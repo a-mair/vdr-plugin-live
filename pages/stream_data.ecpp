@@ -106,9 +106,7 @@ while ((r = f.readsome(buffer, (c < (long int) sizeof(buffer))?c:sizeof(buffer))
   if (!reply.out()) {
     return HTTP_GONE;
   }
-#if TNT_WATCHDOG_SILENCE
   request.touch(); // retrigger the watchdog.
-#endif
 }
 
 reply.out() << std::flush;

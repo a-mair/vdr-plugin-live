@@ -270,7 +270,6 @@ if (LiveFeatures<features::streamdev_server>().Loaded()) {
   uintptr_t iCounter = 0;
 </%args>
 <%cpp>
-#if TNT_WATCHDOG_SILENCE
 // <a href="intent://my.example.com:8080/test.mp4#Intent;scheme=http;package=org.videolan.vlc;end">OPEN IN VLC</a>
 
 // std::string server = request.getHost();
@@ -285,7 +284,6 @@ cToSvConcat url("playlist.m3u?recid=", recid);
 </%cpp><a href="<$ url $>" download><img class="<$ className $>" src="<$ GetThemedLink("img", "playlist.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtLeft=(breaksAtLeft) breaksAtRight=(breaksAtRight) text=(tr("Play this recording in the media player")) &> /> <$ linkText $></a>
 <%cpp>
 }
-#endif
 </%cpp>
 </%def>
 
@@ -303,7 +301,6 @@ cToSvConcat url("playlist.m3u?recid=", recid);
   uintptr_t iCounter = 0;
 </%args>
 <%cpp>
-#if TNT_WATCHDOG_SILENCE
 cToSvConcat rfid;
 {
   const cRecording* recording = nullptr;
@@ -321,7 +318,6 @@ if (!rfid.empty() ) {
 </%cpp><a href="http://localhost:<$cToSvConcat(LiveSetup().GetStreamdevPort())$>/<$rfid$>.ts"><img class="<$ className $>" src="<$ GetThemedLink("img", "playlist.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtLeft=(breaksAtLeft) breaksAtRight=(breaksAtRight) text=(tr("Stream this recording")) &> /> <$ linkText $></a>
 <%cpp>
 }
-#endif
 </%cpp>
 </%def>
 

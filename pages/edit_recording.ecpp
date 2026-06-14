@@ -191,10 +191,12 @@ std::string active_r;
             <td class="label leftcol"><div class="withmargin"><$ tr("Delete marks information") $>:</div></td>
             <td class="rightcol"><input type="checkbox" name="delmarks" value="delmarks"/></td>
           </tr>
+<#
           <tr>
             <td class="label leftcol"><div class="withmargin"><$ tr("Copy only") $>:</div></td>
             <td class="rightcol"><input type="checkbox" name="copy" value="copy"/></td>
           </tr>
+#>
           <tr>
             <td class="label leftcol"><div class="withmargin"><$ tr("Title") $>:</div></td>
 %#if VDRVERSNUM >= 20502

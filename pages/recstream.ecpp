@@ -56,9 +56,7 @@ if (!recording_FileName.empty() ) {
       if (!reply.out()) {
           return HTTP_GONE;
       }
-#if TNT_WATCHDOG_SILENCE
       request.touch(); // retrigger the watchdog.
-#endif
     }
     // dsyslog("live: bytesRead = %zd", bytesRead);
     if (bytesRead < 0) {

@@ -10,9 +10,6 @@
 // Query params without boolean parameter
 #define TNT_QUERYPARAMS_NO_BOOL (TNTVERSION >= 22000)
 
-// new version of TNTNET allow the request watchdog to be silenced.
-#define TNT_WATCHDOG_SILENCE  (TNTVERSION >= 16900)
-
 // version of TNTNET that binds ipv6 addresses with IPV6_V6ONLY flag set to true
 #define TNT_IPV6_V6ONLY          (CXXTOOLVER >= 21000)
 
