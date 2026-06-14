@@ -116,9 +116,6 @@ img.icon.button:hover {
   background-size: var(--icon-width, 16px) var(--icon-height, 16px);
 }
 
-img.recording_folder {
-}
-
 a {
   text-decoration: none;
 }
@@ -271,6 +268,7 @@ div.cast_crew.tabular {
   border-radius: var(--popup-border-radius);
   box-shadow: var(--popup-shadow-offset) var(--popup-shadow-offset) var(--popup-shadow-blur) var(--popup-shadow-spread) var(--hint-popup-shadow-color);
   color: var(--hint-popup-color);
+  z-index: var(--popup-z-index, 300);
 }
 
 .hint-tip hr {
@@ -409,6 +407,7 @@ div.info-win {
   border-top-right-radius: var(--infowin-title-border-radius);
   border-bottom: var(--infowin-border-width) solid var(--infowin-border-color);
   box-shadow: var(--infowin-shadow-offset) var(--infowin-shadow-offset) var(--infowin-shadow-blur) var(--infowin-shadow-spread) var(--infowin-shadow-color);
+  z-index: var(--infowin-z-index, 200);
 }
 
 div.info-win.aboutBox {
@@ -1511,6 +1510,13 @@ table.multischedule tr {
 table.multischedule tr.header {
 }
 
+table.form,
+table.listing,
+table.recordings-list,
+table.multischedule {
+  --table-header-height: calc(max(2 * var(--text-line-gap) + var(--text-line-height), var(--listing-header-height)) + var(--infowin-border-width));
+}
+
 table.form > tbody > tr.head > td,
 table.listing > tbody > tr.head > td,
 table.recordings-list > tbody > tr.head > td,
@@ -1518,7 +1524,7 @@ table.multischedule tr.header th,
 div.event_collection div.event div.station {
   top: 0px;   /* required for stickiness */
   position: sticky;
-  /*! height: inherit; */
+  z-index: var(--listing-z-index, 100);
   box-sizing: border-box;
 }
 
@@ -1695,41 +1701,136 @@ div.recordings {
   border-top: none;
 }
 
-div.recordings .recordingslist {
-  display: block;
+/* Each displayed recording folder or recording item includes a bottom border.
+** For the folder or recording displayed at the form's bottom border, that
+** element's bottom border should "collapse" with the form's bottom border,
+** i.e., be discarded. As this cannot be achieved in CSS with a generic rule,
+** we need distinct rules for a selected number of nesting levels.
+**/
+/* For understanding the subsequent rules,'div.recordingslist' is a container
+** hosting an optional set of folders ('div.folderslist') and an optional set
+** of recordings ('table.recordings'), but at least one of such an element. The
+** 'display' attribute of this container determines whether a folder has been
+** collapsed ('display: none') or not ('display' unset).
+*/
+
+/* last displayed folder collapsed and hits the form's bottom border at: */
+/* level 0 */
+form div.recordings
+> div.recordingslist > div.folderslist:last-of-type
+> div.recordings_folder:has(+ div.recordingslist:last-of-type:is([style*="display: none"])),
+/* level 1 */
+form div.recordings
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type
+> div.recordings_folder:has(+ div.recordingslist:last-of-type:is([style*="display: none"])),
+/* level 2 */
+form div.recordings
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type
+> div.recordings_folder:has(+ div.recordingslist:last-of-type:is([style*="display: none"])),
+/* level 3 */
+form div.recordings
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type
+> div.recordings_folder:has(+ div.recordingslist:last-of-type:is([style*="display: none"])),
+/* level 4 */
+form div.recordings
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type
+> div.recordings_folder:has(+ div.recordingslist:last-of-type:is([style*="display: none"])),
+/* level 5 */
+form div.recordings
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type
+> div.recordings_folder:has(+ div.recordingslist:last-of-type:is([style*="display: none"]))
+{
+  border-bottom: none;
 }
 
-div.recordings ul {
-  margin: 0px;
-  padding: 0px;
-  list-style-type: none;
+/* last displayed recording hits the form's bottom border at: */
+/* level 0 */
+form div.recordings
+> div.recordingslist > table.recordings > tbody > tr.recording_item:last-child,
+/* level 1 */
+form div.recordings:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type
+> div.recordingslist > table.recordings > tbody > tr.recording_item:last-child,
+/* level 2 */
+form div.recordings:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type
+> div.recordingslist > table.recordings > tbody > tr.recording_item:last-child,
+/* level 3 */
+form div.recordings:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type
+> div.recordingslist > table.recordings > tbody > tr.recording_item:last-child,
+/* level 4 */
+form div.recordings:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type
+> div.recordingslist > table.recordings > tbody > tr.recording_item:last-child,
+/* level 5 */
+form div.recordings:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist > div.folderslist:last-of-type
+> div.recordingslist > table.recordings > tbody > tr.recording_item:last-child
+{
+  border-bottom: none;
 }
 
-form div.recordings ul > li:last-of-type:has(> ul:is([style*="display: none"])) > div.recording_item  {
-  /* discard row bottom border if last directory is collapsed */
-  border-bottom: none;
- }
+/* 'div.recordings_folder' refers to a folder's name and action buttons */
 
-form div.recordings > ul > li:last-of-type tr.recording_item:last-child {
-  /* discard row bottom border of last recording */
-  border-bottom: none;
- }
-
-/* 'div.recording_item' refers to a folder */
-
-div.recording_item {
+form div.recordings_folder {
+  --recording-folder-offset: var(--table-header-height);
+  --recording-folder-height: calc(max(1lh, var(--iconic-button-height, 16px)) + 4 * var(--border-spacing, 1px) + var(--listing-border-width));
+  --recording-folder-thumb-height: calc(max(1lh, var(--iconic-button-height, 16px), calc(var(--thumb-image-height, 0px) + 2 * var(--text-line-gap))) + 4 * var(--border-spacing, 1px) + var(--listing-border-width));
+  display: flex;
+  flex-flow: row nowrap;
+  column-gap: var(--margin-left-right);
+  align-items: center;
+  padding: calc(2 * var(--border-spacing, 1px));
+  padding-left: calc(2 * var(--border-spacing) + var(--icon-width, 16px) * var(--folder-level, 0));
+  top: calc(var(--recording-folder-offset) + var(--recording-folder-height) * var(--parents-without-thumbs, 0) + var(--recording-folder-thumb-height) * var(--parents-with-thumbs, 0));
+  z-index: calc(var(--listing-z-index, 100) - var(--folder-level, 0) - 1);
   overflow: hidden;
   background: linear-gradient(to top,var(--listing-row-background-color-bottom), var(--listing-row-background-color-top) var(--listing-row-background-gradient-height), var(--listing-row-background-color-top));
   border-bottom: var(--listing-border-width) solid var(--listing-row-border-color);
   color: var(--listing-color);
 }
 
-div.recording_item .recording_folder_name {
+form div.recordings_folder.sticky {
+  position: sticky;
+}
+
+form div.recordings_folder div.recording-selection {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+form div.recordings_folder .recording_folder_name {
   cursor: pointer;
   font-weight: bold;
 }
 
-div.recording_item .recording_folder_name_new {
+div.recordings_folder .recording_folder_name_new {
   cursor: pointer;
   color: var(--listing-color-highlight);
   font-weight: bold;
@@ -1756,13 +1857,9 @@ tr.recording_item {
   border-bottom: 1px solid var(--listing-row-border-color);
 }
 
-div.recordings > ul > li:last-of-type tr:has(td.message) {
-  /* discard row bottom border of recording message */
-  border-bottom: none;
-}
-
 tr.recording_item td.message {
   padding: var(--margin-top-bottom) var(--margin-left-right);
+  padding-left: calc(var(--margin-left-right) + var(--icon-width, 16px) * var(--folder-level, 0));
   color: var(--listing-color-highlight);
   font-weight: bold;
 }
@@ -2595,13 +2692,16 @@ div.epg_content.confirmation div.message {
   padding: var(--margin-top-bottom)  var(--margin-left-right) 0px var(--margin-left-right);
 }
 
+tr.recording_item div.thumb {
+  margin-right: var(--margin-left-right);
+}
+
 div.thumb {
   overflow: hidden;
   max-width: var(--thumb-image-width);
   max-height: var(--thumb-image-height);
   margin-top: var(--text-line-gap);
   margin-bottom: var(--text-line-gap);
-  margin-right: var(--margin-left-right);
   text-align: center;
 }
 
@@ -2706,7 +2806,8 @@ img.thumb, img.thumbpt {
     margin: 0px !important;
   }
 
-  .hidden-xs {
+  .hidden-xs,
+  form div.recordings_folder div.recording-selection.hidden-xs {
     display: none;
   }
 

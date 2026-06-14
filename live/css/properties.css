@@ -30,6 +30,14 @@
   inherits: false;
 }
 
+@property --border-spacing {
+  /* space around table cells, thus space between cells is twice the value;  */
+  /* used for calculating recording-folder dimensions to match table spacing */
+  syntax: "<length>";
+  initial-value: 1px;
+  inherits: false;
+}
+
 @property --vdr-logo-image-width {
   /* VDR-logo image width in pixels for use in calculated lengths */
   syntax: "<integer>";
@@ -271,6 +279,12 @@
 
 /* table and box-header settings */
 
+@property --listing-z-index {
+  syntax: "<integer>";
+  initial-value: 100;
+  inherits: false;
+}
+
 @property --listing-border-width {
   syntax: "<length>";
   initial-value: 1px;
@@ -379,6 +393,12 @@
 
 /* login- and info-window settings */
 
+@property --infowin-z-index {
+  syntax: "<integer>";
+  initial-value: 200;
+  inherits: false;
+}
+
 @property --infowin-border-width {
   syntax: "<length>";
   initial-value: 1px;
@@ -464,6 +484,12 @@
 }
 
 /* popup settings */
+
+@property --popup-z-index {
+  syntax: "<integer>";
+  initial-value: 300;
+  inherits: false;
+}
 
 @property --popup-width {
   syntax: "<length>";

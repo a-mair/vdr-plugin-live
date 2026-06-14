@@ -429,12 +429,8 @@ input, textarea, select {
 ** and deselecting all of a folder's recordings in tree view.
 */
 /*
-img.iconic.button.recording-select-all {
-  margin-left: calc(var(--margin-left-right) * 2);
-}
-
-img.iconic.button.recording-deselect-all {
-  margin-right: calc(var(--margin-left-right) * 2);
+form div.recordings_folder div.recording-selection {
+  padding: 0px var(--margin-left-right);
 }
 */
 
@@ -443,8 +439,7 @@ img.iconic.button.recording-deselect-all {
 ** all of a folder's recordings in tree view.
 */
 /*
-img.iconic.button.recording-select-all,
-img.iconic.button.recording-deselect-all {
+form div.recordings_folder div.recording-selection {
   display: none;
 }
 */

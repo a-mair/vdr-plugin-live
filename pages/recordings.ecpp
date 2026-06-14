@@ -255,9 +255,9 @@ else active_r = "recordings";
     <tr><td>
       <form method="post" name="recordings" id="form_recordings" action="recordings.ecpp">
         <div class="recordings">
-          <ul class="recordingslist" style="display: revert-layer;">
+          <div class="recordingslist">
             <& recordings.recordings_item iRecItem=(iRecItemRoot) irecording_item=(irecording_item) iOpenTreeNodes=(iOpenTreeNodes) &>
-          </ul>
+          </div>
         </div>
         <input type="hidden" name="sort" value="<$ currentSort $>">
         <input type="hidden" name="filter" value="<$ currentFilter $>">
@@ -316,6 +316,7 @@ ecpp creates the macro TNT_PARAM(uintptr_t, iRecItem, recordings.ecpp, (0));
   uintptr_t irecording_item = 0;  // memory used to create the text we send to the browser
   uintptr_t iOpenTreeNodes = 0;   // list (folder hashes) of open folders
   std::string parentIdHash;       // empty for root (level 0)
+  int parentsWithThumbs = 0;      // number of parent folders with thumbnail posters
 </%args>
 <%cpp>
 // get rec item of this (current) dir
@@ -323,6 +324,7 @@ RecordingsItemDirPtr recItemThisDir = *(static_cast<RecordingsItemDirPtr *>((voi
 cToSvConcat<0> *recording_item = static_cast<cToSvConcat<0> *>((void *)irecording_item );
 std::string openTreeNodes= *(static_cast<std::string *>((void *)iOpenTreeNodes) );
 int level = recItemThisDir->Level();
+int parentsWithoutThumbs = level > parentsWithThumbs ? level - parentsWithThumbs : 0;
 
 // data for dirs, and prepare loop over dirs
 const_rec_iterator<RecordingsItemDirPtr> l_dir_iterator = recItemThisDir->get_dir_iterator();
@@ -332,6 +334,7 @@ bool hasSubDirs = false;
 for (const RecordingsItemDirPtr &recItem: l_dir_iterator) {
 // this is the loop over the subdirs
 // each subdir is a node, which can be expanded (or not)
+// folder line:              id="fl_<$ idHash $>", for controlling the 'sticky' attribute
 // folder checkbox:          id="ca_<$ idHash $>", onchange="ToggleChecked(this, '<$ idHash $>')"
 // image with +/-:           id="pm_<$ idHash $>",  onclick="Toggle(this, '<$ idHash $>')"
 // image with sel all        id="sa_<$ idHash $>"
@@ -348,47 +351,31 @@ for (const RecordingsItemDirPtr &recItem: l_dir_iterator) {
   cToSvXxHash32 idHash(cToSvConcat(parentIdHash, recItem->Name()));
   iRecItem = (uintptr_t)&recItem;
 </%cpp>
-  <li class="recording">
-    <div class="recording_item" onclick="click_folder_line(event, '<$ idHash $>')">
-    <table><tr>
-%     if(level > 0) {
-        <td class = "space">
-          <img src="img/transparent.svg" style="width: calc(var(--icon-width, 16px) * <$ level $>); height: var(--icon-height, 16px)" />
-        </td>
-%     }
-<#    <td class="td-hidden-xs"><div class="hidden-xs">
-        <input type="checkbox" id="ca_<$ idHash $>" disabled onchange="ToggleChecked(this, '<$ idHash $>')" />
-      </div></td>
-#>
-      <td class="space">
-        <img class="iconic button recording-expander" id="pm_<$ idHash $>" src="<$ GetThemedLinkPrefixImg()$>icon_overlay_plus.svg" />
-      </td>
-      <td class="td-hidden-xs space"><div class="hidden-xs">
+  <div class="folderslist">
+    <# should we limit the sticky folder names to, e.g., 5 nested levels? #>
+    <div class="recordings_folder" style="--folder-level: <$ level $>; --parents-with-thumbs: <$ parentsWithThumbs $>; --parents-without-thumbs: <$ parentsWithoutThumbs $>;" id="fl_<$ idHash $>" onclick="click_folder_line(event, '<$ idHash $>')">
+      <img class="iconic button recording-expander" id="pm_<$ idHash $>" src="<$ GetThemedLinkPrefixImg()$>icon_overlay_plus.svg" />
+      <div class="recording-selection hidden-xs">
         <img class="iconic button recording-select-all" id="sa_<$ idHash $>" src="<$ GetThemedLinkPrefixImg()$>icon_overlay_checkmark.svg" title="<$tr("Select all recordings in this folder") $>" />
-      </div></td>
-      <td class="td-hidden-xs space"><div class="hidden-xs">
         <img class="iconic button recording-deselect-all" id="ds_<$ idHash $>" src="<$ GetThemedLinkPrefixImg()$>icon_overlay_cross.svg" title="<$tr("Deselect all recordings in this folder") $>" />
-      </div></td>
-      <td class="space">
-        <img class="recording_folder icon" id="fs_<$ idHash $>" src="<$ GetThemedLinkPrefixImg()$>folder_closed.svg" />
-      </td>
-%     if (!recItem->scraperImage().path.empty() ) {
-        <td class = space>
-          <div class="thumb">
-            <img data-src="/tvscraper/<$ recItem->scraperImage().path $>?thumb=1"
-              class="<$ recItem->scraperImage().width > recItem->scraperImage().height?"thumb":"thumbpt" $>"
-            />
-          </div>
-        </td>
+      </div>
+      <img class="recordings_folder icon" id="fs_<$ idHash $>" src="<$ GetThemedLinkPrefixImg()$>folder_closed.svg" />
+%     bool hasThumb = !recItem->scraperImage().path.empty();
+%     if (hasThumb) {
+        <div class="thumb">
+          <img data-src="/tvscraper/<$ recItem->scraperImage().path $>?thumb=1"
+            class="<$ recItem->scraperImage().width > recItem->scraperImage().height?"thumb":"thumbpt" $>"
+          />
+        </div>
 %     }
-      <td class="recording_folder_name<$ (newR ? "_new" : "") $>">
+      <div class="recording_folder_name<$ (newR ? "_new" : "") $>">
         <$ recItem->Name() $>
-      </td></tr></table>
+      </div>
     </div>
-    <ul id="<$ idHash $>" class="recordingslist" style="display: none;">
-      <& recordings.recordings_item iRecItem=(iRecItem) irecording_item=(irecording_item) parentIdHash=(idHash) iOpenTreeNodes=(iOpenTreeNodes) &>
-    </ul>
-  </li>
+    <div id="<$ idHash $>" class="recordingslist" style="display: none;">
+      <& recordings.recordings_item iRecItem=(iRecItem) irecording_item=(irecording_item) parentIdHash=(idHash) iOpenTreeNodes=(iOpenTreeNodes) parentsWithThumbs=(hasThumb ? parentsWithThumbs + 1 : parentsWithThumbs) &>
+    </div>
+  </div>
   <%cpp>
   hasSubDirs = true;
 } // end of loop over subdirs
@@ -432,20 +419,13 @@ recs[<$$cToSvInt(rPtr->Id())$>]=[<$$ *recording_item $>]
       <script>
         rec_ids["<$ parentIdHash $>"] = []
         document.write(
-          '<li class="recording">' +
-            '<table class="recordings" width="100%">' +
-              '<tbody>' +
-                '<tr class="recording_item">' +
-%               if(level > 0) {
-                  '<td class = "space">' +
-                    '<img src="img/transparent.svg" style="width: calc(var(--icon-width, 16px) * <$ level $>); height: var(--icon-height, 16px)" />' +
-                  '</td>' +
-%               }
-                  '<td class="message"><$ tr("No matching recordings found") $></td>' +
-                '</tr>' +
-              '</tbody>' +
-            '</table>' +
-          '</li>'
+          '<table class="recordings" width="100%">' +
+            '<tbody>' +
+              '<tr class="recording_item">' +
+                '<td class="message"><$ tr("No matching recordings found") $></td>' +
+              '</tr>' +
+            '</tbody>' +
+          '</table>'
         )
       </script>
       <%cpp>

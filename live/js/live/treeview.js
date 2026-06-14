@@ -22,10 +22,12 @@ function set_folder_closed(rec_list) {
 
 //document.getElementById('ca_'+fldr_hash).disabled = true;
   rec_list.style.display = 'none';
+  document.getElementById('fl_'+fldr_hash)?.classList?.toggle('sticky', false);
 }
 async function set_folder_open(rec_list) {
 // return true in case of a dom change
   const fldr_hash = rec_list.id;
+  document.getElementById('fl_'+fldr_hash)?.classList?.toggle('sticky', true);
   updateCookieOnExpand(fldr_hash);
 
   var dom_changed = false;
@@ -50,7 +52,7 @@ async function set_folder_open(rec_list) {
 //}
 
 //document.getElementById('ca_'+fldr_hash).disabled = false;
-  rec_list.style.display = 'revert-layer';
+  rec_list.style.display = '';
   return dom_changed;
 }
 
@@ -241,7 +243,7 @@ function deletedRecordings(recycle_bin, currentSort, currentFlat, currentFilter)
 async function ExpandAll()
 {
   var domChanges = 0;
-  recordingNodes = getElementsByNodeNameClassName(window.document, 'UL', "recordingslist");
+  recordingNodes = getElementsByNodeNameClassName(window.document, 'DIV', "recordingslist");
   for (idx = 0; idx < recordingNodes.length; idx++) {
     if (recordingNodes[idx].parentNode.className != 'recordings') {
       if (await set_folder_open(recordingNodes[idx]) ) domChanges = 1;
@@ -252,7 +254,7 @@ async function ExpandAll()
 }
 function CollapseAll()
 {
-  recordingNodes = getElementsByNodeNameClassName(window.document, 'UL', "recordingslist");
+  recordingNodes = getElementsByNodeNameClassName(window.document, 'DIV', "recordingslist");
   for (idx = 0; idx < recordingNodes.length; idx++) {
     if (recordingNodes[idx].parentNode.className != 'recordings') {
       set_folder_closed(recordingNodes[idx]);
