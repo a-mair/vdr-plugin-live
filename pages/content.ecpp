@@ -3,7 +3,6 @@
 
 #include <fstream>
 #include <setup.h>
-#include <tntfeatures.h>
 #include <vdr/channels.h>
 #include <stringhelpers.h>
 #include "content.h"
@@ -18,18 +17,14 @@ std::string cache_max_age="2592000";   // Time in seconds this file will be cach
 <%cpp>
 std::string mime;
 if (request.getArgsCount() > 0) {
-#if TNT_MAPURL_NAMED_ARGS
   mime = request.getArg("mime-type");
-#else
-  mime = request.getArg(0);
-#endif
-if (mime == "image/jpg")
-  mime = "image/jpeg";
-else if (mime == "image/svg")
-  mime = "image/svg+xml";
+  if (mime == "image/jpg")
+    mime = "image/jpeg";
+  else if (mime == "image/svg")
+    mime = "image/svg+xml";
 } else  {
-mime = "image/png";
-dsyslog("vdrlive::content.ecpp called without args");
+  mime = "image/png";
+  dsyslog2("pages/content.ecpp called without args");
 }
 
 std::string const path(request.getPathInfo());

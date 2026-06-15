@@ -1,7 +1,6 @@
 <%pre>
 
 #include <setup.h>
-#include <tntfeatures.h>
 #include <ffmpeg.h>
 #include <fstream>
 #include <tnt/mimedb.h>

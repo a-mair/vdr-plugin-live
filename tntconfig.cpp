@@ -3,12 +3,8 @@
 #include "live.h"
 #include "setup.h"
 
-#if TNT_LOG_SERINFO
 #include <cxxtools/log.h>
 #include <cxxtools/xml/xmldeserializer.h>
-#else
-#include <cxxtools/loginit.h>
-#endif
 
 #if TNTVERSION >= 31000
 #include <cxxtools/sslctx.h>
@@ -30,17 +26,11 @@ namespace vdrlive {
 
     void MapUrl(tnt::Tntnet & app, const char *rule, const char * component, cSv instPath, const char * pathInfo, const char * mime_type)
     {
-#if TNT_MAPURL_NAMED_ARGS
       tnt::Mapping::args_type argMap;
       argMap.insert(std::make_pair("mime-type", mime_type));
-#endif
       app.mapUrl(rule, component)
         .setPathInfo(std::string(cToSvConcat(instPath, pathInfo)))
-#if TNT_MAPURL_NAMED_ARGS
         .setArgs(argMap);
-#else
-        .pushArg(mime_type);
-#endif
     }
   }
 
@@ -122,7 +112,6 @@ namespace vdrlive {
   {
     std::string const configDir(Plugin::GetConfigDirectory());
 
-#if TNT_LOG_SERINFO
     cxxtools::SerializationInfo si;
     std::istringstream logXmlConf(
       "<logging>\n"
@@ -142,15 +131,6 @@ namespace vdrlive {
     cxxtools::xml::XmlDeserializer d(logXmlConf);
     d.deserialize(si);
     log_init(si);
-#else
-    std::istringstream logConf(
-      "rootLogger=" + LiveSetup().GetTntnetLogLevel() + "\n"
-      "logger.tntnet=" + LiveSetup().GetTntnetLogLevel() + "\n"
-      "logger.cxxtools=" + LiveSetup().GetTntnetLogLevel() + "\n"
-      );
-
-    log_init(logConf);
-#endif
 
     /* info on mapUrl / MapUrl
      * this is (mostly) used to deliver static files like:
@@ -358,13 +338,8 @@ namespace vdrlive {
     // modified by 'tadi' -- verified with above, but not counterchecked yet!
     app.mapUrl("^/([^./]+)(.*)?", "$1");
 
-#if TNT_GLOBAL_TNTCONFIG
     tnt::TntConfig::it().sessionTimeout = 86400;
     tnt::TntConfig::it().defaultContentType = std::string("text/html; charset=UTF-8");
-#else
-    tnt::Sessionscope::setDefaultTimeout(86400);
-    tnt::HttpReply::setDefaultContentType(std::string("text/html; charset=UTF-8"));
-#endif
 //  dsyslog2("vdr's encoding: cCharSetConv::SystemCharacterTable() = ", cCharSetConv::SystemCharacterTable());
 
     Setup::IpList const& ips = LiveSetup().GetServerIps();

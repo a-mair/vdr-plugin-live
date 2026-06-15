@@ -1,12 +1,7 @@
 #ifndef VDR_LIVE_TNTCONFIG_H
 #define VDR_LIVE_TNTCONFIG_H
 
-#if TNTVERSION >= 30000
-  #include <fstream>
-#endif
-
-#include "tntfeatures.h"
-
+#include <fstream>
 #include <tnt/tntnet.h>
 
 namespace vdrlive {

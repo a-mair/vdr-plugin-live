@@ -7,7 +7,6 @@
 #include <timers.h>
 #include <tools.h>
 #include <epg_events.h>
-#include <tntfeatures.h>
 
 using namespace vdrlive;
 
