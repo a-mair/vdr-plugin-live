@@ -226,7 +226,9 @@ bool RecordingsManager::UpdateRecording(cSv hash, cSv directory, cSv name, bool 
       }
 
       Recordings->AddByName(newFileName.c_str());
+#if VDRVERSNUM >= 20502
       cRecordingUserCommand::InvokeCommand(RUC_COPIEDRECORDING, newFileName.c_str(), oldFileName.c_str());
+#endif
     }
 
   } else {

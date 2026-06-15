@@ -1122,7 +1122,7 @@ for (const cTvMedia &media: *media_v) {
       <div class="about_head"><$ tr("Bugs and suggestions") $></div>
       <div class="about_section">
         <div class="about_line"><$ tr("If you encounter any bugs or would like to suggest new features, please use our bugtracker") $>:<br/>
-          <a target="_blank" href="https://github.com/MarkusEh/vdr-plugin-live/issues">https://github.com/MarkusEh/vdr-plugin-live/issues</a></div>
+          <a target="_blank" href="https://codeberg.org/MarkusE/vdr-plugin-live/issues">https://codeberg.org/MarkusE/vdr-plugin-live/issues</a></div>
       </div>
     </div></div>
   </div>
