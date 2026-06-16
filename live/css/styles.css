@@ -1830,7 +1830,7 @@ form div.recordings_folder .recording_folder_name {
   font-weight: bold;
 }
 
-div.recordings_folder .recording_folder_name_new {
+form div.recordings_folder .recording_folder_name_new {
   cursor: pointer;
   color: var(--listing-color-highlight);
   font-weight: bold;
@@ -2698,8 +2698,8 @@ tr.recording_item div.thumb {
 
 div.thumb {
   overflow: hidden;
-  max-width: var(--thumb-image-width);
-  max-height: var(--thumb-image-height);
+  width: var(--thumb-image-width);
+  height: var(--thumb-image-height);
   margin-top: var(--text-line-gap);
   margin-bottom: var(--text-line-gap);
   text-align: center;
@@ -2709,8 +2709,8 @@ a.thumb {
 }
 
 img.thumb, img.thumbpt {
-  max-width: var(--thumb-image-width);
-  max-height: var(--thumb-image-height);
+  width: var(--thumb-image-width);
+  height: var(--thumb-image-height);
   object-fit: contain;
 }
 

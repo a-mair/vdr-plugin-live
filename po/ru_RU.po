@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-14 16:15+0200\n"
+"POT-Creation-Date: 2026-06-16 09:08+0200\n"
 "PO-Revision-Date: 2013-06-21 20:15+0200\n"
 "Last-Translator: Dmitrii Kiselev <wm.amid@gmail.com>\n"
 "Language-Team: see developers in README\n"
@@ -212,9 +212,6 @@ msgstr "Удалить информацию о воспроизведении"
 
 msgid "Delete marks information"
 msgstr "Удалить маркеры"
-
-msgid "Copy only"
-msgstr "Копировать"
 
 msgid "Title"
 msgstr "Название"
@@ -664,6 +661,9 @@ msgid "Recording length"
 msgstr ""
 
 msgid "h"
+msgstr ""
+
+msgid "Number of pes files"
 msgstr ""
 
 msgid "Number of ts files"
@@ -1299,6 +1299,9 @@ msgstr ""
 
 msgid "Delete permanently"
 msgstr ""
+
+#~ msgid "Copy only"
+#~ msgstr "Копировать"
 
 #~ msgid "Recordings"
 #~ msgstr "Записи"

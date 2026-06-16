@@ -9,9 +9,7 @@
 #include <vector>
 #include <list>
 
-#if TNTVERSION >= 30000
-  #include <cxxtools/log.h>  // must be loaded before any VDR include because of duplicate macros (LOG_ERROR, LOG_DEBUG, LOG_INFO)
-#endif
+#include <cxxtools/log.h>  // must be loaded before any VDR include because of duplicate macros (LOG_ERROR, LOG_DEBUG, LOG_INFO)
 
 #ifndef DISABLE_TEMPLATES_COLLIDING_WITH_STL
 // To get rid of the swap definition in vdr/tools.h
@@ -55,8 +53,6 @@ namespace vdrlive {
   bool operator< (const RecordingsItemDirPtr &a, cSv b);
   bool operator< (int a, const RecordingsItemDirPtr &b);
   bool operator< (const RecordingsItemDirPtr &a, int b);
-
-  int GetNumberOfTsFiles(int recId);
 
   /**
    *  Class for managing recordings inside the live plugin. It
@@ -270,6 +266,7 @@ namespace vdrlive {
       char ScanTypeChar(void) const { return ScanTypeChars[m_scanType]; }
       eAspectRatio AspectRatio(void) const { return m_aspectRatio; }
 #endif
+      bool IsPesRecording() const { return m_isPesRecording; }
       time_t StartTime() const { return m_startTime; }
       bool StillRecording(const cRecording* recording = nullptr) const;  // true if this is still recording. The result is bufferd
       int Duration() const;  // duration in seconds, is changing for still recording recordings
@@ -317,7 +314,7 @@ namespace vdrlive {
       const int m_id;
       const XXH128_hash_t m_hash;
       std::string m_name_vdr;  // name as VDR returns with Name(): folder~name
-      const std::string m_file_name; // name as VDR returns with FileName(): name in filesystem, do no sanitize this!
+      const std::string m_file_name; // name as VDR returns with FileName(): name in filesystem, do not sanitize this!
       cSv m_name;
       cStr m_name_str;
       cSv m_folder;
@@ -341,8 +338,9 @@ namespace vdrlive {
       eScanType m_scanType = stUnknown;
       eAspectRatio m_aspectRatio = arUnknown;
 #endif
-      mutable time_t m_last_scraper_update = 0;
+      bool m_isPesRecording = false;
       mutable int m_number_ts_files = -1;
+      mutable time_t m_last_scraper_update = 0;
       std::unique_ptr<cScraperVideo_v01> m_scraperVideo;
       tvType m_s_videoType = tNone;
       int m_s_dbid = 0;

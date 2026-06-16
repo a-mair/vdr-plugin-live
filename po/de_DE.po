@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 3.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-14 16:15+0200\n"
+"POT-Creation-Date: 2026-06-15 12:05+0200\n"
 "PO-Revision-Date: 2026-01-27 20:15+0200\n"
 "Last-Translator: Stefan Hofmann <info@stefans-galerie.de>\n"
 "Language-Team: see developers in README\n"
@@ -214,9 +214,6 @@ msgstr "Wiedergabeposition löschen"
 
 msgid "Delete marks information"
 msgstr "Schnittmarken löschen"
-
-msgid "Copy only"
-msgstr "Nur kopieren"
 
 msgid "Title"
 msgstr "Titel"
@@ -668,8 +665,11 @@ msgstr "Länge der Aufzeichnung"
 msgid "h"
 msgstr "h"
 
+msgid "Number of pes files"
+msgstr "Zahl der pes Dateien"
+
 msgid "Number of ts files"
-msgstr "Zahl der TS-Dateien"
+msgstr "Zahl der TS Dateien"
 
 msgid "Find more in the IMDb (Internet Movie Database)"
 msgstr "Weitere Informationen in der IMDb (Internet Movie Database)"
@@ -1301,6 +1301,9 @@ msgstr "Aufzeichnung dauerhaft löschen"
 
 msgid "Delete permanently"
 msgstr "Dauerhaft löschen"
+
+#~ msgid "Copy only"
+#~ msgstr "Nur kopieren"
 
 #~ msgid "Toggle updates on/off"
 #~ msgstr "Statusabfrage ein- oder ausschalten"

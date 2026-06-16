@@ -168,7 +168,7 @@ rPtr->AppendAsJSArray(recording_item);
       <table class="listing streaming recording" cellspacing="0" cellpadding="0">
         <tbody>
           <script>
-            // column span 0 indicates discrding the label
+            // column span 0 indicates discarding the label
             document.write(existingRecordingString(0, "", <$$ recording_item.c_str() $>))
           </script>
         </tbody>

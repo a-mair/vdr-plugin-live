@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-14 16:15+0200\n"
+"POT-Creation-Date: 2026-06-16 09:08+0200\n"
 "PO-Revision-Date: 2025-10-05 18:19+0200\n"
 "Last-Translator: Tomasz Maciej Nowak <tomek_n@o2.pl>\n"
 "Language-Team: see developers in README\n"
@@ -213,9 +213,6 @@ msgstr "Usuń informację o wznowieniu"
 
 msgid "Delete marks information"
 msgstr "Usuń informację o znacznikach"
-
-msgid "Copy only"
-msgstr "Skopiuj do katalogu"
 
 msgid "Title"
 msgstr "Tytuł"
@@ -666,6 +663,9 @@ msgstr "Długość nagrania"
 
 msgid "h"
 msgstr "godz"
+
+msgid "Number of pes files"
+msgstr ""
 
 msgid "Number of ts files"
 msgstr "Liczba plików ts"
@@ -1300,6 +1300,9 @@ msgstr ""
 
 msgid "Delete permanently"
 msgstr ""
+
+#~ msgid "Copy only"
+#~ msgstr "Skopiuj do katalogu"
 
 #~ msgid "Recordings"
 #~ msgstr "Nagrania - drzewo"

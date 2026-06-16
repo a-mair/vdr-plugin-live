@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-14 16:15+0200\n"
+"POT-Creation-Date: 2026-06-16 09:08+0200\n"
 "PO-Revision-Date: 2007-08-19 20:15+0200\n"
 "Last-Translator: Rolf Ahrenberg <rahrenbe@cc.hut.fi>\n"
 "Language-Team: see developers in README\n"
@@ -212,9 +212,6 @@ msgstr "Poista paluutiedot"
 
 msgid "Delete marks information"
 msgstr "Poista merkinnät"
-
-msgid "Copy only"
-msgstr "Kopioi ainoastaan"
 
 msgid "Title"
 msgstr "Otsikko"
@@ -664,6 +661,9 @@ msgid "Recording length"
 msgstr ""
 
 msgid "h"
+msgstr ""
+
+msgid "Number of pes files"
 msgstr ""
 
 msgid "Number of ts files"
@@ -1299,6 +1299,9 @@ msgstr ""
 
 msgid "Delete permanently"
 msgstr ""
+
+#~ msgid "Copy only"
+#~ msgstr "Kopioi ainoastaan"
 
 #~ msgid "Recordings"
 #~ msgstr "Tallenteet"

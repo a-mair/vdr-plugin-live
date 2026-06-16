@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-14 16:15+0200\n"
+"POT-Creation-Date: 2026-06-16 09:08+0200\n"
 "PO-Revision-Date: 2007-08-19 20:15+0200\n"
 "Last-Translator: Valdemaras Pipiras <varas@ambernet.lt>\n"
 "Language-Team: see developers in README\n"
@@ -211,9 +211,6 @@ msgid "Delete resume information"
 msgstr ""
 
 msgid "Delete marks information"
-msgstr ""
-
-msgid "Copy only"
 msgstr ""
 
 msgid "Title"
@@ -665,6 +662,9 @@ msgid "Recording length"
 msgstr ""
 
 msgid "h"
+msgstr ""
+
+msgid "Number of pes files"
 msgstr ""
 
 msgid "Number of ts files"

@@ -1003,19 +1003,27 @@ const_rec_iterator<RecordingsItemRec*> RecordingsItemDirSeason::get_rec_iterator
   return const_rec_iterator<RecordingsItemRec*>(m_entries, false, RecordingsManager::m_filter_regex_ptr);
 }
 
-int GetNumberOfTsFiles(cSv fileName) {
+int GetNumberOfTsFiles(cSv fileName, bool isPesRecording) {
 // find our number of ts files
 size_t folder_length = fileName.length();
 cToSvConcat file_path(fileName, "/00001.ts");
 struct stat buffer;
 uint32_t num_ts_files;
 std::chrono::time_point<std::chrono::high_resolution_clock> timeStart = std::chrono::high_resolution_clock::now();
-for (num_ts_files = 1; num_ts_files < 100000u; ++num_ts_files) {
-  file_path.erase(folder_length+1);
-  file_path.appendInt<5>(num_ts_files).append(".ts");
+if (isPesRecording) {
+  for (num_ts_files = 1; num_ts_files < 1000u; ++num_ts_files) {
+      file_path.erase(folder_length+1);
+      file_path.appendInt<3>(num_ts_files).append(".vdr");
+      if (stat(file_path.c_str(), &buffer) != 0) break;
+  }
+} else {
+  for (num_ts_files = 1; num_ts_files < 100000u; ++num_ts_files) {
+    file_path.erase(folder_length+1);
+    file_path.appendInt<5>(num_ts_files).append(".ts");
 // stat is 10% faster than access on my system. On others, there is a larger difference
 // see https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exists-using-standard-c-c11-14-17-c
-  if (stat(file_path.c_str(), &buffer) != 0) break;
+    if (stat(file_path.c_str(), &buffer) != 0) break;
+  }
 }
 std::chrono::duration<double> timeNeeded = std::chrono::high_resolution_clock::now() - timeStart;
 if (timeNeeded.count() > 0.1)
@@ -1035,11 +1043,12 @@ RecordingsItemRec::RecordingsItemRec(const cRecording* recording, cMeasureTime *
 {
   m_IsNew = recording->IsNew();
   m_startTime = recording->Start();
+  m_isPesRecording = recording->IsPesRecording();
   if (!RecordingsManager::StillRecording(recording) && !RecordingsManager::StillRecording(m_file_name)) {
     m_stopRecording = 0;
     m_fileSizeMB = DirSizeMB(m_file_name.c_str());
     m_duration = recording->LengthInSeconds();
-    m_number_ts_files = GetNumberOfTsFiles(m_file_name);
+    m_number_ts_files = GetNumberOfTsFiles(m_file_name, IsPesRecording() );
 #if VDRVERSNUM >= 20505
     if (recording->Info()) m_recordingErrors = recording->Info()->Errors();
 #endif
@@ -1162,7 +1171,7 @@ int RecordingsItemRec::FileSizeMB() const {
 }
 int RecordingsItemRec::NumberTsFiles() const {
   if (m_number_ts_files < 0) {
-    int number_ts_files = GetNumberOfTsFiles(m_file_name);
+    int number_ts_files = GetNumberOfTsFiles(m_file_name, IsPesRecording() );
     if (StillRecording())
       return number_ts_files; // check again later for ongoing recordings
     m_number_ts_files = number_ts_files;
@@ -1651,6 +1660,9 @@ void RecordingsItemRec::AppendAsJSArray(cToSvConcat<0> &target) const {
   target.append(",\"");
   StringAppendFrameParams(target, this);
   target.append("\"");
+// [23] isPesRecording (1: true, 0: false)
+  target.append(",");
+  target.concat(IsPesRecording()?1:0);
 }
 
 void RecordingsItemRec::AppendAsJSArray(cToSvConcat<0> &target, const_rec_iterator<RecordingsItemRec*> &rec_iterator, bool &first) {

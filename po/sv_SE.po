@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-14 16:15+0200\n"
+"POT-Creation-Date: 2026-06-16 09:08+0200\n"
 "PO-Revision-Date: 2013-06-21 20:15+0200\n"
 "Last-Translator: Fredrik Olofsson <fredrik.olofsson@freddano.se>\n"
 "Language-Team: see developers in README\n"
@@ -212,9 +212,6 @@ msgstr "Radera information för att återuppta"
 
 msgid "Delete marks information"
 msgstr "Ta bort märkningsinformation"
-
-msgid "Copy only"
-msgstr "Kopiera endast"
 
 msgid "Title"
 msgstr "Titel"
@@ -664,6 +661,9 @@ msgid "Recording length"
 msgstr ""
 
 msgid "h"
+msgstr ""
+
+msgid "Number of pes files"
 msgstr ""
 
 msgid "Number of ts files"
@@ -1299,6 +1299,9 @@ msgstr ""
 
 msgid "Delete permanently"
 msgstr ""
+
+#~ msgid "Copy only"
+#~ msgstr "Kopiera endast"
 
 #~ msgid "Recordings"
 #~ msgstr "Inspelningar"

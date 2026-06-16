@@ -151,10 +151,16 @@ function RecordingActionPlaylist(s, id, label) {
 }
 
 // do not HTML-encode title; will be HTML-encoded here!
-function addEventRec_r(s, eventid, title, folder, shortText, description) {
+function addEventRec_r(s, eventid, title, displayFolder, folder, shortText, description) {
   let http_params = '&sort=<$ sort $>&filter='
   http_params += encodeURIComponent('<$ filter $>')
   http_params += '&flat=<$ flat $>&history_num_back=<$ history_num_back+1 $>'
+<#
+   displayFolder == 1 in flat view, and displayFolder == 2 in hirarchical view.
+   We ignore displayFolder and always display the folder
+   better option: don't display the folder if the top node is filesystem.
+   But, this information is missing here
+#>
   addEventRec(s, 'recording_', eventid, http_params, title, folder, shortText, description)
 }
 </script>
@@ -636,7 +642,7 @@ if (recPtr) {
 </%cpp>
 <div id="icons-<$id$>" class="recording_status"></div>
 <script class="injectIcons">
-injectErrorHdSdIcon(\"icons-<$id$>\", <$cToSvInt(recPtr->RecordingErrors())$>, <$cToSvInt(recPtr->DurationDeviation())$>, \"<$sdhd$>\", \"<$recPtr->ChannelName()$>\", \"<$duration$>\", <$ cToSvInt(recPtr->NumberTsFiles()) $>, \"<$frameParams$>\")
+injectErrorHdSdIcon(\"icons-<$id$>\", <$cToSvInt(recPtr->RecordingErrors())$>, <$cToSvInt(recPtr->DurationDeviation())$>, \"<$sdhd$>\", \"<$recPtr->ChannelName()$>\", \"<$duration$>\", <$ cToSvInt(recPtr->NumberTsFiles()) $>, \"<$frameParams$>\", <$recPtr->IsPesRecording()?1:0$>)
 </script>
 <%cpp>
 }

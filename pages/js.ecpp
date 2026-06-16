@@ -35,7 +35,7 @@ function set_icons_open(img_plus_minus, img_folder_symbol) {
   img_folder_symbol.src="<$ GetThemedLinkPrefixImg()$>folder_open.svg";
 }
 
-function addErrorIcon(s, numErrors, durationDeviation, duration, numTsFiles) {
+function addErrorIcon(s, numErrors, durationDeviation, duration, numTsFiles, isPesRecording) {
   if (numErrors <= -100) return
   s.a += '<div class=\"recording_errors\"><img class=\"icon\" src=\"<$GetThemedLinkPrefixImg()$>'
 
@@ -54,7 +54,11 @@ function addErrorIcon(s, numErrors, durationDeviation, duration, numTsFiles) {
 % }
   s.a += '<p><$tr("Recording length")$>: '
   s.a += duration
-  s.a += ' <$tr("h")$></p><p><$tr("Number of ts files")$>: '
+  if (isPesRecording) {
+    s.a += ' <$tr("h")$></p><p><$tr("Number of pes files")$>: '
+  } else {
+    s.a += ' <$tr("h")$></p><p><$tr("Number of ts files")$>: '
+  }
   s.a += String(numTsFiles)
   s.a += '</p>\" /> </div>'
 }
@@ -189,7 +193,7 @@ function eventString(bottomrow, data) {
 
 // existing recording
 // do not HTML-encode name; will be HTML-encoded here!
-function existingRecordingSR(s, col_span1, bottomrow, imdb_id, id, stillRecording, image, pt, s_title, s_season_episode, s_runtime, s_date, day_time_duration, errors, hd_sd, channel_name, newR, name, short_text, description, durationDeviation, folder, duration, numTsFiles) {
+function existingRecordingSR(s, col_span1, bottomrow, imdb_id, id, stillRecording, image, pt, s_title, s_season_episode, s_runtime, s_date, day_time_duration, errors, hd_sd, channel_name, newR, name, short_text, description, durationDeviation, folder, duration, numTsFiles, isPesRecording) {
   let still_recording = '';
   if (stillRecording === 'still_recording') {
     still_recording = ' still_recording';
@@ -209,7 +213,7 @@ function existingRecordingSR(s, col_span1, bottomrow, imdb_id, id, stillRecordin
 #if VDRVERSNUM >= 20505
 </%cpp>
   s.a += '<div class=\"recording_status\">'
-  addErrorIcon(s, errors, durationDeviation, duration, numTsFiles)
+  addErrorIcon(s, errors, durationDeviation, duration, numTsFiles, isPesRecording)
   addHdSdIcon(s, hd_sd, channel_name, \"\")
   s.a += '</div>'
 <%cpp>
@@ -226,10 +230,10 @@ function existingRecordingSR(s, col_span1, bottomrow, imdb_id, id, stillRecordin
   s.a += '</td></tr>'
 }
 
-function existingRecordingString(col_span, bottomrow, id, stillRecording, imdb_id, image, pt, s_title, s_season_episode, s_runtime, s_date, day_time_duration, errors, hd_sd, channel_name, newR, name, short_text, description, durationDeviation, folder, duration, size, numTsFiles) {
+function existingRecordingString(col_span, bottomrow, id, stillRecording, imdb_id, image, pt, s_title, s_season_episode, s_runtime, s_date, day_time_duration, errors, hd_sd, channel_name, newR, name, short_text, description, durationDeviation, folder, duration, size, numTsFiles, isPesRecording) {
   const s = Object.create(null)
   s.a = ""
-  existingRecordingSR(s, col_span, bottomrow, imdb_id, id, stillRecording, image, pt, s_title, s_season_episode, s_runtime, s_date, day_time_duration, errors, hd_sd, channel_name, newR, name, short_text, description, durationDeviation, folder, duration, numTsFiles)
+  existingRecordingSR(s, col_span, bottomrow, imdb_id, id, stillRecording, image, pt, s_title, s_season_episode, s_runtime, s_date, day_time_duration, errors, hd_sd, channel_name, newR, name, short_text, description, durationDeviation, folder, duration, numTsFiles, isPesRecording)
   return s.a
 }
 
@@ -325,6 +329,7 @@ function addEventRec(s, eventprefix, eventid, http_params, title, folder, shortT
 // [20] : size
 // [21] : numTsFiles
 // [22] : frame parameter text
+// [23] : isPesRecording (1: true, 0: false)
 // before calling, make sure that all recs[obj_i] exist!
 #>
 function RecordingsSt_int(s, level, displayFolder, data, folderId) {
@@ -398,17 +403,15 @@ function RecordingsSt_int(s, level, displayFolder, data, folderId) {
     s.a += '">'
     s.a += obj[20]
     s.a += '</div></div></td><td><div class="recording_status">'
-    addErrorIcon(s, obj[10], obj[17], obj[19], obj[21])
+    addErrorIcon(s, obj[10], obj[17], obj[19], obj[21], obj[23])
     addHdSdIcon(s, obj[11], obj[12], obj[22])
     s.a += '</div></td>'  // end column with error/sd-hd image
     s.a += '<td><div class=\"recording_name'
     s.a += obj[13]
     s.a += still_recording
     s.a += '\">'
-    if (displayFolder == 1) folder = obj[18]
-    else folder = ''
     s.a += '<div class="withmargin">'
-    addEventRec_r(s, obj[0], obj[14], folder, obj[15], obj[16]);
+    addEventRec_r(s, obj[0], obj[14], displayFolder, obj[18], obj[15], obj[16]);
     s.a += '</div></div></td>'  // end of recording_name / short description
     s.a += '<td><div class=\"recording_actions\">'
     let label = obj[9] + '<$ tr(" - ") $>' + obj[14]

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-14 16:15+0200\n"
+"POT-Creation-Date: 2026-06-16 09:08+0200\n"
 "PO-Revision-Date: 2025-10-03 20:15+0200\n"
 "Last-Translator: Carel Willemse <carel@nekanali.nl>\n"
 "Language-Team: see developers in README\n"
@@ -214,9 +214,6 @@ msgstr "Wis hervattingsinformatie"
 
 msgid "Delete marks information"
 msgstr "Wis markeringsinformatie"
-
-msgid "Copy only"
-msgstr "Alleen kopiëren"
 
 msgid "Title"
 msgstr "Titel"
@@ -667,6 +664,9 @@ msgstr "Opnameduur"
 
 msgid "h"
 msgstr "h"
+
+msgid "Number of pes files"
+msgstr ""
 
 msgid "Number of ts files"
 msgstr "Aantal ts file"
@@ -1301,6 +1301,9 @@ msgstr ""
 
 msgid "Delete permanently"
 msgstr ""
+
+#~ msgid "Copy only"
+#~ msgstr "Alleen kopiëren"
 
 #~ msgid "Recordings"
 #~ msgstr "Opnamen"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-14 16:15+0200\n"
+"POT-Creation-Date: 2026-06-16 09:08+0200\n"
 "PO-Revision-Date: 2023-02-14 20:02+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -214,9 +214,6 @@ msgstr "გაგრძელების ინფორმაციის წ�
 
 msgid "Delete marks information"
 msgstr "ნიშნების ინფორმაციის წაშლა"
-
-msgid "Copy only"
-msgstr "მხოლოდ კოპირება"
 
 msgid "Title"
 msgstr "სათაური"
@@ -666,6 +663,9 @@ msgid "Recording length"
 msgstr "ჩანაწერის ხანგრძლივობა"
 
 msgid "h"
+msgstr ""
+
+msgid "Number of pes files"
 msgstr ""
 
 msgid "Number of ts files"
@@ -1301,6 +1301,9 @@ msgstr ""
 
 msgid "Delete permanently"
 msgstr ""
+
+#~ msgid "Copy only"
+#~ msgstr "მხოლოდ კოპირება"
 
 #~ msgid "Recordings"
 #~ msgstr "ჩანაწერები"

@@ -153,10 +153,10 @@ function injectHdSdIcon(elementId, sdhd, channelName, frameParams) {
   if (typeof liveEnhanced !== 'undefined') liveEnhanced.domReadySetup();
 }
 
-function injectErrorHdSdIcon(elementId, numErrors, durationDeviation, sdhd, channelName, duration, numTsFiles, frameParams) {
+function injectErrorHdSdIcon(elementId, numErrors, durationDeviation, sdhd, channelName, duration, numTsFiles, frameParams, isPesRecording) {
   const s = Object.create(null);
   s.a = "";
-  addErrorIcon(s, numErrors, durationDeviation, duration, numTsFiles);
+  addErrorIcon(s, numErrors, durationDeviation, duration, numTsFiles, isPesRecording);
   addHdSdIcon(s, sdhd, channelName, frameParams);
   document.getElementById(elementId).innerHTML = s.a;
   if (typeof liveEnhanced !== 'undefined') liveEnhanced.domReadySetup();
@@ -341,7 +341,7 @@ function addEventList(s, col_span, events) {
         }
 // note: data is written as needed by existingRecordingString
 // which differs somewhat from existingRecordingSR
-        existingRecordingSR(s, col_span-2, bottomrow, events[day][1][event_][1][2], events[day][1][event_][1][0], events[day][1][event_][1][1], events[day][1][event_][1][3], events[day][1][event_][1][4], events[day][1][event_][1][5], events[day][1][event_][1][6], events[day][1][event_][1][7], events[day][1][event_][1][8], events[day][1][event_][1][9], events[day][1][event_][1][10], events[day][1][event_][1][11], events[day][1][event_][1][12], events[day][1][event_][1][13], events[day][1][event_][1][14], events[day][1][event_][1][15], events[day][1][event_][1][16], events[day][1][event_][1][17], events[day][1][event_][1][18], events[day][1][event_][1][19], events[day][1][event_][1][21])
+        existingRecordingSR(s, col_span-2, bottomrow, events[day][1][event_][1][2], events[day][1][event_][1][0], events[day][1][event_][1][1], events[day][1][event_][1][3], events[day][1][event_][1][4], events[day][1][event_][1][5], events[day][1][event_][1][6], events[day][1][event_][1][7], events[day][1][event_][1][8], events[day][1][event_][1][9], events[day][1][event_][1][10], events[day][1][event_][1][11], events[day][1][event_][1][12], events[day][1][event_][1][13], events[day][1][event_][1][14], events[day][1][event_][1][15], events[day][1][event_][1][16], events[day][1][event_][1][17], events[day][1][event_][1][18], events[day][1][event_][1][19], events[day][1][event_][1][21], events[day][1][event_][1][23])
       }
     }
   }

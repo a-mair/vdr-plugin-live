@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-14 16:15+0200\n"
+"POT-Creation-Date: 2026-06-16 09:08+0200\n"
 "PO-Revision-Date: 2012-12-03 21:41+0100\n"
 "Last-Translator: Milan Hrala <hrala.milan@gmail.com>\n"
 "Language-Team: Slovak <hrala.milan@gmail.com>\n"
@@ -212,9 +212,6 @@ msgstr "Znovu zmazať informácie"
 
 msgid "Delete marks information"
 msgstr "Vymazať informačné značky"
-
-msgid "Copy only"
-msgstr "Iba kopírovať"
 
 msgid "Title"
 msgstr "V názve"
@@ -664,6 +661,9 @@ msgid "Recording length"
 msgstr ""
 
 msgid "h"
+msgstr ""
+
+msgid "Number of pes files"
 msgstr ""
 
 msgid "Number of ts files"
@@ -1299,6 +1299,9 @@ msgstr ""
 
 msgid "Delete permanently"
 msgstr ""
+
+#~ msgid "Copy only"
+#~ msgstr "Iba kopírovať"
 
 #~ msgid "Recordings"
 #~ msgstr "Nahrávky"
