@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 3.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-15 12:05+0200\n"
+"POT-Creation-Date: 2026-06-16 19:07+0200\n"
 "PO-Revision-Date: 2026-01-27 20:15+0200\n"
 "Last-Translator: Stefan Hofmann <info@stefans-galerie.de>\n"
 "Language-Team: see developers in README\n"
@@ -31,6 +31,17 @@ msgstr "Aufzeichnung löschen [Name nicht verfügbar]?"
 #, c-format
 msgid "Delete the following %i recordings?"
 msgstr "Folgende %i Aufzeichnungen löschen?"
+
+#, c-format
+msgid "Move recording \"%s\"?"
+msgstr "Aufzeichnung \"%s\" verschieben?"
+
+msgid "Move recording [recording name unavailable]?"
+msgstr "Aufzeichnung verschieben [Name nicht verfügbar]?"
+
+#, c-format
+msgid "Move the following %i recordings?"
+msgstr "Folgende %i Aufzeichnungen verschieben?"
 
 #, c-format
 msgid "Restore recording \"%s\"?"
@@ -665,10 +676,10 @@ msgstr "Länge der Aufzeichnung"
 msgid "h"
 msgstr "h"
 
-msgid "Number of pes files"
-msgstr "Zahl der pes Dateien"
+msgid "Number of PES files"
+msgstr "Zahl der PES Dateien"
 
-msgid "Number of ts files"
+msgid "Number of TS files"
 msgstr "Zahl der TS Dateien"
 
 msgid "Find more in the IMDb (Internet Movie Database)"
@@ -992,6 +1003,9 @@ msgstr "Keine Aufzeichnungen vorhanden"
 msgid "No deleted recordings found"
 msgstr "Keine gelöschten Aufzeichnungen vorhanden"
 
+msgid "Move selected recordings to folder"
+msgstr "Ausgewählte Aufzeichnungen verschieben, in das Verzeichnis"
+
 msgid "Delete selected recordings"
 msgstr "Ausgewählte Aufzeichnungen löschen"
 
@@ -1301,6 +1315,12 @@ msgstr "Aufzeichnung dauerhaft löschen"
 
 msgid "Delete permanently"
 msgstr "Dauerhaft löschen"
+
+msgid "Move recordings"
+msgstr "Aufzeichnungen verschieben"
+
+msgid "Move"
+msgstr "Verschieben"
 
 #~ msgid "Copy only"
 #~ msgstr "Nur kopieren"

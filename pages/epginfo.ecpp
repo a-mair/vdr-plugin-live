@@ -13,6 +13,7 @@ using namespace vdrlive;
 </%pre>
 <%args>
   std::string epgid;
+  std::string folder;
   int history_num_back = 0;
   std::string async;
   std::string tab;
@@ -46,7 +47,7 @@ using namespace vdrlive;
 // we use objects of these types during creation of this page, so keep the locks
 
   if (confirm) {
-      dsyslog2("pages/epginfo.ecpp, confirm popup, epgid = ", epgid, " pageTitle = ", pageTitle);
+      dsyslog2("pages/epginfo.ecpp, confirm popup, epgid = ", epgid, " folder = ", folder, " pageTitle = ", pageTitle);
   } else if (!epgid.empty()) {
 
     const std::string_view recording_s("recording_");
@@ -209,7 +210,7 @@ using namespace vdrlive;
         <div class="tabular buttons">
 %         if (need_confirmation) {
           <div class="about_left">
-            <button id="confirm_<$ epgid $>" class="green" type="button" onclick="action_back('<$ epgid $>', <$ history_num_back $>)"><$confirm->get_prompt()$></button>
+            <button id="confirm_<$ epgid $>" class="green" type="button" onclick="action_back('<$ epgid $>', '<$ folder $>', <$ history_num_back $>)"><$confirm->get_prompt()$></button>
           </div>
 %         }
           <div class="about_right">

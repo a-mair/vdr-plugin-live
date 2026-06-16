@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-16 09:08+0200\n"
+"POT-Creation-Date: 2026-06-16 21:18+0200\n"
 "PO-Revision-Date: 2025-10-05 18:19+0200\n"
 "Last-Translator: Tomasz Maciej Nowak <tomek_n@o2.pl>\n"
 "Language-Team: see developers in README\n"
@@ -29,6 +29,17 @@ msgstr ""
 
 #, c-format
 msgid "Delete the following %i recordings?"
+msgstr ""
+
+#, c-format
+msgid "Move recording \"%s\"?"
+msgstr ""
+
+msgid "Move recording [recording name unavailable]?"
+msgstr ""
+
+#, c-format
+msgid "Move the following %i recordings?"
 msgstr ""
 
 #, c-format
@@ -664,10 +675,10 @@ msgstr "Długość nagrania"
 msgid "h"
 msgstr "godz"
 
-msgid "Number of pes files"
+msgid "Number of PES files"
 msgstr ""
 
-msgid "Number of ts files"
+msgid "Number of TS files"
 msgstr "Liczba plików ts"
 
 msgid "Find more in the IMDb (Internet Movie Database)"
@@ -991,6 +1002,9 @@ msgstr "Nie znaleziono nagrań"
 msgid "No deleted recordings found"
 msgstr ""
 
+msgid "Move selected recordings to folder"
+msgstr ""
+
 msgid "Delete selected recordings"
 msgstr "Usuń zaznaczone"
 
@@ -1299,6 +1313,12 @@ msgid "Permanently delete recording"
 msgstr ""
 
 msgid "Delete permanently"
+msgstr ""
+
+msgid "Move recordings"
+msgstr ""
+
+msgid "Move"
 msgstr ""
 
 #~ msgid "Copy only"

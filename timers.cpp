@@ -515,7 +515,7 @@ namespace vdrlive {
     if (timer) return std::string(cToSvFormatted(tr("Delete timer \"%s\"?"), timer->File() ));
     return tr("Delete timer [timer name unavailable]?");
   }
-  int TimerManager_DeleteTimer(cSv id, std::string &message) {
+  int TimerManager_DeleteTimer(cSv id, std::string &message, cSv folder) {
     std::string tId = SortedTimers::DecodeDomId(id);
     int timer_id;
     const char *remote;

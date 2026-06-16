@@ -55,9 +55,9 @@ function addErrorIcon(s, numErrors, durationDeviation, duration, numTsFiles, isP
   s.a += '<p><$tr("Recording length")$>: '
   s.a += duration
   if (isPesRecording) {
-    s.a += ' <$tr("h")$></p><p><$tr("Number of pes files")$>: '
+    s.a += ' <$tr("h")$></p><p><$tr("Number of PES files")$>: '
   } else {
-    s.a += ' <$tr("h")$></p><p><$tr("Number of ts files")$>: '
+    s.a += ' <$tr("h")$></p><p><$tr("Number of TS files")$>: '
   }
   s.a += String(numTsFiles)
   s.a += '</p>\" /> </div>'
@@ -66,13 +66,22 @@ function addErrorIcon(s, numErrors, durationDeviation, duration, numTsFiles, isP
 function addHdSdIcon(s, hdsd, toolTip, frameParams) {
   s.a += '<div class=\"recording_sd_hd\"><img class=\"sdhd\" src=\"<$GetThemedLinkPrefixImg()$>'
   s.a += hdsd
-  s.a += '.svg\" title=\"<p>'
-  s.a += toolTip
-  if (frameParams.length != 0) {
-    s.a += '</p><p>'
-    s.a += frameParams
+  s.a += '.svg\"'
+  if (toolTip || frameParams) {
+    s.a += ' title=\"'
+    if (toolTip) {
+      s.a += '<p>'
+      s.a += toolTip
+      s.a += '</p>'
+    }
+    if (frameParams) {
+      s.a += '<p>'
+      s.a += frameParams
+      s.a += '</p>'
+    }
+    s.a += '\"'
   }
-  s.a += '</p>\" /></div>'
+  s.a += ' /></div>'
 }
 
 %// do not HTML-encode name; will be URI-encoded here!

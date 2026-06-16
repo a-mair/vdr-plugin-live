@@ -155,6 +155,7 @@ namespace vdrlive {
       static int DeleteRecording(cSv hash, std::string *name = nullptr);
       static int RestoreRecording(cSv hash, std::string *name = nullptr);
       static int PurgeRecording(cSv hash, std::string *name = nullptr);
+      static int MoveRecording(cSv hash, cSv folder, std::string *name = nullptr);
 
       /**
        *  Is this recording still recording?
@@ -190,10 +191,12 @@ namespace vdrlive {
   std::string RecordingsManager_DeleteConfirmationQuestion(cSv recordings_hash);
   std::string RecordingsManager_RestoreConfirmationQuestion(cSv recordings_hash);
   std::string RecordingsManager_PurgeConfirmationQuestion(cSv recordings_hash);
+  std::string RecordingsManager_MoveConfirmationQuestion(cSv recordings_hash);
   std::vector<std::string> RecordingsManager_object_names(cSv recordings_hash);
-  int RecordingsManager_DeleteRecording(cSv recordings_hash, std::string &message);
-  int RecordingsManager_RestoreRecording(cSv recordings_hash, std::string &message);
-  int RecordingsManager_PurgeRecording(cSv recordings_hash, std::string &message);
+  int RecordingsManager_DeleteRecording(cSv recordings_hash, std::string &message, cSv folder=cSv() );
+  int RecordingsManager_RestoreRecording(cSv recordings_hash, std::string &message, cSv folder=cSv() );
+  int RecordingsManager_PurgeRecording(cSv recordings_hash, std::string &message, cSv folder=cSv() );
+  int RecordingsManager_MoveRecording(cSv recordings_hash, std::string &message, cSv folder=cSv() );
 
   /**
    * Class containing possible recordings compare functions

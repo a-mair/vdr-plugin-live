@@ -13,6 +13,7 @@ using namespace vdrlive;
 </%pre>
 <%args>
   std::string id;  // action ID, what needs to be done
+  std::string folder;  // in case of action == "mov": Destination folder for move
   std::string async;
 </%args>
 <%include>page.eh</%include>
@@ -33,11 +34,11 @@ using namespace vdrlive;
   }
 
   std::string message;
-  int result = confirm->perform_action(id, message);
+  int result = confirm->perform_action(id, message, folder);
   if (result != 0)
-    esyslog2("in action.ecpp, id = ", id, " error_message = ", message);
+    esyslog2("in action.ecpp, id = ", id, " folder = \"", folder, "\" error_message = ", message);
   else
-    dsyslog2("in action.ecpp, id = ", id, " message = ", message);
+    dsyslog2("in action.ecpp, id = ", id, " folder = \"", folder, "\" message = ", message);
 
   bool ajaxReq = !async.empty() && (parse_int<int>(async) != 0);
   if (!ajaxReq) {

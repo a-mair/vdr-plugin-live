@@ -216,6 +216,41 @@ async function deleteMarkedRecordings(form, act) {
   } else alert("ERROR createHtml.js, deleteMarkedRecordings, liveEnhanced not defined");
 
 }
+async function moveMarkedRecordings(form) {
+// moveMarkedRecordings
+  var folder;
+  var newdir = form.getElementById("newdir");
+  if (newdir.disabled) {
+    var dir = form.getElementById("directory");
+    folder = dir.value;
+  } else {
+    folder = newdir.value;
+  }
+  var inputs = form.getElementsByTagName('input');
+  let epgid='mov_recording_';
+  for (var i = 0; i<inputs.length; i++) {
+    if (inputs[i].type == 'checkbox' && inputs[i].checked &&
+        inputs[i].value && inputs[i].value.startsWith('recording_')) {
+      const id = inputs[i].value.substring(10);
+      epgid = epgid + id + "_";
+    }
+  }
+  if (is_popup_disabled(epgid)) {
+    await action(epgid, folder);
+    location.reload();
+    return;
+  }
+  if (typeof liveEnhanced !== 'undefined') {
+    var event_ = new Event(event);
+    var infowin = new InfoWin.Ajax(epgid, "epginfo.html?epgid="+epgid+"&folder="+encodeURIComponent(folder), $merge(liveEnhanced.options.infoWinOptions, {
+                      onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced)
+                    }));
+    infowin.options.offsets.y = -400;
+    infowin.show(event_);
+    event_.stop();
+  } else alert("ERROR createHtml.js, moveMarkedRecordings, liveEnhanced not defined");
+
+}
 async function execute(url) {
 /*
  * Input:
@@ -228,8 +263,8 @@ async function execute(url) {
  *               - bool   success
  *               - string error  (only if success == false). Human readable text
 */
-  let enc = encodeURI(url + '&async=1');
-  const response = await fetch(encodeURI(url + '&async=1'), {
+//  let enc = encodeURI(url + '&async=1');
+  const response = await fetch(url + '&async=1', {
     method: "GET",
     headers: {
      "Content-Type": "application/x-www-form-urlencoded",
@@ -274,18 +309,23 @@ async function execute(url) {
   ret_object.error = error_child_nodes[0].nodeValue;
   return ret_object;
 }
-async function action(id)
+async function action(id, folder)
 {
   let cb = document.getElementById("disable_popup_" + id);
   if (cb && cb.type == 'checkbox' && cb.checked) {
       disable_popup(id);
   }
-  var ret_object = await execute('action.html?id=' + id);
+  var ret_object;
+  if (folder) {
+    ret_object = await execute('action.html?id=' + id + '&folder=' + encodeURIComponent(folder));
+  } else {
+    ret_object = await execute('action.html?id=' + id);
+  }
   if (!ret_object.success) alert (ret_object.error);
 }
-async function action_back(id, history_num_back)
+async function action_back(id, folder, history_num_back)
 {
-  await action(id);
+  await action(id, folder);
   history.go(-history_num_back);
 }
 function back_depending_referrer(back_epginfo, back_others) {

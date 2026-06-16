@@ -285,6 +285,31 @@ void RecordingsManager::DeleteMarks(cSv hash)
   }
 }
 
+int RecordingsManager::MoveRecording(cSv hash, cSv folder, std::string *name) {
+// return values
+//   0 sucess
+//   1 no recording with this hash
+//   2 recording is in use
+//   3 other error returned by recording->ChangeName(...)
+  if (hash.length() != 32) dsyslog3("hash = \"", hash, "\"");
+  cToSvConcat NewName;
+  if (!folder.empty() ) NewName.concat(folder, '~');
+  {
+    LOCK_RECORDINGS_WRITE;
+    cRecording *recording = const_cast<cRecording *>(RecordingsManager::GetByHash(hash, Recordings));
+    if (!recording) return 1;
+    cSv name_l(recording->Name());
+    if (name) *name = name_l;
+    if (recording->IsInUse() ) return 2;
+    if (StillRecording(recording->FileName())) return 2; // check recording by another VDR
+    cSv::size_type pos = name_l.rfind('~');
+    if (pos == cSv::npos) NewName.concat(name_l);
+    else NewName.concat(name_l.substr(pos+1));
+    isyslog2("move \"", name_l, "\" to \"", NewName, "\"");
+    if (!recording->ChangeName(NewName.c_str() )) return 3;
+  }
+  return 0;
+}
 int RecordingsManager::DeleteRecording(cSv hash, std::string *name)
 {
   if (hash.length() != 32) dsyslog3("hash = \"", hash, "\"");
@@ -433,6 +458,16 @@ std::string RecordingsManager_DeleteConfirmationQuestion(cSv recordings_hash) {
   }
   return std::string(cToSvFormatted(tr("Delete the following %i recordings?"), num_recs));
 }
+std::string RecordingsManager_MoveConfirmationQuestion(cSv recordings_hash) {
+  int num_recs = get_number_of_objects(recordings_hash);
+  if (num_recs == 0) return tr("Nothing selected!");
+  if (num_recs == 1) {
+    const char *name = RecordingsManager::GetNameByHash(RecordingsManager::GetHash(recordings_hash.substr(0, 42)));
+    if (name) return std::string(cToSvFormatted(tr("Move recording \"%s\"?"), name));
+    return tr("Move recording [recording name unavailable]?");
+  }
+  return std::string(cToSvFormatted(tr("Move the following %i recordings?"), num_recs));
+}
 std::string RecordingsManager_RestoreConfirmationQuestion(cSv recordings_hash) {
   int num_recs = get_number_of_objects(recordings_hash);
   if (num_recs == 0) return tr("Nothing selected!");
@@ -454,7 +489,7 @@ std::string RecordingsManager_PurgeConfirmationQuestion(cSv recordings_hash) {
   return std::string(cToSvFormatted(tr("Permanently delete the following %i recordings?"), num_recs));
 }
 
-int RecordingsManager_DeleteRecording(cSv recordings_hash, std::string &message) {
+int RecordingsManager_DeleteRecording(cSv recordings_hash, std::string &message, cSv folder) {
   int result = 0;
   std::string name;
   if (recordings_hash.length() == 42) {
@@ -483,7 +518,26 @@ int RecordingsManager_DeleteRecording(cSv recordings_hash, std::string &message)
   }
   return result;
 }
-int RecordingsManager_RestoreRecording(cSv recordings_hash, std::string &message) {
+int RecordingsManager_MoveRecording(cSv recordings_hash, std::string &message, cSv folder) {
+  int result = 0;
+  std::string name;
+  message.clear();
+  for (cSv id: cSplit(recordings_hash.substr(10), '_')) if (id.length() == 32) {
+    int res= RecordingsManager::MoveRecording(id, folder, &name);
+    if (res!= 0) {
+      switch (res) {
+        case 1: message.append("Error move recording: Couldn't find recording ID "); break;
+        case 2: message.append(cToSvFormatted("Error move recording %s is still in use, recording ID ", name.c_str())); break;
+        default: message.append(cToSvFormatted("Error move recording %s. Other error. Recording ID ", name.c_str())); break;
+      }
+      message.append(id);
+      message.append(";");
+      result += 1;
+    }
+  }
+  return result;
+}
+int RecordingsManager_RestoreRecording(cSv recordings_hash, std::string &message, cSv folder) {
   int result = 0;
   std::string name;
   if (recordings_hash.length() == 42) {
@@ -510,7 +564,7 @@ int RecordingsManager_RestoreRecording(cSv recordings_hash, std::string &message
   }
   return result;
 }
-int RecordingsManager_PurgeRecording(cSv recordings_hash, std::string &message) {
+int RecordingsManager_PurgeRecording(cSv recordings_hash, std::string &message, cSv folder) {
   int result = 0;
   std::string name;
   if (recordings_hash.length() == 42) {

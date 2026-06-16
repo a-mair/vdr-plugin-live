@@ -429,7 +429,7 @@ std::string SearchTimers_DeleteConfirmationQuestion(cSv id) {
   return std::string(cToSvFormatted(tr("Delete search timer \"%s\"?"), search->Search().c_str()  ));
 }
 
-int SearchTimers_DeleteSearchTimer(cSv id, std::string &message) {
+int SearchTimers_DeleteSearchTimer(cSv id, std::string &message, cSv folder) {
 
   SearchTimers searchTimers;
   SearchTimer* search = searchTimers.GetByTimerId(id);
