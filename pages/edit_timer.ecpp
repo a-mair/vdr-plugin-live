@@ -169,7 +169,7 @@ TimerConflictNotifier timerNotifier;
     // title or aux string it breaks parsing of timer definition
     // in VDRs cTimer::Parse method.  The '|' will be replaced
     // back to ':' by the cTimer::Parse() method.
-    TimerManager().UpdateTimer(timerId, remoteServerName.c_str(), oldRemote.c_str(), channel, builder);
+    TimerManager().UpdateTimer(timerId, remoteServerName, oldRemote, builder);
     timerNotifier.SetTimerModification();
 </%cpp>
 <!DOCTYPE html>
@@ -217,7 +217,7 @@ TimerConflictNotifier timerNotifier;
     active = timer->Flags() & tfActive;
     channel = timer->Channel()->GetChannelID();
     title = timer->File() ? timer->File() : "";
-    remoteServerName = timer->Remote() ? timer->Remote() : "";
+    remoteServerName = cSv(timer->Remote() );
 //  dsyslog("live: remoteServerName '%s'", remoteServerName.c_str());
     if (LiveFeatures<features::epgsearch>().Recent() ) {
       std::string::size_type tilde_found = title.rfind('~');
@@ -364,24 +364,15 @@ TimerConflictNotifier timerNotifier;
           <tr>
             <td class="label leftcol"><div class="withmargin"><$ tr("Server" ) $>:</div></td>
             <td class="rightcol"><select name="remoteServerName" size="1" id="remoteServerName" style="margin-top: 5px">
-              <option/>
-<%cpp>
-              for (int i = 0; i < svdrpServerNames.Size(); i++) {
-              std::string rsrv = svdrpServerNames[i];
-</%cpp>
-              <option
-%                if (rsrv == remoteServerName) {
-                selected="selected"
-%                }
-              ><$ rsrv $></option>
-<%cpp>
-              }
-</%cpp>
-              </select>
-            </td>
+              <option <?? remoteServerName.empty() ? "selected=\"selected\"" ?> />
+%             for (int i = 0; i < svdrpServerNames.Size(); i++) {
+%               cSv rsrv = svdrpServerNames[i];
+                <option <?? rsrv == remoteServerName ? "selected=\"selected\"" ?> ><$ rsrv $></option>
+%             }
+            </select></td>
           </tr>
 <%cpp>
-          svdrpServerNames.Clear();
+            svdrpServerNames.Clear();
           }
 </%cpp>
 <%cpp>

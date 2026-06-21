@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-16 21:18+0200\n"
+"POT-Creation-Date: 2026-06-21 11:43+0200\n"
 "PO-Revision-Date: 2011-12-25 23:22+0100\n"
 "Last-Translator: Diego Pierotto <vdr-italian@tiscali.it>\n"
 "Language-Team: see developers in README\n"
@@ -36,14 +36,14 @@ msgid "Delete the following %i recordings?"
 msgstr ""
 
 #, c-format
-msgid "Move recording \"%s\"?"
+msgid "Move recording \"%s\" to folder \"%.*s\"?"
 msgstr ""
 
 msgid "Move recording [recording name unavailable]?"
 msgstr ""
 
 #, c-format
-msgid "Move the following %i recordings?"
+msgid "Move the following %i recordings to folder \"%.*s\"?"
 msgstr ""
 
 #, c-format
@@ -148,6 +148,9 @@ msgstr "Nome amministratore"
 msgid "Admin password"
 msgstr "Password amministratore"
 
+msgid "Error in timer settings"
+msgstr "Errore nelle impostazioni timer"
+
 #, c-format
 msgid "%A, %x"
 msgstr "%A, %x"
@@ -155,14 +158,11 @@ msgstr "%A, %x"
 msgid "Search timer"
 msgstr "Timer di ricerca"
 
-msgid "Error in timer settings"
-msgstr "Errore nelle impostazioni timer"
+msgid "Timer not defined"
+msgstr "Timer non definito"
 
 msgid "Timer already defined"
 msgstr "Timer già definito"
-
-msgid "Timer not defined"
-msgstr "Timer non definito"
 
 #, c-format
 msgid "Delete timer \"%s\"?"
@@ -1006,7 +1006,7 @@ msgstr "Nessuna registrazione trovata"
 msgid "No deleted recordings found"
 msgstr ""
 
-msgid "Move selected recordings to folder"
+msgid "Move selected recordings"
 msgstr ""
 
 msgid "Delete selected recordings"

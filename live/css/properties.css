@@ -597,6 +597,20 @@
   inherits: false;
 }
 
+@property --button-margin-top-bottom {
+  /* distance between top/bottom border and label */
+  syntax: "*";
+  initial-value: 0.25ex;
+  inherits: false;
+}
+
+@property --button-margin-left-right {
+  /* distance between left/right border and label */
+  syntax: "*";
+  initial-value: 0.4ch;
+  inherits: false;
+}
+
 /* OSD settings */
 
 @property --osd-screen-width {

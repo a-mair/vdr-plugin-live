@@ -106,22 +106,22 @@ namespace vdrlive {
       std::string remoteServer = svdrpServerNames[i];
 //      dsyslog("live: TimerConflicts::GetRemote() found remote server '%s'", remoteServer.c_str());
       cStringList response;
-                        std::string command = "PLUG epgsearch lscc";
-                        bool svdrpOK = ExecSVDRPCommand(remoteServer.c_str(), command.c_str(), &response);
-                        if ( !svdrpOK ) {
-                                esyslog("live: TimerConflicts::GetRemote() svdrp command '%s' on remote server '%s'failed", command.c_str(), remoteServer.c_str());
-                        }
-                        else {
-                                for (int i = 0; i < response.Size(); i++) {
-                                        int code = SVDRPCode(response[i]);
-//          dsyslog("live: GetRemote() response[i] '%s'", response[i]);
+      std::string command = "PLUG epgsearch lscc";
+      bool svdrpOK = ExecSVDRPCommand(remoteServer.c_str(), command.c_str(), &response);
+      if ( !svdrpOK ) {
+        esyslog("live: TimerConflicts::GetRemote() svdrp command '%s' on remote server '%s'failed", command.c_str(), remoteServer.c_str());
+      }
+      else {
+        for (int i = 0; i < response.Size(); i++) {
+          int code = SVDRPCode(response[i]);
+//        dsyslog("live: GetRemote() response[i] '%s'", response[i]);
           switch ( code ) {
-                                          case 900: {
+            case 900: {
               std::string rConflict = response[i];
               std::string remConflict = rConflict.substr(4);
               remConflict.append("|");
               remConflict.append(remoteServer);
-//              dsyslog("live: TimerConflicts::GetRemote() found remote conflict '%s' ", remConflict.c_str());
+//            dsyslog("live: TimerConflicts::GetRemote() found remote conflict '%s' ", remConflict.c_str());
               conflicts.push_back(remConflict);
               break;
             }
@@ -133,10 +133,10 @@ namespace vdrlive {
             }
           }
         }
-                                if ( svdrpOK ) {
-//          dsyslog("live: TimerConflicts::GetRemote() on server '%s' successful", remoteServer.c_str());
+        if ( svdrpOK ) {
+//        dsyslog("live: TimerConflicts::GetRemote() on server '%s' successful", remoteServer.c_str());
         }
-                                else {
+        else {
           esyslog("live: TimerConflicts::GetRemote() on server '%s' failed", remoteServer.c_str());
         }
       }

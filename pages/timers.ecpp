@@ -44,7 +44,7 @@ using namespace vdrlive;
     if (action == "delete") {
       if (!cUser::CurrentUserHasRightTo(UR_DELTIMERS))
         throw HtmlError( tr("Sorry, no permission. Please contact your administrator!") );
-      TimerManager().DelTimer(timer_id, remote);
+      TimerManager().DeleteTimer(timer_id, remote);
       timerNotifier.SetTimerModification();
     }
     if (action == "toggle") {

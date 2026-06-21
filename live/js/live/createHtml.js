@@ -188,16 +188,30 @@ function clearCheckboxes(form) {
     }
   }
 }
-async function deleteMarkedRecordings(form, act) {
-// deleteMarkedRecordings
-// act = 'del' or 'pur'
-  var inputs = form.getElementsByTagName('input');
+async function actionOnMarkedRecordings(form, act) {
+// act = 'del' or 'pur' or "res' or 'mov'
   let epgid=act+'_recording_';
+  if (act == 'mov') {
+    var folder;
+    var newdir = form.getElementById("newdir");
+    if (newdir.disabled) {
+      var dir = form.getElementById("directory");
+      folder = dir.value;
+    } else {
+      folder = newdir.value;
+    }
+    epgid += folder.length;
+    epgid += '_';
+    epgid += folder;
+    epgid += '_';
+  }
+
+  var inputs = form.getElementsByTagName('input');
   for (var i = 0; i<inputs.length; i++) {
     if (inputs[i].type == 'checkbox' && inputs[i].checked &&
         inputs[i].value && inputs[i].value.startsWith('recording_')) {
-      const id = inputs[i].value.substring(10);
-      epgid = epgid + id + "_";
+      epgid += inputs[i].value.substring(10);
+      epgid += '_';
     }
   }
   if (is_popup_disabled(epgid)) {
@@ -207,48 +221,13 @@ async function deleteMarkedRecordings(form, act) {
   }
   if (typeof liveEnhanced !== 'undefined') {
     var event_ = new Event(event);
-    var infowin = new InfoWin.Ajax(epgid, "epginfo.html?epgid="+epgid, $merge(liveEnhanced.options.infoWinOptions, {
-                      onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced)
-                    }));
+    var infowin = new InfoWin.Ajax(epgid, "epginfo.html?epgid="+encodeURIComponent(epgid), $merge(liveEnhanced.options.infoWinOptions,
+      { onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced) }
+    ));
     infowin.options.offsets.y = -400;
     infowin.show(event_);
     event_.stop();
-  } else alert("ERROR createHtml.js, deleteMarkedRecordings, liveEnhanced not defined");
-
-}
-async function moveMarkedRecordings(form) {
-// moveMarkedRecordings
-  var folder;
-  var newdir = form.getElementById("newdir");
-  if (newdir.disabled) {
-    var dir = form.getElementById("directory");
-    folder = dir.value;
-  } else {
-    folder = newdir.value;
-  }
-  var inputs = form.getElementsByTagName('input');
-  let epgid='mov_recording_';
-  for (var i = 0; i<inputs.length; i++) {
-    if (inputs[i].type == 'checkbox' && inputs[i].checked &&
-        inputs[i].value && inputs[i].value.startsWith('recording_')) {
-      const id = inputs[i].value.substring(10);
-      epgid = epgid + id + "_";
-    }
-  }
-  if (is_popup_disabled(epgid)) {
-    await action(epgid, folder);
-    location.reload();
-    return;
-  }
-  if (typeof liveEnhanced !== 'undefined') {
-    var event_ = new Event(event);
-    var infowin = new InfoWin.Ajax(epgid, "epginfo.html?epgid="+epgid+"&folder="+encodeURIComponent(folder), $merge(liveEnhanced.options.infoWinOptions, {
-                      onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced)
-                    }));
-    infowin.options.offsets.y = -400;
-    infowin.show(event_);
-    event_.stop();
-  } else alert("ERROR createHtml.js, moveMarkedRecordings, liveEnhanced not defined");
+  } else alert("ERROR createHtml.js, actionOnMarkedRecordings, liveEnhanced not defined");
 
 }
 async function execute(url) {
@@ -263,7 +242,6 @@ async function execute(url) {
  *               - bool   success
  *               - string error  (only if success == false). Human readable text
 */
-//  let enc = encodeURI(url + '&async=1');
   const response = await fetch(url + '&async=1', {
     method: "GET",
     headers: {
@@ -309,24 +287,32 @@ async function execute(url) {
   ret_object.error = error_child_nodes[0].nodeValue;
   return ret_object;
 }
-async function action(id, folder)
-{
+function disable_popup_if_user_checked(id, param) {
+  // id is the hash
+  // param is the epgid
   let cb = document.getElementById("disable_popup_" + id);
   if (cb && cb.type == 'checkbox' && cb.checked) {
-      disable_popup(id);
+    disable_popup(param);
   }
+}
+async function action(id)
+{
+  let id_enc = encodeURIComponent(id);
   var ret_object;
-  if (folder) {
-    ret_object = await execute('action.html?id=' + id + '&folder=' + encodeURIComponent(folder));
-  } else {
-    ret_object = await execute('action.html?id=' + id);
-  }
+  ret_object = await execute('action.html?id=' + id_enc);
   if (!ret_object.success) alert (ret_object.error);
 }
-async function action_back(id, folder, history_num_back)
+async function action_back(id, param, history_num_back)
 {
-  await action(id, folder);
+  disable_popup_if_user_checked(id, param);
+  await action(param);
   history.go(-history_num_back);
+}
+async function createTimer(epgid) {
+  ret_object = await execute('create_timer.html?epgid=event_' + epgid);
+  if (!ret_object.success) alert (ret_object.error);
+  location.reload();
+  return false;
 }
 function back_depending_referrer(back_epginfo, back_others) {
   if (document.referrer.indexOf("epginfo.html?") != -1) {

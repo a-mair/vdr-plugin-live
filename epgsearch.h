@@ -335,7 +335,7 @@ private:
 };
 
 std::string SearchTimers_DeleteConfirmationQuestion(cSv id);
-int SearchTimers_DeleteSearchTimer(cSv id, std::string &message, cSv folder);
+int SearchTimers_DeleteSearchTimer(cSv id, std::string &message);
 
 class Blacklist
 {

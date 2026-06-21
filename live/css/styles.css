@@ -986,7 +986,7 @@ button {
   height: fit-content;
   min-width: var(--button-width);
   min-height: var(--button-height);
-  padding: 0.2ex 0.4ch 0.3ex 0.4ch;
+  padding: var(--button-margin-top-bottom) var(--button-margin-left-right);
   font-size: var(--text-font-size);
   text-align: center;
 }
@@ -1038,8 +1038,14 @@ button.yellow {
   margin-left: 0px;
 }
 
+#form_recordings div.button-panel span.label {
+  margin-left: var(--margin-left-right);
+  font-weight: bold;
+}
+
+#form_recordings div.button-panel div.buttons button.move,
 #form_recordings div.button-panel div.buttons button.delete {
-  min-width: calc(var(--button-width) * 2.0);
+  min-width: calc(var(--button-width) * 2.2);
 }
 
 #form_recordings div.button-panel div.buttons button.restore,
@@ -2301,6 +2307,8 @@ table.form > tbody > tr.permissions > td.rightcol > div {
   margin: var(--text-line-gap) 0px;
 }
 
+form div.with-tooltip,
+form div.with-action-icon,
 table.form div.with-tooltip,
 table.form div.with-action-icon {
   display: inline-flex;
@@ -2337,6 +2345,17 @@ div.buttons {
   flex-flow: row wrap;
   gap: var(--margin-top-bottom) calc(var(--margin-left-right) * 2);
   margin: var(--margin-top-bottom) 0px;
+}
+
+div.buttons:has(.with-tooltip),
+div.buttons:has(.with-action-icon)
+{
+  align-items: flex-start;
+}
+
+div.buttons div.with-tooltip,
+div.buttons div.with-action-icon {
+  margin-top: calc(var(--button-border-width) + var(--button-margin-top-bottom));
 }
 
 table.dependent {

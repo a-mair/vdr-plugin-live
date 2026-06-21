@@ -498,6 +498,7 @@ table.listing.timerconflicts div.short {
 **   del: delete recording
 **   pur: permanently delete recording
 **   res: restore recording
+**   mov: restore recording
 **   det: delete timer
 **   des: delete search timer
 **
@@ -516,6 +517,7 @@ table.listing.timerconflicts div.short {
   --disable_popup_res_ms: 1;
   --disable_popup_pur:    1;
   --disable_popup_pur_ms: 1;
+  --disable_popup_mov_ms: 1;
   --disable_popup_det:    1;
   --disable_popup_des:    1;
 }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-16 21:18+0200\n"
+"POT-Creation-Date: 2026-06-21 11:43+0200\n"
 "PO-Revision-Date: 2007-08-19 20:15+0200\n"
 "Last-Translator: Rolf Ahrenberg <rahrenbe@cc.hut.fi>\n"
 "Language-Team: see developers in README\n"
@@ -31,14 +31,14 @@ msgid "Delete the following %i recordings?"
 msgstr ""
 
 #, c-format
-msgid "Move recording \"%s\"?"
+msgid "Move recording \"%s\" to folder \"%.*s\"?"
 msgstr ""
 
 msgid "Move recording [recording name unavailable]?"
 msgstr ""
 
 #, c-format
-msgid "Move the following %i recordings?"
+msgid "Move the following %i recordings to folder \"%.*s\"?"
 msgstr ""
 
 #, c-format
@@ -143,6 +143,9 @@ msgstr "Ylläpidon käyttäjätunnus"
 msgid "Admin password"
 msgstr "Ylläpidon salasana"
 
+msgid "Error in timer settings"
+msgstr "Ajastimen asetukset virheelliset"
+
 #, c-format
 msgid "%A, %x"
 msgstr "%A %x"
@@ -150,14 +153,11 @@ msgstr "%A %x"
 msgid "Search timer"
 msgstr "Hakuajastimet"
 
-msgid "Error in timer settings"
-msgstr "Ajastimen asetukset virheelliset"
+msgid "Timer not defined"
+msgstr "Ajastinta ei ole määritelty"
 
 msgid "Timer already defined"
 msgstr "Ajastin jo määritelty"
-
-msgid "Timer not defined"
-msgstr "Ajastinta ei ole määritelty"
 
 #, c-format
 msgid "Delete timer \"%s\"?"
@@ -1001,7 +1001,7 @@ msgstr "Tallenteita ei löydy"
 msgid "No deleted recordings found"
 msgstr ""
 
-msgid "Move selected recordings to folder"
+msgid "Move selected recordings"
 msgstr ""
 
 msgid "Delete selected recordings"

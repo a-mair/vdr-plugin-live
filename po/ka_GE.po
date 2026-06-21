@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-16 21:18+0200\n"
+"POT-Creation-Date: 2026-06-21 11:43+0200\n"
 "PO-Revision-Date: 2023-02-14 20:02+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -33,14 +33,14 @@ msgid "Delete the following %i recordings?"
 msgstr ""
 
 #, c-format
-msgid "Move recording \"%s\"?"
+msgid "Move recording \"%s\" to folder \"%.*s\"?"
 msgstr ""
 
 msgid "Move recording [recording name unavailable]?"
 msgstr ""
 
 #, c-format
-msgid "Move the following %i recordings?"
+msgid "Move the following %i recordings to folder \"%.*s\"?"
 msgstr ""
 
 #, c-format
@@ -145,6 +145,9 @@ msgstr "ადმინისტრატორით შესვლა"
 msgid "Admin password"
 msgstr "ადმინისტრატორის პაროლი"
 
+msgid "Error in timer settings"
+msgstr "შეცდომა ტაიმერების პარამეტრებში"
+
 #, c-format
 msgid "%A, %x"
 msgstr "%A, %x"
@@ -152,14 +155,11 @@ msgstr "%A, %x"
 msgid "Search timer"
 msgstr "ძებნისტაიმერი"
 
-msgid "Error in timer settings"
-msgstr "შეცდომა ტაიმერების პარამეტრებში"
+msgid "Timer not defined"
+msgstr "ტაიმერი აღწერილი არაა"
 
 msgid "Timer already defined"
 msgstr "ტაიმერი უკვე აღწერილია"
-
-msgid "Timer not defined"
-msgstr "ტაიმერი აღწერილი არაა"
 
 #, c-format
 msgid "Delete timer \"%s\"?"
@@ -1003,7 +1003,7 @@ msgstr "ჩანაწერების გარეშე"
 msgid "No deleted recordings found"
 msgstr ""
 
-msgid "Move selected recordings to folder"
+msgid "Move selected recordings"
 msgstr ""
 
 msgid "Delete selected recordings"

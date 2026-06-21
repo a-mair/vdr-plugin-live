@@ -5,14 +5,14 @@
 #include <exception.h>
 #include <tools.h>
 #include <users.h>
-#include <recman.h>
-#include <confirm.h>
+#include "setup.h"
+#include "timers.h"
 
 using namespace vdrlive;
 
 </%pre>
 <%args>
-  std::string id;  // action ID, what needs to be done
+  std::string epgid;  // create timer for this epg event
   std::string async;
 </%args>
 <%include>page.eh</%include>
@@ -20,24 +20,17 @@ using namespace vdrlive;
 // there must be no newline after <& login.authentication &> (before <%cpp>),
 // otherwise there will be a newline in the output, which will break the resulting XML file
 
-  const cConfirm *confirm = get_confirm_popup(id);
-  if (!confirm) {
-    cToSvConcat error_message("pages/action.ecpp, no action found for ID \"", id, "\"");
-    esyslog2(error_message);
-    throw HtmlError(error_message.c_str() );
-  }
-
-  if (!confirm->currentUserHasRight() ) {
-    esyslog2("pages/action.ecpp, no authorization for ", id);
+  if (!cUser::CurrentUserHasRightTo(UR_EDITTIMERS))
     throw HtmlError( tr("Sorry, no permission. Please contact your administrator!") );
-  }
 
   std::string message;
-  int result = confirm->perform_action(id, message);
-  if (result != 0)
-    esyslog2("in action.ecpp, id = ", id, "\" error_message = ", message);
-  else
-    dsyslog2("in action.ecpp, id = ", id, "\" message = ", message);
+  int result = TimerManager_CreateTimer(epgid);
+  switch (result) {
+    case 1: message = cToSvConcat("event ", epgid, " not found"); break;
+    case 2: message = cToSvConcat("timer already exists for epgid ", epgid); break;
+    case 3: message = cToSvConcat("error handling timer on remote server, epgid ", epgid); break;
+    default: break;
+  }
 
   bool ajaxReq = !async.empty() && (parse_int<int>(async) != 0);
   if (!ajaxReq) {
@@ -48,7 +41,7 @@ using namespace vdrlive;
 </%cpp>
 <b>Result of Request:</b>
 <hr/>
-ID:        <$ id $><br/>
+ID:        <$ epgid $><br/>
 Result:    <$ result==0?"success":"error" $><br/>
 Message:   <$ message $>
 <hr/>
@@ -56,7 +49,7 @@ Message:   <$ message $>
   } else {
 reply.setContentType( "application/xml" );
 </%cpp>
-<& xmlresponse.ajax name=("action") pname=("id") value=(id) result=(result==0) error=(result==0?std::string():message) &>
+<& xmlresponse.ajax name=("create_timer") pname=("epgid") value=(epgid) result=(result==0) error=(result==0?std::string():message) &>
 <%cpp>
   }
 </%cpp>

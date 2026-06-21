@@ -13,12 +13,38 @@
 #include <vdr/svdrp.h>
 #include "services.h"
 #include "setup.h"
+#include "epg_events.h"
 
 namespace vdrlive {
 
-  static char const* const TIMER_DELETE = "DELETE";
-  static char const* const TIMER_TOGGLE = "TOGGLE";
-
+  int TimerManager::ExecSVDRPCommandReportErrors(cStr ServerName, const char *Command, cSv context) {
+// like ExecSVDRPCommand, but report errors in syslog, together with context
+// Return codes:
+// 0 success
+// 1 error calling ExecSVDRPCommand
+// 2 error code != 250 returned by ExecSVDRPCommand
+// 3 no ServerName provided
+    if (ServerName.empty()) {
+      esyslog3("no ServerName provided ", context, "', svdrp command '", Command, "'");
+      return 3;
+    }
+    dsyslog2(context, " server '", ServerName, "', svdrp command '", Command, "'");
+    cStringList response;
+    if (!ExecSVDRPCommand(ServerName, Command, &response)) {
+      esyslog2(context, " server '", ServerName, "', svdrp command '", Command, "' failed");
+      return 1;
+    }
+    int ret = 0;
+    for (int i = 0; i < response.Size(); i++) {
+      int code = SVDRPCode(response[i]);
+      if (code != 250) {
+        esyslog2(context, " server '", ServerName, "', svdrp command '", Command, "' failed. Response: '", response[i], "'");
+        ret = 2;
+      }
+    }
+    if (ret == 2) throw HtmlError(tr("Error in timer settings") );
+    return ret;
+  }
   std::string SortedTimers::GetTimerId(cTimer const& timer)
   {
     return std::string(cToSvConcat(timer.Channel()->GetChannelID(), ':', timer.WeekDays(), ':', timer.Day(), ':', timer.Start(), ':', timer.Stop()) );
@@ -85,10 +111,10 @@ namespace vdrlive {
 
   std::string SortedTimers::GetTimerInfo(cTimer const& timer)
   {
-    std::stringstream info;
-    info << trVDR("Priority") << ": " << timer.Priority() << std::endl;
-    info << trVDR("Lifetime") << ": " << timer.Lifetime() << std::endl;
-    info << trVDR("VPS") << ": " << (timer.HasFlags(tfVps)?trVDR("yes"):trVDR("no")) << std::endl;
+    cToSvConcat info;
+    info << trVDR("Priority") << ": " << timer.Priority() << "\n";
+    info << trVDR("Lifetime") << ": " << timer.Lifetime() << "\n";
+    info << trVDR("VPS") << ": " << (timer.HasFlags(tfVps)?trVDR("yes"):trVDR("no")) << "\n";
 
     if (timer.Aux())
     {
@@ -97,13 +123,13 @@ namespace vdrlive {
       {
         cSv searchtimer = partInXmlTag(epgsearchinfo, "searchtimer");
         if (!searchtimer.empty())
-          info << tr("Search timer") << ": " << searchtimer << std::endl;
+          info << tr("Search timer") << ": " << searchtimer << "\n";
       }
     }
     if (!timer.Local()) {
-      info << trVDR("Record on") << ": " << timer.Remote() << std::endl;
+      info << trVDR("Record on") << ": " << timer.Remote() << "\n";
     }
-    return info.str();
+    return std::string(info);
   }
 
   std::string SortedTimers::TvScraperTimerInfo(cTimer const& timer, std::string &recID, std::string &recName) {
@@ -132,122 +158,80 @@ namespace vdrlive {
     return concat(data, " ", partInXmlTag(tvScraperInfo, "causedBy"));
   }
 
-  void TimerManager::UpdateTimer( int timerId, const char* remote, const char* oldRemote, const tChannelID& channel, cStr builder)
+  void TimerManager::UpdateTimer(int timerId, cStr remote, cStr oldRemote, cStr builder)
   {
-    if (remote && !*remote) remote = nullptr;
-    if (oldRemote && !*oldRemote) oldRemote = nullptr;
-    dsyslog("live: UpdateTimer() timerId '%d'", timerId);
-    dsyslog("live: UpdateTimer() remote '%s'", remote);
-    dsyslog("live: UpdateTimer() oldRemote '%s'", oldRemote);
-    dsyslog("live: UpdateTimer() channel '%s'", *(channel.ToString()));
-    dsyslog("live: UpdateTimer() channel '%s'", cToSvConcat(channel).c_str() );
-    dsyslog("live: UpdateTimer() builder '%s'", builder.c_str());
-
-    timerStruct timerData = { .id = timerId, .remote=remote, .oldRemote=oldRemote, .builder=std::string(builder) };
-
-    // dsyslog("live: SV: in UpdateTimer");
-    m_updateTimers.push_back( timerData );
-    // dsyslog("live: SV: wait for update");
-    DoUpdateTimers();
-    // dsyslog("live: SV: update done");
-
-    std::string error = GetError( timerData );
-    if ( !error.empty() )
-      throw HtmlError( error );
-  }
-
-  void TimerManager::DelTimer( int timerId, const char* remote )
-  {
-    dsyslog("live: DelTimer() timerId '%d'", timerId);
-    dsyslog("live: DelTimer() remote '%s'", remote);
-
-    timerStruct timerData{ .id=timerId, .remote=remote, .oldRemote=remote, .builder=TIMER_DELETE };
-
-    m_updateTimers.push_back( timerData );
-    DoUpdateTimers();
-
-    std::string error = GetError( timerData );
-    if ( !error.empty() )
-      throw HtmlError( error );
-  }
-
-  void TimerManager::ToggleTimerActive( int timerId, const char* remote)
-  {
-    timerStruct timerData{ .id=timerId, .remote=remote, .oldRemote=remote, .builder=TIMER_TOGGLE };
-
-    m_updateTimers.push_back( timerData );
-    DoUpdateTimers();
-
-    std::string error = GetError( timerData );
-    if ( !error.empty() )
-      throw HtmlError( error );
-  }
-
-  void TimerManager::DoUpdateTimers()
-  {
-    // dsyslog("live: SV: updating timers");
-    for ( TimerList::iterator timer = m_updateTimers.begin(); timer != m_updateTimers.end(); ++timer ) {
-//      dsyslog("live: DoUpdateTimers() timerid '%d'", timer->id );
-//      dsyslog("live: DoUpdateTimers() remote '%s'", timer->remote );
-//      dsyslog("live: DoUpdateTimers() builder '%s'", timer->builder.c_str() );
-      if ( timer->id == 0 ) // new timer
-        DoInsertTimer( *timer );
-      else if ( timer->builder == TIMER_DELETE ) // delete timer
-        DoDeleteTimer( *timer );
-      else if ( timer->builder == TIMER_TOGGLE ) // toggle timer
-        DoToggleTimer( *timer );
-      else // update timer
-        DoUpdateTimer( *timer );
+    if (timerId == 0 ) {
+// new timer
+      CreateTimer(remote, builder);
+      return;
     }
-    m_updateTimers.clear();
+// timer exists
+    if (remote != oldRemote) {
+      isyslog3("move timer from server '", oldRemote.empty()?"local":oldRemote, "' to server '", remote.empty()?"local":remote, "'");
+      DeleteTimer(timerId, oldRemote);
+      CreateTimer(remote, builder);
+      return;
+    }
+// timer stays on same server
+    if (!remote.empty() ) {
+      cToSvConcat command("MODT ", timerId, " ", builder);
+      int svdrpOK = ExecSVDRPCommandReportErrors(remote, command.c_str(), "UpdateTimer()");
+      if (svdrpOK == 0) isyslog("live: remote timer '%s' on server '%s' updated", command.c_str(), remote.c_str() );
+      return;
+    }
+// change local timer
+#ifdef DEBUG_LOCK
+    dsyslog3("LOCK_TIMERS_WRITE");
+#endif
+    LOCK_TIMERS_WRITE;
+    Timers->SetExplicitModify();
+    cTimer* oldTimer = Timers->GetById(timerId, oldRemote.vdr_str() );
+    dsyslog("live: UpdateTimer() change local timer '%s'", *oldTimer->ToDescr());
+    if (oldTimer == 0) {
+      esyslog3(tr("Timer not defined"));
+      throw HtmlError(tr("Timer not defined") );
+      return;
+    }
+
+    cTimer copy = *oldTimer;
+    dsyslog("live: old timer flags: %u", copy.Flags());
+    if ( !copy.Parse( builder.c_str() ) ) {
+      esyslog3(tr("Error in timer settings"));
+      throw HtmlError(tr("Error in timer settings") );
+      return;
+    }
+    if (oldTimer->HasFlags(tfRecording)) copy.SetFlags(tfRecording);  // changed a running recording, restore flag "tfRecording"
+    dsyslog("live: new timer flags: %u", copy.Flags());
+    *oldTimer = copy;
+
+    Timers->SetModified();
+    isyslog("live: local timer %s modified (%s)", *oldTimer->ToDescr(), oldTimer->HasFlags(tfActive) ? "active" : "inactive");
   }
 
-  void TimerManager::DoInsertTimer( timerStruct& timerData )
+  void TimerManager::CreateTimer(cStr remote, cStr builder)
   {
-    if ( timerData.remote ) {  // add remote timer via svdrpsend
-      dsyslog("live: DoInsertTimer() add remote timer on server '%s'", timerData.remote);
-      cStringList response;
-      std::string command = "NEWT ";
-      command.append(timerData.builder);
-      dsyslog("live: DoInsertTimer() svdrp command '%s'", command.c_str());
-      bool svdrpOK = ExecSVDRPCommand(timerData.remote, command.c_str(), &response);
-      if ( !svdrpOK ) {
-        esyslog("live: svdrp command on remote server %s failed", timerData.remote);
-      }
-      else {
-           for (int i = 0; i < response.Size(); i++) {
-                int code = SVDRPCode(response[i]);
-                if (code != 250) {
-                  esyslog("live: DoInsertTimer() svdrp failed, response: %s", response[i]);
-            svdrpOK = false;
-                                  }
-           }
-        if ( svdrpOK ) {
-          isyslog("live: remote timer '%s' on server '%s' added", timerData.builder.c_str(), timerData.remote);
-        }
-        else {
-          dsyslog("live: TimerManager::DoInsertTimer(): error in settings for remote timer");
-                StoreError(timerData, tr("Error in timer settings"));
-        }
-      }
-      response.Clear();
-    }
-    else {        // add local timer
-      std::unique_ptr<cTimer> newTimer( new cTimer );
-      if ( !newTimer->Parse( timerData.builder.c_str() ) ) {
-        dsyslog("live: TimerManager::DoInsertTimer(): error in settings for local timer");
-        StoreError( timerData, tr("Error in timer settings") );
+    if (!remote.empty() ) {  // add remote timer via svdrpsend
+      dsyslog3("add remote timer");
+      cToSvConcat command("NEWT ", builder);
+      int svdrpOK = ExecSVDRPCommandReportErrors(remote, command.c_str(), "CreateTimer()");
+      if (svdrpOK == 0) isyslog("live: remote timer '%s' on server '%s' added", builder.c_str(), remote.c_str() );
+    } else {
+      dsyslog3("add local timer");
+      std::unique_ptr<cTimer> newTimer(new cTimer);
+      if (!newTimer->Parse(builder.c_str()) ) {
+        esyslog3("error in settings for local timer");
+        throw HtmlError(tr("Error in timer settings") );
         return;
       }
-      dsyslog("live: DoInsertTimer() add local timer");
 #ifdef DEBUG_LOCK
-      dsyslog("live: timers.cpp TimerManager::DoInsertTimer() LOCK_TIMERS_WRITE");
+      dsyslog3("LOCK_TIMERS_WRITE");
 #endif
       LOCK_TIMERS_WRITE;
       Timers->SetExplicitModify();
-      const cTimer *checkTimer = Timers->GetTimer( newTimer.get() );
+      const cTimer *checkTimer = Timers->GetTimer(newTimer.get() );
       if (checkTimer) {
-        StoreError( timerData, tr("Timer already defined") );
+        esyslog3(tr("Timer already defined"));
+        throw HtmlError(tr("Timer already defined") );
         return;
       }
       Timers->Add( newTimer.get() );
@@ -257,229 +241,84 @@ namespace vdrlive {
     }
   }
 
-  void TimerManager::DoUpdateTimer( timerStruct& timerData )
+  void TimerManager::DeleteTimer(int timerId, cStr remote)
   {
-    dsyslog("live: DoUpdateTimer() timerid '%d'", timerData.id );
-    dsyslog("live: DoUpdateTimer() remote '%s'", timerData.remote );
-    dsyslog("live: DoUpdateTimer() oldRemote '%s'", timerData.oldRemote );
-    dsyslog("live: DoUpdateTimer() builder '%s'", timerData.builder.c_str() );
-
-    if ( timerData.remote && timerData.oldRemote ) {  // old and new are remote
-      if ( timerData.remote == timerData.oldRemote ) {  // timer stays on the same remote server
-        dsyslog("live: DoUptimer() update timer on remote server '%s'", timerData.remote);
-        cStringList response;
-        std::string command = "MODT ";
-        command.append(cToSvInt(timerData.id));
-        command.append(" ");
-        command.append(timerData.builder);
-        dsyslog("live: DoUpdateTimer() svdrp command '%s'", command.c_str());
-        bool svdrpOK = ExecSVDRPCommand(timerData.remote, command.c_str(), &response);
-        if ( !svdrpOK ) {
-          esyslog("live: svdr command on remote server %s failed", timerData.remote);
-        }
-        else {
-          bool responseOK = true;
-          for (int i = 0; i < response.Size(); i++) {
-            int code = SVDRPCode(response[i]);
-            if (code != 250) {
-              esyslog("live: DoInsertTimer() svdrp response: %s", response[i]);
-              responseOK = false;
-            }
-          }
-          if ( responseOK ) {
-            isyslog("live: remote timer '%s' on server '%s' updated", command.c_str(), timerData.remote);
-          }
-          else {
-            StoreError(timerData, tr("Error in timer settings"));
-          }
-        }
-        response.Clear();
+    if (!remote.empty() ) {
+// delete remote timer via svdrpsend
+      dsyslog3("delete remote timer, timerid '", timerId, "' remote '", remote, "'");
+      cToSvConcat command("DELT ", timerId);
+      int svdrpOK = ExecSVDRPCommandReportErrors(remote, command.c_str(), "DeleteTimer()");
+      if (svdrpOK == 0) {
+        isyslog("live: remote timer '%s' on server '%s' deleted", command.c_str(), remote.c_str() );
       }
-      else {      // timer moves from one remote server to another
-        isyslog("live: DoUptimer() move timer from remote server '%s' to remote server '%s'", timerData.oldRemote, timerData.remote);
-        timerStruct timerDataMove = { .id = timerData.id, .remote=timerData.oldRemote, .oldRemote=timerData.oldRemote, .builder=timerData.builder};
-        DoDeleteTimer( timerDataMove );
-        timerDataMove = { .id = timerData.id, .remote=timerData.remote, .oldRemote=timerData.remote, .builder=timerData.builder};
-        DoInsertTimer( timerDataMove );
-      }
-
-    }
-    else if ( timerData.remote && !timerData.oldRemote ) {    // move timer from local to remote
-      dsyslog("live: DoUpdateTimer() move timer from local to remote server");
-      timerStruct timerDataMove = { .id = timerData.id, .remote=NULL, .oldRemote=NULL, .builder=timerData.builder};
-      DoDeleteTimer( timerDataMove );
-      timerDataMove = { .id = timerData.id, .remote=timerData.remote, .oldRemote=timerData.remote, .builder=timerData.builder};
-      DoInsertTimer( timerDataMove );
-    }
-    else if ( !timerData.remote && timerData.oldRemote ) {    // move timer from remote to local
-      dsyslog("live: DoUpdateTimer() move timer from remote server to local");
-      timerStruct timerDataMove = { .id = timerData.id, .remote=timerData.oldRemote, .oldRemote=timerData.oldRemote, .builder=timerData.builder};
-      DoDeleteTimer( timerDataMove );
-      timerDataMove = { .id = timerData.id, .remote=NULL, .oldRemote=NULL, .builder=timerData.builder};
-      DoInsertTimer( timerDataMove );
-    }
-    else {        // old and new are local
-      dsyslog("live: DoUpdateTimer() old and new timer are local");
+    } else {
+// delete local timer
+      dsyslog3("delete local timer, timerid '", timerId, "'");
 #ifdef DEBUG_LOCK
-      dsyslog("live: timers.cpp TimerManager::DoUpdateTimer() LOCK_TIMERS_WRITE");
+      dsyslog3("LOCK_TIMERS_WRITE");
 #endif
       LOCK_TIMERS_WRITE;
       Timers->SetExplicitModify();
-      cTimer* oldTimer = Timers->GetById( timerData.id, timerData.oldRemote );
-      dsyslog("live: DoUpdateTimer() change local timer '%s'", *oldTimer->ToDescr());
-      if ( oldTimer == 0 ) {
-        StoreError( timerData, tr("Timer not defined") );
-      return;
-      }
-
-      cTimer copy = *oldTimer;
-      dsyslog("live: old timer flags: %u", copy.Flags());
-      if ( !copy.Parse( timerData.builder.c_str() ) ) {
-        StoreError( timerData, tr("Error in timer settings") );
+      cTimer* timer = Timers->GetById(timerId);
+      if (!timer) {
+        esyslog3("Local timer '", timerId, "' not defined");
+        throw HtmlError(tr("Timer not defined") );
         return;
       }
-      if (oldTimer->HasFlags(tfRecording)) copy.SetFlags(tfRecording);  // changed a running recording, restore flag "tfRecording"
-      dsyslog("live: new timer flags: %u", copy.Flags());
-      *oldTimer = copy;
-
+      cString timer_desc = timer->ToDescr();
+      if (timer->Recording() ) {
+        timer->Skip();
+        cRecordControls::Process(Timers, time( 0 ) );
+      }
+      Timers->Del(timer);
       Timers->SetModified();
-      isyslog("live: local timer %s modified (%s)", *oldTimer->ToDescr(), oldTimer->HasFlags(tfActive) ? "active" : "inactive");
+      isyslog("live: local timer %s deleted", *timer_desc);
     }
   }
 
-  void TimerManager::DoDeleteTimer( timerStruct& timerData )
+  void TimerManager::ToggleTimerActive(int timerId, cStr remote)
   {
-    dsyslog("live: DoDeleteTimer() timerid '%d'", timerData.id );
-    dsyslog("live: DoDeleteTimer() remote '%s'", timerData.remote );
-    dsyslog("live: DoDeleteTimer() builder '%s'", timerData.builder.c_str() );
-
-    if ( timerData.remote ) {    // delete remote timer via svdrpsend
-      dsyslog("live: DoDeleteTimer() delete remote timer id '%d' from server '%s'", timerData.id, timerData.remote);
-      cStringList response;
-      std::string command = "DELT ";
-      command.append(cToSvInt(timerData.id));
-      bool svdrpOK = ExecSVDRPCommand(timerData.remote, command.c_str(), &response);
-      if ( !svdrpOK ) {
-        esyslog( "live: delete remote timer id %d failed", timerData.id);
-      }
-      else {
-        for (int i = 0; i < response.Size(); i++) {
-          int code = SVDRPCode(response[i]);
-          if (code != 250) {
-            esyslog("live: DoDeleteTimer() svdrp failed, response: %s", response[i]);
-            svdrpOK = false;
-          }
-        }
-        if ( svdrpOK ) {
-          isyslog("live: remote timer '%s' on server '%s' deleted", command.c_str(), timerData.remote);
-        }
-        else {
-          StoreError(timerData, tr("Error in timer settings"));
-        }
-      }
-      response.Clear();
-    }
-    else {          // delete local timer
-      dsyslog("live: DoDeleteTimer() delete local timer id '%d'", timerData.id);
-
+    if (!remote.empty() ) {
+// toggle remote timer via svdrpsend
 #ifdef DEBUG_LOCK
-      dsyslog("live: timers.cpp TimerManager::DoDeleteTimer() LOCK_TIMERS_WRITE");
-#endif
-      LOCK_TIMERS_WRITE;
-      Timers->SetExplicitModify();
-      cTimer* oldTimer = Timers->GetById( timerData.id,  timerData.remote );
-      if ( oldTimer == 0 ) {
-        StoreError( timerData, tr("Timer not defined") );
-        return;
-         }
-      cTimer copy = *oldTimer;
-      if ( oldTimer->Recording() ) {
-        oldTimer->Skip();
-        cRecordControls::Process( Timers, time( 0 ) );
-         }
-      Timers->Del( oldTimer );
-      Timers->SetModified();
-      isyslog("live: local timer %s deleted", *copy.ToDescr());
-    }
-  }
-
-  void TimerManager::DoToggleTimer( timerStruct& timerData )
-  {
-    if ( timerData.remote ) {    // toggle remote timer via svdrpsend
-#ifdef DEBUG_LOCK
-      dsyslog("live: timers.cpp TimerManager::DoToggleTimer() LOCK_TIMERS_READ");
+      dsyslog3("LOCK_TIMERS_READ");
 #endif
       LOCK_TIMERS_READ;
-      const cTimer* toggleTimer = Timers->GetById( timerData.id, timerData.remote );
-      std::string command = "MODT ";
-      command.append(cToSvInt(timerData.id));
-      if (toggleTimer->HasFlags(tfActive)) {
-        dsyslog("live: DoToggleTimer() timer is active");
-        command.append(" off");
+      const cTimer* toggleTimer = Timers->GetById(timerId, remote.vdr_str());
+      if (!toggleTimer) {
+        esyslog3("Remote timer is not defined, timerid '", timerId, "' remote '", remote, "'");
+        throw HtmlError(tr("Timer not defined") );
+        return;
       }
-      else {
-        dsyslog("live: DoToggleTimer() timer is not active");
+      cToSvConcat command("MODT ", timerId);
+      if (toggleTimer->HasFlags(tfActive)) {
+        dsyslog3("Remote timer is active, timerid '", timerId, "' remote '", remote, "'");
+        command.append(" off");
+      } else {
+        dsyslog3("Remote timer is not active, timerid '", timerId, "' remote '", remote, "'");
         command.append(" on");
       }
-      cStringList response;
-      dsyslog("live: DoToggleTimer svdrp command '%s'", command.c_str());
-      bool svdrpOK = ExecSVDRPCommand(timerData.remote, command.c_str(), &response);
-      if ( !svdrpOK ) {
-        esyslog("live: svdr command on remote server %s failed", timerData.remote);
+      int svdrpOK = ExecSVDRPCommandReportErrors(remote, command.c_str(), "ToggleTimerActive()");
+      if (svdrpOK == 0) {
+        isyslog2("Remote timer toggled, timerid '", timerId, "' remote '", remote, "'");
       }
-      else {
-        for (int i = 0; i < response.Size(); i++) {
-                                        int code = SVDRPCode(response[i]);
-          if (code != 250) {
-            esyslog("live: DoToggleTimer() svdrp failed, response: %s", response[i]);
-            svdrpOK = false;
-          }
-        }
-        if ( svdrpOK ) {
-          isyslog("live: remote timer '%s' on server '%s' toggled", command.c_str(), timerData.remote);
-        }
-        else {
-          StoreError(timerData, tr("Error in timer settings"));
-        }
-      }
-      response.Clear();
-    }
-    else {           // toggle local timer
+    } else {
+// toggle local timer
 #ifdef DEBUG_LOCK
-      dsyslog("live: timers.cpp TimerManager::DoToggleTimer() LOCK_TIMERS_WRITE");
+      dsyslog3("LOCK_TIMERS_WRITE");
 #endif
       LOCK_TIMERS_WRITE;
       Timers->SetExplicitModify();
-      cTimer* toggleTimer = Timers->GetById( timerData.id, timerData.remote );
-      if ( toggleTimer == 0 ) {
-        StoreError( timerData, tr("Timer not defined") );
+      cTimer* toggleTimer = Timers->GetById(timerId);
+      if (!toggleTimer) {
+        esyslog3("Local timer is not defined, timerid '", timerId, "'");
+        throw HtmlError(tr("Timer not defined") );
         return;
       }
-
       toggleTimer->OnOff();
       Timers->SetModified();
-      isyslog("live: timer %s toggled %s", *toggleTimer->ToDescr(), toggleTimer->HasFlags(tfActive) ? "on" : "off");
+      isyslog("live: local timer %s toggled %s", *toggleTimer->ToDescr(), toggleTimer->HasFlags(tfActive) ? "on" : "off");
     }
-  }
-
-  void TimerManager::StoreError( timerStruct const& timerData, std::string const& error )
-  {
-    m_failedUpdates.push_back( ErrorPair( timerData, error ) );
-  }
-
-  std::string TimerManager::GetError( timerStruct const& timerData )
-  {
-    for ( ErrorList::iterator error = m_failedUpdates.begin(); error != m_failedUpdates.end(); ++error ) {
-      if ( error->first.id == timerData.id &&
-           error->first.remote == timerData.remote &&
-           error->first.oldRemote == timerData.oldRemote &&
-           error->first.builder == timerData.builder ) {
-        std::string message = error->second;
-        m_failedUpdates.erase( error );
-        return message;
-      }
-    }
-    return "";
   }
 
   const cTimer* TimerManager::GetTimer(const cEvent *event, const cChannel *channel, const cTimers *Timers)
@@ -507,6 +346,50 @@ namespace vdrlive {
 #endif
     return GetTimer(event, channel, Timers);
   }
+  int TimerManager_CreateTimer(cSv epgid)
+// return codes:
+// 0: success
+// 1: event with epgid not found
+// 2: timer already exists
+// 3: error creating timer on remote server
+  {
+    dsyslog3("create default timer");
+#ifdef DEBUG_LOCK
+    dsyslog3("LOCK_TIMERS_WRITE");
+#endif
+    LOCK_TIMERS_WRITE;
+    LOCK_CHANNELS_READ;
+    LOCK_SCHEDULES_READ;
+    Timers->SetExplicitModify();
+    const cEvent *event = EpgEvents::GetEventByEpgId(epgid, Schedules);
+    if (!event) {
+      esyslog3("event ", epgid, " not found");
+      return 1;
+    }
+    cTimer *Timer = new cTimer(event);
+    if (::Setup.SVDRPPeering && *::Setup.SVDRPDefaultHost)
+      Timer->SetRemote(::Setup.SVDRPDefaultHost);
+    if (Timers->GetTimer(Timer)) {
+      delete Timer;
+      return 2;
+    }
+    Timers->Add(Timer);
+    Timers->SetModified();
+    cString ErrorMessage;
+    if (!HandleRemoteTimerModifications(Timer, nullptr, &ErrorMessage) ) {
+// must add the timer before HandleRemoteModifications to get proper log messages with timer ids
+      esyslog3("creating timer ", *Timer->ToDescr(), " ErrorMessage: ", *ErrorMessage);
+      Timers->Del(Timer);
+      return 3;
+    }
+    if (Timer->Remote())
+      Timers->SetSyncStateKey(StateKeySVDRPRemoteTimersPoll);
+
+    TimerConflictNotifier timerNotifier;
+    timerNotifier.SetTimerModification();
+    isyslog("live: timer %s added", *Timer->ToDescr() );
+    return 0;
+  }
 
   std::string TimerManager_DeleteConfirmationQuestion(cSv id) {
     std::string tId = SortedTimers::DecodeDomId(id);
@@ -515,7 +398,7 @@ namespace vdrlive {
     if (timer) return std::string(cToSvFormatted(tr("Delete timer \"%s\"?"), timer->File() ));
     return tr("Delete timer [timer name unavailable]?");
   }
-  int TimerManager_DeleteTimer(cSv id, std::string &message, cSv folder) {
+  int TimerManager_DeleteTimer(cSv id, std::string &message) {
     std::string tId = SortedTimers::DecodeDomId(id);
     int timer_id;
     const char *remote;
@@ -531,7 +414,7 @@ namespace vdrlive {
       remote   = timer->Remote();
       name = timer->File();
     }
-    TimerManager().DelTimer(timer_id, remote);
+    TimerManager().DeleteTimer(timer_id, cStr(remote) );
     TimerConflictNotifier timerNotifier;
     timerNotifier.SetTimerModification();
 

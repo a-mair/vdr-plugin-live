@@ -5,9 +5,7 @@
 #include <list>
 #include <string>
 
-#if TNTVERSION >= 30000
-  #include <cxxtools/log.h>  // must be loaded before any VDR include because of duplicate macros (LOG_ERROR, LOG_DEBUG, LOG_INFO)
-#endif
+#include <cxxtools/log.h>  // must be loaded before any VDR include because of duplicate macros (LOG_ERROR, LOG_DEBUG, LOG_INFO)
 
 #include <vdr/timers.h>
 #include "stringhelpers.h"
@@ -36,39 +34,19 @@ template<std::size_t N>
   class TimerManager
   {
     public:
-      void UpdateTimer(int timerId, const char* remote, const char* oldRemote, const tChannelID& channel, cStr builder);
-      void DelTimer(int timerId, const char* remote);
-      void ToggleTimerActive(int timerId, const char* remote);
+      void UpdateTimer(int timerId, cStr remote, cStr oldRemote, cStr builder);
+      void DeleteTimer(int timerId, cStr remote);
+      void ToggleTimerActive(int timerId, cStr remote);
       static const cTimer* GetTimer(tEventID eventid, tChannelID channelid, const cTimers* Timers);
       static const cTimer* GetTimer(const cEvent *event, const cChannel *channel, const cTimers* Timers);
 
     private:
-      typedef struct
-      {
-        int id;
-        const char* remote;
-        const char* oldRemote;
-        std::string builder;
-      } timerStruct;
-
-      typedef std::pair<timerStruct, std::string> ErrorPair;
-      typedef std::list<timerStruct> TimerList;
-      typedef std::list<ErrorPair> ErrorList;
-
-      TimerList m_updateTimers;
-      ErrorList m_failedUpdates;
-
-      void DoUpdateTimers();
-      void DoInsertTimer( timerStruct& timerData );
-      void DoUpdateTimer( timerStruct& timerData );
-      void DoDeleteTimer( timerStruct& timerData );
-      void DoToggleTimer( timerStruct& timerData );
-
-      void StoreError( timerStruct const& timerData, std::string const& error );
-      std::string GetError( timerStruct const& timerData );
+      int ExecSVDRPCommandReportErrors(cStr ServerName, const char *Command, cSv context);
+      void CreateTimer(cStr remote, cStr builder);
   };
   std::string TimerManager_DeleteConfirmationQuestion(cSv id);
-  int TimerManager_DeleteTimer(cSv id, std::string &message, cSv folder);
+  int TimerManager_DeleteTimer(cSv id, std::string &message);
+  int TimerManager_CreateTimer(cSv epgid);
 
 } // namespace vdrlive
 

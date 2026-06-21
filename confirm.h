@@ -18,8 +18,8 @@
 
 namespace vdrlive {
 
-// note: list of ids must also be available in live/js/live/infowin.js, action_id
-//(action_id == "del_" || action_id == "pur_" || action_id == "res_" || action_id == "det_" || action_id == "des_")
+// note: list of ids must also be available in live/js/live/infowin.js, async function id_from_epgid(epgid)
+//(action_id == "del_" || action_id == "pur_" || action_id == "res_" || action_id == "mov_" || action_id == "det_" || action_id == "des_")
 //  "del_" delete recording
 //  "pur_" permanently delete recording
 //  "res_" restore recording
@@ -29,7 +29,7 @@ namespace vdrlive {
 //
 typedef std::string (*tConfirmationQuestion)(cSv id);
 typedef std::vector<std::string> (*tObjectNames)(cSv id);
-typedef int (*tPerformAction)(cSv id, std::string &message, cSv folder); // return 0 on success;
+typedef int (*tPerformAction)(cSv id, std::string &message); // return 0 on success;
 
 inline std::vector<std::string> one_object(cSv id) {
   std::vector<std::string> result;
@@ -60,8 +60,8 @@ class cConfirm {
     std::string get_prompt() const {
       return tr(m_prompt && *m_prompt ? m_prompt : m_headline);
     }
-    int perform_action(cSv id, std::string &message, cSv folder = cSv()) const {
-      return m_perform_action(id.substr(4), message, folder);
+    int perform_action(cSv id, std::string &message) const {
+      return m_perform_action(id.substr(4), message);
     }
     bool currentUserHasRight() const {
       return cUser::CurrentUserHasRightTo(m_user_rights);
@@ -78,7 +78,7 @@ inline static const cSortedVector<cConfirm, std::less<>> g_confirm_popups =
   { "del_", UR_DELRECS, trNOOP("Delete recording"), nullptr, trNOOP("Delete"), &RecordingsManager_DeleteConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_DeleteRecording},
   { "res_", UR_DELRECS, trNOOP("Restore recording"), nullptr, trNOOP("Restore"), &RecordingsManager_RestoreConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_RestoreRecording},
   { "pur_", UR_DELRECS, trNOOP("Permanently delete recording"), trNOOP("Warning: This cannot be undone!"), trNOOP("Delete permanently"), &RecordingsManager_PurgeConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_PurgeRecording},
-  { "mov_", UR_EDITRECS, trNOOP("Move recordings"), nullptr, trNOOP("Move"), &RecordingsManager_MoveConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_MoveRecording},
+  { "mov_", UR_EDITRECS, trNOOP("Move recordings"), nullptr, trNOOP("Move"), &RecordingsManager_MoveConfirmationQuestion, &RecordingsManager_object_names_mov, &RecordingsManager_MoveRecording},
   { "det_", UR_DELTIMERS, trNOOP("Delete timer"), nullptr, trNOOP("Delete"), &TimerManager_DeleteConfirmationQuestion, &one_object, &TimerManager_DeleteTimer},
   { "des_", UR_DELSTIMERS, trNOOP("Delete search timer"), nullptr, trNOOP("Delete"), &SearchTimers_DeleteConfirmationQuestion, &one_object, &SearchTimers_DeleteSearchTimer}
 

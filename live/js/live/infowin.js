@@ -217,31 +217,34 @@ var InfoWin = new Class({
       return false;
     },
 
-    fillBody: function(id){
-      var bodyElems = $$('#'+ id + ' ' + this.options.bodySelect);
+    fillBody: function(id, id_select_html_elements, epgid){
+      var bodyElems;
+      if (id_select_html_elements) {
+        bodyElems = $$('#'+ id_select_html_elements + ' ' + this.options.bodySelect);
+      } else {
+        bodyElems = $$('#'+ id + ' ' + this.options.bodySelect);
+      }
       if ($defined(bodyElems) && bodyElems.length > 0) {
         this.winBody.empty();
         this.fireEvent('onDomExtend', [id, bodyElems]);
         this.winBody.adopt(bodyElems);
         var history_num_back = 0;
-        var history_back = this.winBody.getElementById('history_' + id);
+        var history_back = this.winBody.getElementById('history_' + id_select_html_elements);
         if (history_back) {
           history_num_back = Number(history_back.value);
         }
-        var confirm_del = this.winBody.getElementById('confirm_' + id);
-        if (confirm_del) {
-          let action_id = id.substring(0, 4);
-          if (action_id == "del_" || action_id == "pur_" || action_id == "res_" || action_id == "det_" || action_id == "des_") {
-            confirm_del.onclick = null;
-            confirm_del.addEvent('click', async function(event) {
-                await action(id);
-                if (history_num_back > 0) { history.go(-history_num_back); }
-                else { location.reload(); }
-                var event = new Event(event);
-                event.stop();
-                return this.hide();
-              }.bind(this));
-          }
+        var confirm_ = this.winBody.getElementById('confirm_' + id_select_html_elements);
+        if (confirm_) {
+          confirm_.onclick = null;
+          confirm_.addEvent('click', async function(event) {
+              disable_popup_if_user_checked(id_select_html_elements, epgid);
+              await action(epgid);
+              if (history_num_back > 0) { history.go(-history_num_back); }
+              else { location.reload(); }
+              var event = new Event(event);
+              event.stop();
+              return this.hide();
+            }.bind(this));
         }
         var close_button = this.winBody.getElementById('close_' + id);
         if (close_button) {
@@ -367,122 +370,201 @@ function is_digit(c){
     return false;
   }
 }
+/*  cyrb53 (c) 2018 bryc (github.com/bryc)
+ *  License: Public domain (or MIT if needed). Attribution appreciated.
+ *  A fast and simple 53-bit string hash function with decent collision resistance.
+ *  Largely inspired by MurmurHash2/3, but with a focus on speed/simplicity.
+*/
+const cyrb53 = function(str, seed = 0) {
+  let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+  for(let i = 0, ch; i < str.length; i++) {
+    ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1  = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
+  h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2  = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
+  h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+};
+
+/*
+*     cyrb53a beta (c) 2023 bryc (github.com/bryc)
+*     License: Public domain (or MIT if needed). Attribution appreciated.
+*     This is a work-in-progress, and changes to the algorithm are expected.
+*     The original cyrb53 has a slight mixing bias in the low bits of h1.
+*     This doesn't affect collision rate, but I want to try to improve it.
+*     This new version has preliminary improvements in avalanche behavior.
+* */
+const cyrb53a_beta = function(str, seed = 0) {
+  let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+  for(let i = 0, ch; i < str.length; i++) {
+    ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 0x85ebca77);
+    h2 = Math.imul(h2 ^ ch, 0xc2b2ae3d);
+  }
+  h1 ^= Math.imul(h1 ^ (h2 >>> 15), 0x735a2d97);
+  h2 ^= Math.imul(h2 ^ (h1 >>> 15), 0xcaf649a9);
+  h1 ^= h2 >>> 16; h2 ^= h1 >>> 16;
+  return 2097152 * (h2 >>> 0) + (h1 >>> 11);
+};
+//  "Content-Type": "application/x-www-form-urlencoded",
+//  headers: { "Content-Type": "text/plain",}
+async function hash(input) {
+var url = 'hash.html?input='+encodeURIComponent(input);
+alert("url= " +url);
+try {
+  const response = await fetch(url, {
+    method: "GET",
+  });
+  if (!response.ok) {
+    alert(`HTTP ${response.status}: ${response.statusText}`);
+    return input;
+  }
+  let p_text = response.text();
+  let text = await p_text;
+} catch (error) {
+  alert("Network request failed: "+ error.message);
+  return input;
+}
+return text.slice(0,32);
+}
+async function id_from_epgid(epgid) {
+var action_id = epgid.slice(0,4);
+if (action_id == "del_" || action_id == "pur_" || action_id == "res_" || action_id == "mov_" || action_id == "det_" || action_id == "des_") {
+  return await hash(epgid);
+} else {
+  return epgid;
+}
+}
 function decrease_history_num_back(url) {
-  var ind_history = url.indexOf("history_num_back=");
-  if (ind_history == -1) return url;
-  ind_history += 17;
-  for (var ind_history_e = ind_history; ind_history_e < url.length && is_digit(url.substring(ind_history_e, ind_history_e+1)); ++ind_history_e);
-  if (ind_history_e <= ind_history) return url;
-  var history_num_back = Number(url.substring(ind_history, ind_history_e))-1;
-  if (history_num_back < 0) return url;
-  return url.substring(0, ind_history) + history_num_back + url.substring(ind_history_e);
+var ind_history = url.indexOf("history_num_back=");
+if (ind_history == -1) return url;
+ind_history += 17;
+for (var ind_history_e = ind_history; ind_history_e < url.length && is_digit(url.substring(ind_history_e, ind_history_e+1)); ++ind_history_e);
+if (ind_history_e <= ind_history) return url;
+var history_num_back = Number(url.substring(ind_history, ind_history_e))-1;
+if (history_num_back < 0) return url;
+return url.substring(0, ind_history) + history_num_back + url.substring(ind_history_e);
 }
 
 InfoWin.Ajax = InfoWin.extend({
-    options: {
-      loadingMsg: 'loading',
-      errorMsg: 'an error occurred!',
-      onError: Class.empty
-    },
+  options: {
+    loadingMsg: 'loading',
+    errorMsg: 'an error occurred!',
+    onError: Class.empty
+  },
 
-    initialize: function(id, url_in, options){
-      var url = decrease_history_num_back(url_in);
-      this.parent(id, options);
-      if ($defined(this.ajaxResponse)) {
-        this.addEvent('onError', function(){
-            this.hide.delay(1000, this);
-          }.bind(this));
-        var ajax = new Ajax(url, {
-            update: this.ajaxResponse,
-            onComplete: function(text, xmldoc){
-              this.fillTitle(id);
-              this.fillBody(id);
-              this.ajaxResponse.remove();
-            }.bind(this),
-            onFailure: function(transport){
-              this.titleBox.setHTML(this.options.errorMsg);
-              this.fireEvent('onError', [id, url]);
-            }.bind(this)
-          }).request('async=1');
-      }
-    },
-
-    // this function gets called when no previous instance for 'id'
-    // created a DOM subtree for an infowin.
-    build: function(id){
-      if (!this.parent(id)) {
-        this.titleBox.setHTML(this.options.loadingMsg);
-        this.ajaxResponse = new Element('div', {
-            'styles' : {
-              'display': 'none'
+  initialize: function(epgid, url_in, options){
+// id: id for this infowin
+    let id = 'A' + cyrb53(epgid);
+    this.parent(id, options);
+    var url = decrease_history_num_back(url_in);
+    if ($defined(this.ajaxResponse)) {
+      this.addEvent('onError', function(){
+          this.hide.delay(1000, this);
+        }.bind(this));
+      var ajax = new Ajax(url, {
+          update: this.ajaxResponse,
+          onComplete: function(text, xmldoc){
+            var id_select_html_elements;
+            var found = /<input type="hidden" id="id_select_html_elements" value="(\w+)"/.exec(text);
+            if ($defined(found) && found.length > 1) {
+              id_select_html_elements = found[1];
+//            console.log("id_select_html_elements found, value "+id_select_html_elements, " epgid = "+epgid);
+            } else {
+              id_select_html_elements = epgid;
+//            console.log("id_select_html_elements NOT found, epgid = "+epgid);
             }
-          }).inject(this.winFrame);
-      }
+            this.fillTitle(id_select_html_elements);
+            this.fillBody(id, id_select_html_elements, epgid);
+            this.ajaxResponse.remove();
+          }.bind(this),
+          onFailure: function(transport){
+            this.titleBox.setHTML(this.options.errorMsg);
+            this.fireEvent('onError', [id, url]);
+          }.bind(this)
+        }).request('async=1');
     }
-  });
+  },
+
+  // this function gets called when no previous instance for 'id'
+  // created a DOM subtree for an infowin.
+  build: function(id){
+    if (!this.parent(id)) {
+      this.titleBox.setHTML(this.options.loadingMsg);
+      this.ajaxResponse = new Element('div', {
+          'styles' : {
+            'display': 'none'
+          }
+        }).inject(this.winFrame);
+    }
+  }
+});
 
 
 /*
 Class: Infowin.Notifier
 
-  Creates a notification popup that disappears automatically.
-  Useful for a confirmation message after a AJAX action request.
- */
+Creates a notification popup that disappears automatically.
+Useful for a confirmation message after a AJAX action request.
+*/
 
 InfoWin.Notifier = InfoWin.extend({
-    options: {
-      timeout: 2500,
-      destroyOnHide: true,
-      className: 'ok',
-      classSuffix: '-info',
-      message: '',
-      offsets: {'x': 16, 'y': 16}
-    },
+  options: {
+    timeout: 2500,
+    destroyOnHide: true,
+    className: 'ok',
+    classSuffix: '-info',
+    message: '',
+    offsets: {'x': 16, 'y': 16}
+  },
 
-    initialize: function(id, options){
-      this.parent(id, options);
-    },
+  initialize: function(id, options){
+    this.parent(id, options);
+  },
 
-    build: function(id){
-      /* body of tip: some helper divs and content */
-      this.winBody = new Element('div', {
-          'class': this.options.className + this.options.classSuffix + '-body'
-        }).inject(this.winFrame);
-      return this.fillBody(id);
-    },
+  build: function(id){
+    /* body of tip: some helper divs and content */
+    this.winBody = new Element('div', {
+        'class': this.options.className + this.options.classSuffix + '-body'
+      }).inject(this.winFrame);
+    return this.fillBody(id);
+  },
 
-    fillBody: function(id){
-      this.winFrame.setStyle('position', 'fixed');
-      this.winBody.empty().setHTML(this.options.message);
-      return true;
-    },
+  fillBody: function(id){
+    this.winFrame.setStyle('position', 'fixed');
+    this.winBody.empty().setHTML(this.options.message);
+    return true;
+  },
 
-    position: function(event){
-      var prop = {'x': 'left', 'y': 'top'};
-      for (var z in prop) {
-        var pos = this.options.offsets[z];
-        this.winFrame.setStyle(prop[z], pos);
-      }
+  position: function(event){
+    var prop = {'x': 'left', 'y': 'top'};
+    for (var z in prop) {
+      var pos = this.options.offsets[z];
+      this.winFrame.setStyle(prop[z], pos);
     }
-  });
+  }
+});
 
 // the following functions are generally needed to show the about box
 // as window; without them a new page will be opened all the time
 
 function get_disable_popup_storage_name(id) {
-  if (id.endsWith('_') ) {
-    return "disable_popup_" + id.substring(0, 3) + "_ms";   // ms for multiple selection
-  } else {
-    return "disable_popup_" + id.substring(0, 3);
-  }
+if (id.endsWith('_') ) {
+  return "disable_popup_" + id.substring(0, 3) + "_ms";   // ms for multiple selection
+} else {
+  return "disable_popup_" + id.substring(0, 3);
+}
 }
 
 function is_popup_disabled(id) {
-  let storage_name = get_disable_popup_storage_name(id);
-  let c = sessionStorage.getItem(storage_name);
-  if (c && c == '1') return true;
-  const el = document.querySelector("div");
-  let cs = getComputedStyle(el).getPropertyValue("--" + storage_name);
+let storage_name = get_disable_popup_storage_name(id);
+let c = sessionStorage.getItem(storage_name);
+if (c && c == '1') return true;
+const el = document.querySelector("div");
+let cs = getComputedStyle(el).getPropertyValue("--" + storage_name);
   return cs && cs == '1';
 }
 

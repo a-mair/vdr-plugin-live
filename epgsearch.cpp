@@ -422,14 +422,13 @@ bool SearchTimers::Delete(cSv id)
 }
 
 std::string SearchTimers_DeleteConfirmationQuestion(cSv id) {
-
   SearchTimers searchTimers;
   SearchTimer* search = searchTimers.GetByTimerId(id);
   if (!search) return tr("Delete search timer [search timer name unavailable]?");
   return std::string(cToSvFormatted(tr("Delete search timer \"%s\"?"), search->Search().c_str()  ));
 }
 
-int SearchTimers_DeleteSearchTimer(cSv id, std::string &message, cSv folder) {
+int SearchTimers_DeleteSearchTimer(cSv id, std::string &message) {
 
   SearchTimers searchTimers;
   SearchTimer* search = searchTimers.GetByTimerId(id);

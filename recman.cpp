@@ -428,6 +428,22 @@ int RecordingsManager::PurgeRecording(cSv hash, std::string *name) {
 }
 
 
+bool split_recordings_hash(cSv recordings_hash, cSv &folder, cSv &recordings) {
+// recordings_hash:
+//  0..9 recording_
+// 10..? int folder_length, end with _
+// after _  folder (folder_length characters)
+  if (recordings_hash.length() < 11) return false;
+  cSv hash_folder_recs = recordings_hash.substr(10);
+  size_t pos = hash_folder_recs.find('_');
+  if (pos == cSv::npos) return false;
+  size_t f_length = parse_unsigned<size_t>(hash_folder_recs);
+  if (hash_folder_recs.length() < pos+2+f_length) return false;
+  folder = hash_folder_recs.substr(pos+1, f_length);
+  recordings = hash_folder_recs.substr(pos+2+f_length);
+  dsyslog3("hash_folder_recs ", hash_folder_recs, " pos ", pos, " f_length ", f_length, " folder ", folder, " recordings ", recordings, "'");
+  return true;
+}
 
 
 int get_number_of_objects(cSv recordings_hash) {
@@ -436,6 +452,20 @@ int get_number_of_objects(cSv recordings_hash) {
   return std::count(recordings_hash.begin()+10, recordings_hash.end(), '_');
 }
 
+std::vector<std::string> RecordingsManager_object_names_mov(cSv recordings_hash) {
+  std::vector<std::string> result;
+  cSv folder;
+  cSv recordings;
+  if (!split_recordings_hash(recordings_hash, folder, recordings)) {
+    esyslog3("Error in split_recordings_hash");
+    return result;
+  }
+  for (cSv id: cSplit(recordings, '_')) if (id.length() == 32) {
+    const char *name = RecordingsManager::GetNameByHash(id);
+    result.push_back(std::string(cSv(name)));
+  }
+  return result;
+}
 std::vector<std::string> RecordingsManager_object_names(cSv recordings_hash) {
   std::vector<std::string> result;
   if (recordings_hash.length() == 42) {
@@ -459,14 +489,19 @@ std::string RecordingsManager_DeleteConfirmationQuestion(cSv recordings_hash) {
   return std::string(cToSvFormatted(tr("Delete the following %i recordings?"), num_recs));
 }
 std::string RecordingsManager_MoveConfirmationQuestion(cSv recordings_hash) {
-  int num_recs = get_number_of_objects(recordings_hash);
+  cSv folder;
+  cSv recordings;
+  if (!split_recordings_hash(recordings_hash, folder, recordings)) {
+    return "Error in split_recordings_hash";
+  }
+  int num_recs = std::count(recordings.begin(), recordings.end(), '_');
   if (num_recs == 0) return tr("Nothing selected!");
   if (num_recs == 1) {
-    const char *name = RecordingsManager::GetNameByHash(RecordingsManager::GetHash(recordings_hash.substr(0, 42)));
-    if (name) return std::string(cToSvFormatted(tr("Move recording \"%s\"?"), name));
+    const char *name = RecordingsManager::GetNameByHash(recordings.substr(0, 32));
+    if (name) return std::string(cToSvFormatted(tr("Move recording \"%s\" to folder \"%.*s\"?"), name, static_cast<int>(folder.length()), folder.data() ));
     return tr("Move recording [recording name unavailable]?");
   }
-  return std::string(cToSvFormatted(tr("Move the following %i recordings?"), num_recs));
+  return std::string(cToSvFormatted(tr("Move the following %i recordings to folder \"%.*s\"?"), num_recs, static_cast<int>(folder.length()), folder.data() ));
 }
 std::string RecordingsManager_RestoreConfirmationQuestion(cSv recordings_hash) {
   int num_recs = get_number_of_objects(recordings_hash);
@@ -489,7 +524,7 @@ std::string RecordingsManager_PurgeConfirmationQuestion(cSv recordings_hash) {
   return std::string(cToSvFormatted(tr("Permanently delete the following %i recordings?"), num_recs));
 }
 
-int RecordingsManager_DeleteRecording(cSv recordings_hash, std::string &message, cSv folder) {
+int RecordingsManager_DeleteRecording(cSv recordings_hash, std::string &message) {
   int result = 0;
   std::string name;
   if (recordings_hash.length() == 42) {
@@ -518,11 +553,18 @@ int RecordingsManager_DeleteRecording(cSv recordings_hash, std::string &message,
   }
   return result;
 }
-int RecordingsManager_MoveRecording(cSv recordings_hash, std::string &message, cSv folder) {
+int RecordingsManager_MoveRecording(cSv recordings_hash, std::string &message) {
+  cSv folder;
+  cSv recordings;
+  if (!split_recordings_hash(recordings_hash, folder, recordings)) {
+    esyslog3("Error in split_recordings_hash");
+    return 1000;
+  }
+  dsyslog2("move recordings to folder '", folder, "'");
   int result = 0;
   std::string name;
   message.clear();
-  for (cSv id: cSplit(recordings_hash.substr(10), '_')) if (id.length() == 32) {
+  for (cSv id: cSplit(recordings, '_')) if (id.length() == 32) {
     int res= RecordingsManager::MoveRecording(id, folder, &name);
     if (res!= 0) {
       switch (res) {
@@ -537,7 +579,7 @@ int RecordingsManager_MoveRecording(cSv recordings_hash, std::string &message, c
   }
   return result;
 }
-int RecordingsManager_RestoreRecording(cSv recordings_hash, std::string &message, cSv folder) {
+int RecordingsManager_RestoreRecording(cSv recordings_hash, std::string &message) {
   int result = 0;
   std::string name;
   if (recordings_hash.length() == 42) {
@@ -564,7 +606,7 @@ int RecordingsManager_RestoreRecording(cSv recordings_hash, std::string &message
   }
   return result;
 }
-int RecordingsManager_PurgeRecording(cSv recordings_hash, std::string &message, cSv folder) {
+int RecordingsManager_PurgeRecording(cSv recordings_hash, std::string &message) {
   int result = 0;
   std::string name;
   if (recordings_hash.length() == 42) {

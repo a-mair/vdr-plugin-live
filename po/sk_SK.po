@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-16 21:18+0200\n"
+"POT-Creation-Date: 2026-06-21 11:43+0200\n"
 "PO-Revision-Date: 2012-12-03 21:41+0100\n"
 "Last-Translator: Milan Hrala <hrala.milan@gmail.com>\n"
 "Language-Team: Slovak <hrala.milan@gmail.com>\n"
@@ -31,14 +31,14 @@ msgid "Delete the following %i recordings?"
 msgstr ""
 
 #, c-format
-msgid "Move recording \"%s\"?"
+msgid "Move recording \"%s\" to folder \"%.*s\"?"
 msgstr ""
 
 msgid "Move recording [recording name unavailable]?"
 msgstr ""
 
 #, c-format
-msgid "Move the following %i recordings?"
+msgid "Move the following %i recordings to folder \"%.*s\"?"
 msgstr ""
 
 #, c-format
@@ -143,6 +143,9 @@ msgstr "Prihlasovacie meno admina"
 msgid "Admin password"
 msgstr "Heslo admina"
 
+msgid "Error in timer settings"
+msgstr "Chyba v nastavení plánu"
+
 #, c-format
 msgid "%A, %x"
 msgstr "%A, %x"
@@ -150,13 +153,10 @@ msgstr "%A, %x"
 msgid "Search timer"
 msgstr "Vyhľadávač vysielacieho času"
 
-msgid "Error in timer settings"
-msgstr "Chyba v nastavení plánu"
-
-msgid "Timer already defined"
+msgid "Timer not defined"
 msgstr "Plán nahrávania nie je stanovený."
 
-msgid "Timer not defined"
+msgid "Timer already defined"
 msgstr "Plán nahrávania nie je stanovený."
 
 #, c-format
@@ -1001,7 +1001,7 @@ msgstr "Nenašla sa nahrávka"
 msgid "No deleted recordings found"
 msgstr ""
 
-msgid "Move selected recordings to folder"
+msgid "Move selected recordings"
 msgstr ""
 
 msgid "Delete selected recordings"

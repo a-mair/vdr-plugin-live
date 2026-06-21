@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-16 21:18+0200\n"
+"POT-Creation-Date: 2026-06-21 11:43+0200\n"
 "PO-Revision-Date: 2010-05-10 22:15+0200\n"
 "Last-Translator: Vladimír Bárta <vladimir.barta@k2atmitec.cz>,Radek Stastny <dedkus@gmail.com> \n"
 "Language-Team: see developers in README\n"
@@ -32,14 +32,14 @@ msgid "Delete the following %i recordings?"
 msgstr ""
 
 #, c-format
-msgid "Move recording \"%s\"?"
+msgid "Move recording \"%s\" to folder \"%.*s\"?"
 msgstr ""
 
 msgid "Move recording [recording name unavailable]?"
 msgstr ""
 
 #, c-format
-msgid "Move the following %i recordings?"
+msgid "Move the following %i recordings to folder \"%.*s\"?"
 msgstr ""
 
 #, c-format
@@ -144,6 +144,9 @@ msgstr ""
 msgid "Admin password"
 msgstr "Admin heslo"
 
+msgid "Error in timer settings"
+msgstr "Chyba v nastavení nahrávání"
+
 #, c-format
 msgid "%A, %x"
 msgstr ""
@@ -151,14 +154,11 @@ msgstr ""
 msgid "Search timer"
 msgstr "Nahrávání"
 
-msgid "Error in timer settings"
-msgstr "Chyba v nastavení nahrávání"
+msgid "Timer not defined"
+msgstr "Nahrávaní není nastaveno"
 
 msgid "Timer already defined"
 msgstr "Nahrávaní již nastaveno"
-
-msgid "Timer not defined"
-msgstr "Nahrávaní není nastaveno"
 
 #, c-format
 msgid "Delete timer \"%s\"?"
@@ -1009,7 +1009,7 @@ msgstr "žádné nahrávky"
 msgid "No deleted recordings found"
 msgstr ""
 
-msgid "Move selected recordings to folder"
+msgid "Move selected recordings"
 msgstr ""
 
 #, fuzzy

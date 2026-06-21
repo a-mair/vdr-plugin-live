@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-16 21:18+0200\n"
+"POT-Creation-Date: 2026-06-21 11:43+0200\n"
 "PO-Revision-Date: 2013-06-21 20:15+0200\n"
 "Last-Translator: Fredrik Olofsson <fredrik.olofsson@freddano.se>\n"
 "Language-Team: see developers in README\n"
@@ -31,14 +31,14 @@ msgid "Delete the following %i recordings?"
 msgstr ""
 
 #, c-format
-msgid "Move recording \"%s\"?"
+msgid "Move recording \"%s\" to folder \"%.*s\"?"
 msgstr ""
 
 msgid "Move recording [recording name unavailable]?"
 msgstr ""
 
 #, c-format
-msgid "Move the following %i recordings?"
+msgid "Move the following %i recordings to folder \"%.*s\"?"
 msgstr ""
 
 #, c-format
@@ -143,6 +143,9 @@ msgstr ""
 msgid "Admin password"
 msgstr "Admin lösen"
 
+msgid "Error in timer settings"
+msgstr "Fel i timer-inställning"
+
 #, c-format
 msgid "%A, %x"
 msgstr ""
@@ -150,14 +153,11 @@ msgstr ""
 msgid "Search timer"
 msgstr "Söktimer"
 
-msgid "Error in timer settings"
-msgstr "Fel i timer-inställning"
+msgid "Timer not defined"
+msgstr "Timer ej definierad"
 
 msgid "Timer already defined"
 msgstr "Timer redan satt"
-
-msgid "Timer not defined"
-msgstr "Timer ej definierad"
 
 #, c-format
 msgid "Delete timer \"%s\"?"
@@ -1001,7 +1001,7 @@ msgstr "Inga inspelningar funna"
 msgid "No deleted recordings found"
 msgstr ""
 
-msgid "Move selected recordings to folder"
+msgid "Move selected recordings"
 msgstr ""
 
 msgid "Delete selected recordings"

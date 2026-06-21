@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 3.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-16 19:07+0200\n"
+"POT-Creation-Date: 2026-06-19 22:07+0200\n"
 "PO-Revision-Date: 2026-01-27 20:15+0200\n"
 "Last-Translator: Stefan Hofmann <info@stefans-galerie.de>\n"
 "Language-Team: see developers in README\n"
@@ -33,15 +33,15 @@ msgid "Delete the following %i recordings?"
 msgstr "Folgende %i Aufzeichnungen löschen?"
 
 #, c-format
-msgid "Move recording \"%s\"?"
-msgstr "Aufzeichnung \"%s\" verschieben?"
+msgid "Move recording \"%s\" to folder \"%.*s\"?"
+msgstr "Aufzeichnung \"%s\" in das Verzeichnis \"%.*s\" verschieben?"
 
 msgid "Move recording [recording name unavailable]?"
 msgstr "Aufzeichnung verschieben [Name nicht verfügbar]?"
 
 #, c-format
-msgid "Move the following %i recordings?"
-msgstr "Folgende %i Aufzeichnungen verschieben?"
+msgid "Move the following %i recordings to folder \"%.*s\"?"
+msgstr "Folgende %i Aufzeichnungen in des Verzeichnis \"%.*s\" verschieben?"
 
 #, c-format
 msgid "Restore recording \"%s\"?"
@@ -145,6 +145,9 @@ msgstr "Administrator-Login"
 msgid "Admin password"
 msgstr "Administrator-Passwort"
 
+msgid "Error in timer settings"
+msgstr "Fehler in den Timer-Einstellungen"
+
 #, c-format
 msgid "%A, %x"
 msgstr "%A, %x"
@@ -152,14 +155,11 @@ msgstr "%A, %x"
 msgid "Search timer"
 msgstr "Suchtimer"
 
-msgid "Error in timer settings"
-msgstr "Fehler in den Timer-Einstellungen"
+msgid "Timer not defined"
+msgstr "Timer wurde nicht erstellt"
 
 msgid "Timer already defined"
 msgstr "Timer ist bereits vorhanden"
-
-msgid "Timer not defined"
-msgstr "Timer wurde nicht erstellt"
 
 #, c-format
 msgid "Delete timer \"%s\"?"
@@ -677,10 +677,10 @@ msgid "h"
 msgstr "h"
 
 msgid "Number of PES files"
-msgstr "Zahl der PES Dateien"
+msgstr "Zahl der PES-Dateien"
 
 msgid "Number of TS files"
-msgstr "Zahl der TS Dateien"
+msgstr "Zahl der TS-Dateien"
 
 msgid "Find more in the IMDb (Internet Movie Database)"
 msgstr "Weitere Informationen in der IMDb (Internet Movie Database)"
@@ -1003,8 +1003,8 @@ msgstr "Keine Aufzeichnungen vorhanden"
 msgid "No deleted recordings found"
 msgstr "Keine gelöschten Aufzeichnungen vorhanden"
 
-msgid "Move selected recordings to folder"
-msgstr "Ausgewählte Aufzeichnungen verschieben, in das Verzeichnis"
+msgid "Move selected recordings"
+msgstr "Ausgewählte Aufzeichnungen verschieben"
 
 msgid "Delete selected recordings"
 msgstr "Ausgewählte Aufzeichnungen löschen"
@@ -1322,28 +1322,7 @@ msgstr "Aufzeichnungen verschieben"
 msgid "Move"
 msgstr "Verschieben"
 
-#~ msgid "Copy only"
-#~ msgstr "Nur kopieren"
-
-#~ msgid "Toggle updates on/off"
-#~ msgstr "Statusabfrage ein- oder ausschalten"
-
-#~ msgid "Deleted recording:"
-#~ msgstr "Gelöschte Aufzeichnung:"
-
-#~ msgid "Permanently deleted recording:"
-#~ msgstr "Dauerhaft gelöschte Aufzeichnung:"
-
 #, c-format
-#~ msgid "Delete the following recordings?"
-#~ msgstr "Folgende Aufzeichnungen löschen?"
-
-#~ msgid "Restore the following recordings?"
-#~ msgstr "Folgende Aufzeichnungen wiederherstellen?"
-
-#~ msgid "Permanently delete the following recordings?"
-#~ msgstr "Folgende Aufzeichnungen endgültig löschen?"
-
 #~ msgid "On archive DVD No."
 #~ msgstr "Auf Archiv-DVD Nr."
 
@@ -1358,12 +1337,6 @@ msgstr "Verschieben"
 
 #~ msgid "Attempt to delete recording currently in playback."
 #~ msgstr "Die gerade abgespielte Aufzeichnung soll gelöscht werden."
-
-#~ msgid "Delete this search timer?"
-#~ msgstr "Suchtimer löschen?"
-
-#~ msgid "Delete this timer?"
-#~ msgstr "Timer löschen?"
 
 #~ msgid "Compare"
 #~ msgstr "Vergleiche"

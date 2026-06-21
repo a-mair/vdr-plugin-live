@@ -15,6 +15,7 @@
 #include <vdr/plugin.h>
 #include <vdr/recording.h>
 #include <vdr/videodir.h>
+#include <vdr/svdrp.h>
 
 using namespace tnt;
 
@@ -222,7 +223,7 @@ namespace vdrlive {
     if (s.empty()) return std::string();
     char *str = reinterpret_cast<char*>(std::malloc(s.length() + 1)); // VDR ExchangeChars needs a pointer to data allocated with malloc
     if (!str) {
-      esyslog("live, ERROR: out of memory in FileSystemExchangeChars");
+      esyslog3("out of memory in FileSystemExchangeChars");
       return std::string(s);
     }
     std::memcpy(str, s.data(), s.length());

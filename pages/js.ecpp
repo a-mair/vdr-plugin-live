@@ -134,9 +134,14 @@ function addEvent(s, bottomrow_i, obj) {
     addEncodeHtml(s, label)
     s.a += '&lt;/p&gt;&lt;p class=&quot;click-action&quot;&gt;<$tr("Edit timer")$>&lt;/p&gt;\" />'
   } else {
+<#
     s.a += '<a href=\"edit_timer.html?epgid=event_'
     s.a += obj[0]
-    s.a += '\"><img class=\"icon\" src=\"<$ GetThemedLink("img", "record.svg") $>'
+    s.a += '\" onclick="return createTimer(\\''
+#>
+    s.a += '<a onclick="return createTimer(\\''
+    s.a += obj[0]
+    s.a += '\\')"><img class=\"icon\" src=\"<$ GetThemedLink("img", "record.svg") $>'
     s.a += '\" title=\"&lt;p&gt;'
     addEncodeHtml(s, label)
     s.a += '&lt;/p&gt;&lt;p class=&quot;click-action&quot;&gt;<$tr("Record this")$>&lt;/p&gt;\" />'
