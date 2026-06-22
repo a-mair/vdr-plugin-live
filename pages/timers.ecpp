@@ -228,6 +228,36 @@ using namespace vdrlive;
             <$$ cToSvReplace(timerFile, "~", "~<wbr>") $>
 %         }
             </div>
+<%cpp>
+#if VDRVERSNUM >= 20707
+          if (timer->HasFlags(tfVps) ) {
+            time_t vps_time = timer->VpsTime();
+            LOCK_CHANNELS_READ;
+            LOCK_SCHEDULES_READ;
+            const cEvent *event0 = timer->Event();
+            const cSchedule *schedule = event0->Schedule();
+            for (const cEvent *e = schedule->Events()->First(); e; e = schedule->Events()->Next(e)) {
+              if (e == event0) continue;
+              if (e->Vps() != vps_time) continue;
+              cToSvConcat title;
+              cToSvConcat shortText;
+              title.appendDateTime("%a,", e->StartTime()) << ' ';
+              title.appendDateTime(tr("%b %d %y"), e->StartTime()) << ' ';
+              title.appendDateTime(tr("%I:%M %p"), e->StartTime()) << ", ";
+              AppendHtmlEscapedAndCorrectNonUTF8(title, e->Title());
+              AppendHtmlEscapedAndCorrectNonUTF8(shortText, e->ShortText(), true);
+</%cpp>
+            <div class="withmargin">
+              <a <& tooltip.display domId=(EpgEvents::EncodeDomId(timer->Channel()->GetChannelID(), e->EventID())) &>
+                 class="apopup" title="<$$shortText$>">
+                 <$$ title $>
+              </a>
+            </div>
+<%cpp>
+            }
+          }
+#endif
+</%cpp>
           </td>
           <td class="<? bottom ? "bottomrow" ?> <$ noRemoteTimers ? "notpresent" : "remotetimer" $> td-hidden-xs"><div class="xs-nomargin"><$ timer->Local()?trVDR(" "):timer->Remote() $></div></td>
           <td class="<$ noSearchTimers ? "notpresent" : "searchtimer" $><? bottom ? " bottomrow" ?>"><div class="withmargin">

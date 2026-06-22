@@ -277,11 +277,12 @@ else active_r = "recordings";
               function new_dir() {
                 var dirSelection = document.getElementById("dirSelection");
                 dirSelection.style.display = "none";
+                var dirEntry = document.getElementById("dirEntry");
+                dirEntry.style.display = "";
                 var dir = document.getElementById("directory");
                 var newdir = document.getElementById("newdir");
                 newdir.value = dir.value;
                 newdir.disabled = false;
-                newdir.style.display = "";
               }
             </script>
             <div class="button-panel hidden-xs">
@@ -298,7 +299,9 @@ else active_r = "recordings";
                     </select>
                     <img id="new_dir_button" class="icon button new-dir" src="<$ GetThemedLink("img", "icon_overlay_plus.svg") $>" title="<$tr("Create new directory")$>" alt="" onclick="new_dir()">
                   </div>
-                  <input type="text" name="newdir" id="newdir" value="." size="55" class="" style="display: none" disabled="true" pattern="^([^~.\s][^~]*)(~[^~.\s][^~]*)*$" title="<$tr("Separate directories with a tilde '~'; directory names must not start with a tilde, dot, or whitespace")$>" />
+                  <div class="with-action-icon" id="dirEntry" style="display: none">
+                    <input type="text" name="newdir" id="newdir" value="." size="55" disabled="true" pattern="^([^~.\s][^~]*)(~[^~.\s][^~]*)*$" title="<$tr("Separate directories with a tilde '~'; directory names must not start with a tilde, dot, or whitespace")$>" />
+                  </div>
                 </div>
               </div>
               <div class="buttons">

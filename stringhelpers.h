@@ -1365,7 +1365,7 @@ template<typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
 // if more than m chars are required, use what is needed
       size_t needed_chars = stringhelpers_internal::numChars(i);
       ensure_free(std::max(m, needed_chars));
-      if (needed_chars < m) append(' ', m-needed_chars);
+      if (needed_chars < m) append(m-needed_chars, ' ');
       m_pos_for_append = to_chars10_internal::itoa(m_pos_for_append, i);
       return *this;
     }
@@ -1376,11 +1376,11 @@ template<typename T, std::enable_if_t<std::is_unsigned_v<T>, bool> = true>
 // if more than m chars are required, use what is needed
       size_t needed_chars = stringhelpers_internal::numChars(i);
       ensure_free(std::max(m, needed_chars));
-      if (needed_chars < m) append('0', m-needed_chars);
+      if (needed_chars < m) append(m-needed_chars, '0');
       m_pos_for_append = to_chars10_internal::itoa(m_pos_for_append, i);
       return *this;
     }
-template<typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
+template<typename T, std::enable_if_t<std::is_signed_v<T>, bool> = true>
     cToSvConcat &appendIntFillZeros(T i, size_t m) {
 // use m chars to print the integer
 // if less than m chars are required, left fill with zeros
