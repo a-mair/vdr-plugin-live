@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 11:43+0200\n"
+"POT-Creation-Date: 2026-06-23 20:03+0200\n"
 "PO-Revision-Date: 2007-08-19 20:15+0200\n"
 "Last-Translator: Nicolas Huillard <nhuillard@e-dition.fr>\n"
 "Language-Team: see developers in README\n"
@@ -251,6 +251,9 @@ msgstr "Sauvegarde"
 
 msgid "Cancel"
 msgstr "Interrompre"
+
+msgid "Execute this recording command"
+msgstr ""
 
 msgid "Couldn't find search timer. Maybe you mistyped your request?"
 msgstr "Impossible de trouver la programmation de recherche. Peut-être que votre demande de fautes de frappe?"

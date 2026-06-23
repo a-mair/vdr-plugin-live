@@ -198,7 +198,7 @@ using namespace vdrlive;
 %   }
     <form>
       <input type="hidden" name="history_num_back" value="<$ history_num_back $>" id="history_<$$ idhash $>" />
-      <input type="hidden" id="id_select_html_elements" value="<$$ idhash $>" />
+      <input type="hidden" name="id_select_html_elements" value="<$$ idhash $>" />
 %     if (need_confirmation) {
       <div class="label">
         <input type="checkbox" name="disable_popup" value="disable_popup" id="disable_popup_<$$ idhash $>" />

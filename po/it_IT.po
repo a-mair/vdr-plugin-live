@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 11:43+0200\n"
+"POT-Creation-Date: 2026-06-23 20:03+0200\n"
 "PO-Revision-Date: 2011-12-25 23:22+0100\n"
 "Last-Translator: Diego Pierotto <vdr-italian@tiscali.it>\n"
 "Language-Team: see developers in README\n"
@@ -249,6 +249,9 @@ msgstr "Salva"
 
 msgid "Cancel"
 msgstr "Annulla"
+
+msgid "Execute this recording command"
+msgstr ""
 
 msgid "Couldn't find search timer. Maybe you mistyped your request?"
 msgstr "Impossibile trovare timer di ricerca. Hai digitato correttamente la richiesta?"

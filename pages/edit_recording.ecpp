@@ -235,6 +235,17 @@ std::string active_r;
             <td class="rightcol"><$$ aux_data $></td>
           </tr>
 % }
+% if (RecordingCommands.First()) {
+          <tr>
+            <td class="label leftcol"><div class="withmargin"><$ trVDR("Recording commands") $>:</div></td>
+            <td class="rightcol">
+%           for (cNestedItem *Command = RecordingCommands.First(); Command; Command = RecordingCommands.Next(Command)) if (!Command->SubItems()) {
+              <&one_reccomands_line text=(Command->Text()) recid=(recid)&>
+%           }
+            <div id="display_execute_rec_command_result"></div>
+            </td>
+          </tr>
+% }
         </table>
         <!-- Messages and buttons -->
         <div class="message error"><$ message $></div>
@@ -250,4 +261,22 @@ std::string active_r;
   </body>
 </html>
 % }
+<%def one_reccomands_line>
+<%args>
+  std::string text;
+  std::string recid;
+</%args>
+<%cpp>
+  size_t col_pos = text.find(':');
+  if (col_pos == std::string::npos) {
+    esyslog2("edit_recording.ecpp, text \"", text, "\" contains no ':', recid = ", recid);
+  } else {
+</%cpp>
+    <div>
+      <a onclick="execute_rec_command('<$text$>', '<$recid$>')" title="<$tr("Execute this recording command")$>">
+      <$cSv(text).substr(0, col_pos)$>
+    </a></div>
+% }
+<# <div><img class="icon" src="<$ GetThemedLink("img", "icon_regular_active.svg") $>"/></div> #>
+</%def>
 <%include>page_exit.eh</%include>

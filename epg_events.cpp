@@ -78,12 +78,15 @@ namespace vdrlive
 
   cSv EpgInfo::Name() const
   {
-    cSv name(m_name);
-    size_t index = name.find_last_of('~');
-    if (index != std::string::npos) {
-      name = name.substr(index+1);
-    }
-    return name;
+    size_t index = m_name.find_last_of('~');
+    if (index != std::string::npos) return cSv(m_name).substr(index+1);
+    else return m_name;
+  }
+  cSv EpgInfo::Folder() const
+  {
+    size_t index = m_name.find_last_of('~');
+    if (index != std::string::npos) return cSv(m_name).substr(0, index);
+    else return cSv();
   }
 
   /*

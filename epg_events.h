@@ -122,6 +122,8 @@ namespace vdrlive
       cScraperVideo *GetScraperVideo() const { return m_scraperVideo.get() ; }
 // only for recordings:
       cSv FileName() const { return m_fileName; }
+      cSv Name() const; // Last Part of m_name
+      cSv Folder() const; // Other Parts of m_name
     private:
       int m_type = 0; // o -> none, 1 -> event, 2 -> recording
       std::string m_eventId;
@@ -146,7 +148,6 @@ namespace vdrlive
       int m_numFrames = 0;
       std::string m_fileName;
       std::string m_name;  // as returned by cRecording:Name()
-      cSv Name() const; // Last Part of m_name
   };
 
   // -------------------------------------------------------------------------

@@ -95,7 +95,6 @@ inline cToSvConcat<N>& AppendHtmlEscapedAndCorrectNonUTF8(cToSvConcat<N>& target
         case '\t': target.append(notAppended, i); target.append("&tab;");  notAppended += i + 1; i = 0; break;
         case '\n':
         case '\r':
-//                 target.append(notAppended, i); target.append("&lt;br/&gt;");   notAppended += i + 1; i = 0; break;
                    target.append(notAppended, i); target.append(lf);       notAppended += i + 1; i = 0; break;
         case '&':  target.append(notAppended, i); target.append("&amp;");  notAppended += i + 1; i = 0; break;
         case '\"': target.append(notAppended, i); target.append("&quot;"); notAppended += i + 1; i = 0; break;

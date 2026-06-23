@@ -409,35 +409,7 @@ const cyrb53a_beta = function(str, seed = 0) {
   h1 ^= h2 >>> 16; h2 ^= h1 >>> 16;
   return 2097152 * (h2 >>> 0) + (h1 >>> 11);
 };
-//  "Content-Type": "application/x-www-form-urlencoded",
-//  headers: { "Content-Type": "text/plain",}
-async function hash(input) {
-var url = 'hash.html?input='+encodeURIComponent(input);
-alert("url= " +url);
-try {
-  const response = await fetch(url, {
-    method: "GET",
-  });
-  if (!response.ok) {
-    alert(`HTTP ${response.status}: ${response.statusText}`);
-    return input;
-  }
-  let p_text = response.text();
-  let text = await p_text;
-} catch (error) {
-  alert("Network request failed: "+ error.message);
-  return input;
-}
-return text.slice(0,32);
-}
-async function id_from_epgid(epgid) {
-var action_id = epgid.slice(0,4);
-if (action_id == "del_" || action_id == "pur_" || action_id == "res_" || action_id == "mov_" || action_id == "det_" || action_id == "des_") {
-  return await hash(epgid);
-} else {
-  return epgid;
-}
-}
+
 function decrease_history_num_back(url) {
 var ind_history = url.indexOf("history_num_back=");
 if (ind_history == -1) return url;
@@ -469,7 +441,7 @@ InfoWin.Ajax = InfoWin.extend({
           update: this.ajaxResponse,
           onComplete: function(text, xmldoc){
             var id_select_html_elements;
-            var found = /<input type="hidden" id="id_select_html_elements" value="(\w+)"/.exec(text);
+            var found = /<input type="hidden" name="id_select_html_elements" value="(\w+)"/.exec(text);
             if ($defined(found) && found.length > 1) {
               id_select_html_elements = found[1];
 //            console.log("id_select_html_elements found, value "+id_select_html_elements, " epgid = "+epgid);

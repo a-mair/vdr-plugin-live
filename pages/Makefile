@@ -13,7 +13,7 @@ INCLUDES += -I$(VDRDIR)/include -I..
 ECPPINCLUDES += -I../live/img
 
 ### The object files (add further files here):
-OBJS := hash.o create_timer.o action.o content.o recordings_widget.o play_recording.o timers.o edit_timer.o \
+OBJS := recording_command.o create_timer.o action.o content.o recordings_widget.o play_recording.o timers.o edit_timer.o \
         pageelems.o js.o get_recordings.o recordings.o \
         epginfo.o schedule.o multischedule.o screenshot.o   \
         whats_on.o switch_channel.o keypress.o remote.o	\

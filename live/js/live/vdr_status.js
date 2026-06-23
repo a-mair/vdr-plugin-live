@@ -150,7 +150,6 @@ var LiveVdrInfo = Ajax.extend({
         case "prevchan":
         {
           if (textContent != "") {
-            // docNode.href = "javascript:LiveSimpleAjaxRequest('switch_channel.xml', 'param', '" + textContent + "');";
             docNode.href = "vdr_request/switch_channel?param=" + textContent;
             docNode.style.visibility = "visible";
           }
@@ -162,11 +161,10 @@ var LiveVdrInfo = Ajax.extend({
         case "pause":
         case "play":
         case "rwd":
-         case "ffw":
+        case "ffw":
         case "stop":
         {
           if (textContent != "") {
-            // docNode.href = "javascript:LiveSimpleAjaxRequest('" + nodeName + "_recording.xml', 'param', '" + textContent + "');";
             docNode.href = "vdr_request/" + nodeName + "_recording?param=" + textContent;
             docNode.style.visibility = "visible";
           }

@@ -393,7 +393,6 @@ if (!rfid.empty() ) {
 
 <%def ajax_js>
   <script type="text/javascript" src="js/mootools/mootools.v1.11.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
-  <script type="text/javascript" src="js/live/liveajax.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript" src="js/live/infowin.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript" src="js/live/hinttips.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript" src="js/live/browserwin.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
@@ -702,10 +701,15 @@ if (scraperMovieOrTv.found) {
           <div class="event_details">
             <div class="time_channel">
               <div class="time">
-                <$ (time) $>
+                <$ time $>
               </div>
-%             if (!filename.empty() && !channel.empty()) {
-                <div class="channel"><$ (channel) $></div>
+%             if (!channel.empty()) {
+                <div class="channel"><$ channel $></div>
+%             }
+%             if (epgEvent && epgEvent->isRecording() ) {
+                <div class=""><$epgEvent->Name()$>
+                  <? !epgEvent->Folder().empty() ? cToSvConcat('(', epgEvent->Folder(), ')') ?>
+                </div>
 %             }
             </div>
             <div class="duration">

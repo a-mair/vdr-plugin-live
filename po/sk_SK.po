@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 11:43+0200\n"
+"POT-Creation-Date: 2026-06-23 20:03+0200\n"
 "PO-Revision-Date: 2012-12-03 21:41+0100\n"
 "Last-Translator: Milan Hrala <hrala.milan@gmail.com>\n"
 "Language-Team: Slovak <hrala.milan@gmail.com>\n"
@@ -244,6 +244,9 @@ msgstr "Uložiť"
 
 msgid "Cancel"
 msgstr "Zrušiť"
+
+msgid "Execute this recording command"
+msgstr ""
 
 msgid "Couldn't find search timer. Maybe you mistyped your request?"
 msgstr "Nenašiel sa vyhľadávaný čas. Možno ste zle napísali vašu požiadavku?"

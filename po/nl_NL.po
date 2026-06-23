@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 11:43+0200\n"
+"POT-Creation-Date: 2026-06-23 20:03+0200\n"
 "PO-Revision-Date: 2025-10-03 20:15+0200\n"
 "Last-Translator: Carel Willemse <carel@nekanali.nl>\n"
 "Language-Team: see developers in README\n"
@@ -246,6 +246,9 @@ msgstr "Bewaar"
 
 msgid "Cancel"
 msgstr "Annuleren"
+
+msgid "Execute this recording command"
+msgstr ""
 
 msgid "Couldn't find search timer. Maybe you mistyped your request?"
 msgstr "Kon geen zoektimer vinden, misschien een typefout in het verzoek?"

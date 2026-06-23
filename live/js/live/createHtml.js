@@ -314,6 +314,12 @@ async function createTimer(epgid) {
   location.reload();
   return false;
 }
+async function execute_rec_command(text, recid) {
+  const response = await fetch('recording_command.html?text='+encodeURIComponent(text)+
+    '&recid='+encodeURIComponent(recid));
+  const re_text = await response.text();
+  document.getElementById('display_execute_rec_command_result').innerHTML = re_text;
+}
 function back_depending_referrer(back_epginfo, back_others) {
   if (document.referrer.indexOf("epginfo.html?") != -1) {
     history.go(-back_epginfo);
