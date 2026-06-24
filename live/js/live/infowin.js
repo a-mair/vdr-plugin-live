@@ -217,16 +217,12 @@ var InfoWin = new Class({
       return false;
     },
 
-    fillBody: function(id, id_select_html_elements, epgid){
-      var bodyElems;
-      if (id_select_html_elements) {
-        bodyElems = $$('#'+ id_select_html_elements + ' ' + this.options.bodySelect);
-      } else {
-        bodyElems = $$('#'+ id + ' ' + this.options.bodySelect);
-      }
+    fillBody: function(id_select_html_elements, epgid){
+      if (!epgid) return false;
+      var bodyElems = $$('#'+ id_select_html_elements + ' ' + this.options.bodySelect);
       if ($defined(bodyElems) && bodyElems.length > 0) {
         this.winBody.empty();
-        this.fireEvent('onDomExtend', [id, bodyElems]);
+        this.fireEvent('onDomExtend', [id_select_html_elements, bodyElems]);
         this.winBody.adopt(bodyElems);
         var history_num_back = 0;
         var history_back = this.winBody.getElementById('history_' + id_select_html_elements);
@@ -246,7 +242,7 @@ var InfoWin = new Class({
               return this.hide();
             }.bind(this));
         }
-        var close_button = this.winBody.getElementById('close_' + id);
+        var close_button = this.winBody.getElementById('close_' + id_select_html_elements);
         if (close_button) {
           close_button.onclick = null;
           close_button.addEvent('click', function(event) {
@@ -265,8 +261,8 @@ var InfoWin = new Class({
       return false;
     },
 
-    fillTitle: function(id){
-      var titleElems = $$('#' + id + ' ' + this.options.titleSelect);
+    fillTitle: function(id_select_html_elements){
+      var titleElems = $$('#' + id_select_html_elements + ' ' + this.options.titleSelect);
       if ($defined(titleElems) && titleElems.length > 0) {
         this.titleBox.empty().adopt(titleElems);
         return true;
@@ -360,8 +356,7 @@ window.addEvent('domready', function(){
 /*
 Class: InfoWin.Ajax
 
-  Use an instance of mootools Ajax class to asynchronously request
-  the content of an info win.
+  Asynchronously request the content of an info win using fetch
 */
 function is_digit(c){
   if (c >= '0' && c <= '9') {
@@ -428,36 +423,38 @@ InfoWin.Ajax = InfoWin.extend({
     onError: Class.empty
   },
 
+  get_content: async function(epgid, url) {
+    if (!this.get_content_0(epgid, url)) {
+      console.log('Error fetching url '+url);
+      this.titleBox.innerHTML = 'Error fetching url '+url;
+    }
+  },
+  get_content_0: async function(epgid, url) {
+    var response = await fetch(url);
+    if (!response) return false;
+    var text = await response.text();
+    if (!text) return false;
+    var id_select_html_elements;
+    var found = /<input type="hidden" name="id_select_html_elements" value="(\w+)"/.exec(text);
+    if ($defined(found) && found.length > 1) {
+      id_select_html_elements = found[1];
+    } else {
+      id_select_html_elements = epgid;
+    }
+//  console.log("id_select_html_elements  = "+id_select_html_elements+" epgid = "+epgid);
+    this.ajaxResponse.innerHTML = text;
+    this.fillTitle(id_select_html_elements);
+    this.fillBody(id_select_html_elements, epgid);
+    this.ajaxResponse.remove();
+    return true;
+  },
   initialize: function(epgid, url_in, options){
 // id: id for this infowin
     let id = 'A' + cyrb53(epgid);
     this.parent(id, options);
-    var url = decrease_history_num_back(url_in);
+    var url = decrease_history_num_back(url_in)+'&async=1';
     if ($defined(this.ajaxResponse)) {
-      this.addEvent('onError', function(){
-          this.hide.delay(1000, this);
-        }.bind(this));
-      var ajax = new Ajax(url, {
-          update: this.ajaxResponse,
-          onComplete: function(text, xmldoc){
-            var id_select_html_elements;
-            var found = /<input type="hidden" name="id_select_html_elements" value="(\w+)"/.exec(text);
-            if ($defined(found) && found.length > 1) {
-              id_select_html_elements = found[1];
-//            console.log("id_select_html_elements found, value "+id_select_html_elements, " epgid = "+epgid);
-            } else {
-              id_select_html_elements = epgid;
-//            console.log("id_select_html_elements NOT found, epgid = "+epgid);
-            }
-            this.fillTitle(id_select_html_elements);
-            this.fillBody(id, id_select_html_elements, epgid);
-            this.ajaxResponse.remove();
-          }.bind(this),
-          onFailure: function(transport){
-            this.titleBox.setHTML(this.options.errorMsg);
-            this.fireEvent('onError', [id, url]);
-          }.bind(this)
-        }).request('async=1');
+      this.get_content(epgid, url);
     }
   },
 

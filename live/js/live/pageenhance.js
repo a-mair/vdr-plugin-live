@@ -12,7 +12,6 @@ var PageEnhance = new Class({
     options: {
       epgLinkSelector: 'a[href^="epginfo.html?epgid"], *[xlink:href="epginfo.html?epgid=rcKeys"]',
       actionLinkSelector: 'a[href^="vdr_request/"]',
-      editTimerSelector: 'a[href^="edit_timer.html?timerid"]',
       hintTipSelector: '*[title], *[xlink:title]',
       hintClassName: 'hint',
       infoWinOptions: {
@@ -39,9 +38,6 @@ var PageEnhance = new Class({
       $$(this.options.epgLinkSelector).each(this.epgPopup.bind(this));
       this.addHintTips($$(this.options.hintTipSelector));
       $$(this.options.actionLinkSelector).each(this.vdrRequest.bind(this));
-      // the following line activates timer editing in popup window.
-      // but it does not yet work like expected. So we leave it deactivated currently.
-      // $$(this.options.editTimerSelector).each(this.editTimer.bind(this));
     },
 
     // actions applied on mouse down.
@@ -96,55 +92,31 @@ var PageEnhance = new Class({
       }
     },
 
-    // Edit Timer Popup function. Apply to all elements that should
-    // pop up a timer edit windows based on InfoWin window.
-    editTimer: function(el){
-      var href = el.href;
-      var timerid = $pick(href, "");
-      if (timerid != "") {
-        var extractId = /timerid=(.+)/;
-        var found = extractId.exec(timerid);
-        if ($defined(found) && found.length > 1) {
-          timerid = found[1];
-          el.addEvent('click', function(event){
-              var event = new Event(event);
-              new InfoWin.Ajax(timerid, href, $merge(this.options.infoWinOptions, {
-                    bodySelect: '',
-                    modal: true,
-                    onDomExtend: this.domExtend.bind(this)
-                      })).show(event);
-              event.stop();
-              return false;
-            }.bind(this));
-        }
+    // function that requests an action from the server VDR.
+    vdrRequest_fetch: async function(href, event){
+      event.stop();
+      try {
+        const response = await fetch(href + '&async=1');
+        var xmldoc = new window.DOMParser().parseFromString(await response.text(), "text/xml");
+        var success = xmldoc.getElementsByTagName('response').item(0).firstChild.nodeValue;
+        new InfoWin.Notifier(this.options.notifyIdPrefix + this.$notifyCount, {
+            className: success == '1' ? 'ok' : 'err',
+            message: success == '1' ? this.options.notifyStrings.successMsg : this.options.notifyStrings.errorMsg
+          }).show(event);
+      } catch(e) {
+        console.log("Error in vdrRequest_fetch: "+e.message);
       }
     },
-
-    // function that requests an action from the server VDR.
     vdrRequest: function(el){
       el.addEvent('click', function(event, element){
-          var href = $pick(element.href, "");
-          if (href != "") {
-            this.$notifyCount++;
-            var req = new Ajax(href, {
-                method: 'post',
-                onComplete: function(text, xmldoc) {
-                  try {
-                    var success = xmldoc.getElementsByTagName('response').item(0).firstChild.nodeValue;
-                    new InfoWin.Notifier(this.options.notifyIdPrefix + this.$notifyCount, {
-                        className: success == '1' ? 'ok' : 'err',
-                        message: success == '1' ? this.options.notifyStrings.successMsg : this.options.notifyStrings.errorMsg
-                      }).show(event);
-                  } catch(e) {
-                  }
-                }.bind(this)
-              });
-            req.request('async=1');
-            event.stop();
-            return false;
-          }
-          return true;
-        }.bindWithEvent(this, el));
+        var href = $pick(element.href, "");
+        if (href != "") {
+          this.$notifyCount++;
+          this.vdrRequest_fetch(href, event);
+          return false;
+        }
+        return true;
+      }.bindWithEvent(this, el));
     },
 
     // change normal 'title'-Attributes into enhanced hinttips

@@ -166,7 +166,9 @@ if (!cUser::CurrentUserHasRightTo(UR_EDITSETUP))
     }
     function changedLocalTheme() {
       if (document.getElementById("uselocaltheme").checked) {
-        document.getElementById("localtheme").style.visibility = "";
+        const localTheme = document.getElementById("localtheme");
+        if (!localTheme.value) localTheme.value = document.getElementById("theme").value;
+        localTheme.style.visibility = "";
       } else {
         document.getElementById("localtheme").style.visibility = "hidden";
 

@@ -172,11 +172,11 @@ using namespace vdrlive;
 <%cpp>
   }
   if (confirm) {
-    vdrlive::cToSvXxHash128 idhash(epgid);
+    vdrlive::cToSvXxHash128 id_select_html_elements(epgid);
     auto obj_list = confirm->get_object_names(epgid);
     bool need_confirmation = !obj_list.empty();
 </%cpp>
-<div class="epg_description" id="<$$ idhash $>">
+<div class="epg_description" id="<$$ id_select_html_elements $>">
   <div class="station">
     <div class="boxheader"><div class="caption"><$ confirm->get_headline() $></div></div>
   </div>
@@ -197,11 +197,11 @@ using namespace vdrlive;
       <div class="message warning"><$ tr(confirm->m_warning) $></div>
 %   }
     <form>
-      <input type="hidden" name="history_num_back" value="<$ history_num_back $>" id="history_<$$ idhash $>" />
-      <input type="hidden" name="id_select_html_elements" value="<$$ idhash $>" />
+      <input type="hidden" name="history_num_back" value="<$ history_num_back $>" id="history_<$$ id_select_html_elements $>" />
+      <input type="hidden" name="id_select_html_elements" value="<$$ id_select_html_elements $>" />
 %     if (need_confirmation) {
       <div class="label">
-        <input type="checkbox" name="disable_popup" value="disable_popup" id="disable_popup_<$$ idhash $>" />
+        <input type="checkbox" name="disable_popup" value="disable_popup" id="disable_popup_<$$ id_select_html_elements $>" />
         <label for="disable_popup"><$ tr("Do not ask again during this session") $></label>
       </div>
 %     }
@@ -210,12 +210,12 @@ using namespace vdrlive;
         <div class="tabular buttons">
 %         if (need_confirmation) {
           <div class="about_left">
-            <button id="confirm_<$$ idhash $>" class="green" type="button" onclick="action_back('<$$ idhash $>', '<$ epgid $>', <$ history_num_back $>)"><$confirm->get_prompt()$>
+            <button id="confirm_<$$ id_select_html_elements $>" class="green" type="button" onclick="action_back('<$$ id_select_html_elements $>', '<$ epgid $>', <$ history_num_back $>)"><$confirm->get_prompt()$>
             </button>
           </div>
 %         }
           <div class="about_right">
-            <button id="close_<$$ idhash $>" class="red" type="button" onclick="back_depending_referrer(1, <$history_num_back $>)"><$ tr("Cancel") $>
+            <button id="close_<$$ id_select_html_elements $>" class="red" type="button" onclick="back_depending_referrer(1, <$history_num_back $>)"><$ tr("Cancel") $>
             </button>
           </div>
         </div>
