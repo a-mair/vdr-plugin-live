@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-23 20:03+0200\n"
+"POT-Creation-Date: 2026-06-25 09:06+0200\n"
 "PO-Revision-Date: 2007-08-19 20:15+0200\n"
 "Last-Translator: Nicolas Huillard <nhuillard@e-dition.fr>\n"
 "Language-Team: see developers in README\n"
@@ -835,14 +835,14 @@ msgstr "Demande réussi!"
 msgid "Request failed!"
 msgstr "Échec de la requête!"
 
-msgid "Retrieving status ..."
-msgstr "mise à jours de l'état"
-
 msgid "Infobox update is on. Click to turn it off"
 msgstr ""
 
 msgid "Infobox update is off. Click to turn it on"
 msgstr ""
+
+msgid "Retrieving status ..."
+msgstr "mise à jours de l'état"
 
 msgid "Stop playback"
 msgstr "arrêter la lecture"

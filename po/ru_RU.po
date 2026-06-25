@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-23 20:03+0200\n"
+"POT-Creation-Date: 2026-06-25 09:06+0200\n"
 "PO-Revision-Date: 2013-06-21 20:15+0200\n"
 "Last-Translator: Dmitrii Kiselev <wm.amid@gmail.com>\n"
 "Language-Team: see developers in README\n"
@@ -815,14 +815,14 @@ msgstr "Запрос выполнен!"
 msgid "Request failed!"
 msgstr "Запрос не выполнен!"
 
-msgid "Retrieving status ..."
-msgstr "получение статуса … "
-
 msgid "Infobox update is on. Click to turn it off"
 msgstr ""
 
 msgid "Infobox update is off. Click to turn it on"
 msgstr ""
+
+msgid "Retrieving status ..."
+msgstr "получение статуса … "
 
 msgid "Stop playback"
 msgstr "остановить воспроизведение"

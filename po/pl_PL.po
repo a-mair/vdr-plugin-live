@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-23 20:03+0200\n"
+"POT-Creation-Date: 2026-06-25 09:06+0200\n"
 "PO-Revision-Date: 2025-10-05 18:19+0200\n"
 "Last-Translator: Tomasz Maciej Nowak <tomek_n@o2.pl>\n"
 "Language-Team: see developers in README\n"
@@ -816,14 +816,14 @@ msgstr "Zakończono powodzeniem!"
 msgid "Request failed!"
 msgstr "Zakończono niepowodzeniem!"
 
-msgid "Retrieving status ..."
-msgstr "odczytywanie stanu ..."
-
 msgid "Infobox update is on. Click to turn it off"
 msgstr ""
 
 msgid "Infobox update is off. Click to turn it on"
 msgstr ""
+
+msgid "Retrieving status ..."
+msgstr "odczytywanie stanu ..."
 
 msgid "Stop playback"
 msgstr "zatrzymaj odtwarzanie"

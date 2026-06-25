@@ -418,9 +418,9 @@ if (!rfid.empty() ) {
 </%cpp>
   <script type="text/javascript" src="js/live/vdr_status.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript"><!--
-    var InfoBox = new LiveVdrInfo('ibox.xml', 'infobox');
+    var InfoBox = new LiveVdrInfo('ibox.xml', 'infobox', '<$ tr("Infobox update is on. Click to turn it off") $>', '<$ tr("Infobox update is off. Click to turn it on") $>');
     window.addEvent('domready', function(){
-      InfoBox.request(<%cpp> if (update_status) { reply.sout() << "true"; } else { reply.sout() << "false"; } </%cpp>);
+      InfoBox.request(<$$ update_status?"true":"false" $>);
     });
     window.addEvent('unload', function(){
       InfoBox.pageFinished();
@@ -449,10 +449,6 @@ if (!rfid.empty() ) {
     </div>
     <div class="st_controls">
       <div class="st_update">
-        <script type="text/javascript"><!--
-          InfoBox['tooltipStopUpdate'] = '<$ tr("Infobox update is on. Click to turn it off") $>';
-          InfoBox['tooltipStartUpdate'] = '<$ tr("Infobox update is off. Click to turn it on") $>';
-        --></script>
         <a href="javascript:InfoBox.toggleUpdate()" <& tooltip.hint text=(tr("Infobox update is on. Click to turn it off")) &>><img class="icon" id="statusReloadBtn" src="<$ GetThemedLink("img", "stop_update.svg") $>" alt="" /></a>
       </div>
       <div id="infobox_recording_buttons" style="display: none">

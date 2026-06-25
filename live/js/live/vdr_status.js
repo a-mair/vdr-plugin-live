@@ -5,29 +5,39 @@
  * This file needs mootools.js to be included on the pages.
  */
 
-var LiveVdrInfo = Ajax.extend({
+class LiveVdrInfo {
 
-    options: {
-      autoCancel: true
-    },
-
-    initialize: function(url, boxId)
+    constructor(url, boxId, tooltipStopUpdate, tooltipStartUpdate)
     {
-      this.parent(url, null);
-      this.addEvent('onComplete', this.showInfo);
-      this.addEvent('onFailure', this.reportError);
-
+      this.url = url;
       this.boxId = boxId;
       this.reload = true;
       this.timer = null;
-    },
+      this.tooltipStopUpdate = tooltipStopUpdate;
+      this.tooltipStartUpdate = tooltipStartUpdate;
+    }
 
-    request: function(update)
+    async request(update)
     {
-      this.parent({update: update ? "1" : "0"});
-    },
+      var response;
+      if (update)
+        response = await fetch(this.url+'?update=1');
+      else
+        response = await fetch(this.url+'?update=0');
+      const text = await response.text();
+      if (!text || text == '') {
+        this.reportError(true);
+        return;
+      }
+      const xmldoc = new window.DOMParser().parseFromString(text, "text/xml");
+      if (!xmldoc || xmldoc == '') {
+        this.reportError(true);
+        return;
+      }
+      this.showInfo(text, xmldoc);
+    }
 
-    showInfo: function(text, xmldoc)
+    showInfo(text, xmldoc)
     {
       try {
         this.selectInfoElems(xmldoc);
@@ -41,9 +51,9 @@ var LiveVdrInfo = Ajax.extend({
       catch (e) {
         this.reportError(null);
       }
-    },
+    }
 
-    reportError: function(transport)
+    reportError(transport)
     {
       this.setTextContent('caption', 'ERROR');
       var message;
@@ -54,10 +64,10 @@ var LiveVdrInfo = Ajax.extend({
         message = $("__infobox_update_err").firstChild.nodeValue;
       }
       this.setTextContent('name', message);
-    },
+    }
 
     // private function to switch visibility of controls.
-    selectInfoElems: function(xmldoc)
+    selectInfoElems(xmldoc)
     {
       var infoType = xmldoc.getElementsByTagName('type').item(0);
 
@@ -77,11 +87,11 @@ var LiveVdrInfo = Ajax.extend({
         playback.style.display = 'none';
         channel.style.display = 'block';
       }
-    },
+    }
 
     // private function to activate the info message display if the
     // corresponding element is found in the current page.
-    setInfoMessage: function(xmldoc)
+    setInfoMessage(xmldoc)
     {
       var info = xmldoc.getElementsByTagName('info').item(0);
       if (! $defined(info))
@@ -106,10 +116,10 @@ var LiveVdrInfo = Ajax.extend({
         }
         messagebar.removeClass('notpresent');
       }
-    },
+    }
 
     // private function to display information from EPG info.
-    setEpgInfo: function(xmldoc)
+    setEpgInfo(xmldoc)
     {
       var epgInfo = xmldoc.getElementsByTagName('epginfo').item(0);
 
@@ -122,10 +132,10 @@ var LiveVdrInfo = Ajax.extend({
           this.setTextContent(node.nodeName, textContent);
         }
       }
-    },
+    }
 
     // private function to update text contents.
-    setTextContent: function(nodeName, textContent)
+    setTextContent(nodeName, textContent)
     {
       var docNode = $(this.boxId + '_' + nodeName);
       if (docNode != null) {
@@ -177,11 +187,11 @@ var LiveVdrInfo = Ajax.extend({
           break;
         }
       }
-    },
+    }
 
     // private function to determine update status and to trigger
     // the next update.
-    setUpdate: function(xmldoc)
+    setUpdate(xmldoc)
     {
       /* check if we still need to update the status */
       var upd = xmldoc.getElementsByTagName('update').item(0);
@@ -208,12 +218,10 @@ var LiveVdrInfo = Ajax.extend({
       }
       if (this.reload)
         this.timer = this.request.delay(1000, this, true);
-    },
+    }
 
-    tooltipStopUpdate: '',
-    tooltipStartUpdate: '',
 
-    toggleUpdate: function()
+    toggleUpdate()
     {
       if (this.reload) {
         if (this.timer != null) {
@@ -221,9 +229,9 @@ var LiveVdrInfo = Ajax.extend({
         }
       }
       this.request(!this.reload);
-    },
+    }
 
-    pageFinished: function()
+    pageFinished()
     {
       if (this.reload) {
         if (this.timer != null) {
@@ -232,4 +240,4 @@ var LiveVdrInfo = Ajax.extend({
       }
       this.cancel();
     }
-});
+}
