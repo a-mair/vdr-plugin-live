@@ -398,7 +398,8 @@ if (!rfid.empty() ) {
   <script type="text/javascript" src="js/live/browserwin.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript" src="js/live/pageenhance.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript"><!--
-    var liveEnhanced = new PageEnhance({
+    var liveEnhanced = new PageEnhance(
+      {
         infoWinOptions: {
           resizeImg: '<$ GetThemedLink("img", "resize.svg") $>',
           closeImg: '<$ GetThemedLink("img", "icon_overlay_cross.svg") $>',
@@ -411,7 +412,8 @@ if (!rfid.empty() ) {
           successMsg: '<img class="icon" src="<$ GetThemedLink("img", "active.svg") $>" alt=""> <$ tr("Request succeeded") $>',
           errorMsg: '<img class="icon" src="<$ GetThemedLink("img", "del.svg") $>" alt=""> <$ tr("Request failed!") $>'
         }
-      });
+      }
+   );
   --></script>
 <%cpp>
     if (LiveSetup().GetShowInfoBox()) {

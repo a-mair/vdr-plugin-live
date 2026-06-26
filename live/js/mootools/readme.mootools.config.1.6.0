@@ -1,9 +1,48 @@
-Don't move to 1.6 . Too much effort :(
+Move to 1.6
 
-If you try, you need: core + more
+from https://mootools.net/core/builder, select:
+  Class.Extras
+  Element.Dimensions
+  DOMReady
+
+from https://mootools.net/more/builder, select:
+  Drag.Move
+  Tips
+  Hash
 
 
-Changes:
+====== Changes =============================================
+see https://github.com/mootools/mootools-upgrade-helper
+
+====== Class.extend  =======================================
+Class.extend in 1.1 is accomplished by using the Extends mutator in 1.2.
+
+====== Tips ================================================
+Tips are altered such that the DOM structure of the tip elements themselves are different with different class names. This will require you to update your CSS a bit.
+Tips no longer take an offsets option but rather an offset option (that does the same thing).
+
+
+
+Function.empty is deprecated; use $empty.
+Class.empty in 1.1 is just $empty in 1.2
+
+setHTML is deprecated, use set('html', {html})
+
+
+
+
+
+============================================================
+====== Done, replaced with code working in 1.1 and 1.6
+============================================================
+
+
+====== Event ===============================================
+var event = new DOMEvent(event)
+-> after that, event.page[z] event.stop(), ... work again
+event.page[z] : does not work, use event.pageX & event.pageY
+event.stop(): not defined, try stopImmediatePropagation()   (guess)
+
 
 ====== options  ===============================================
 For classes with options: {
@@ -11,8 +50,15 @@ var PageEnhance = new Class({
     Implements: [Options],
     options: {
 
+
+============================================================
+====== Done, replaced with standard Javascript  ============
+============================================================
+
 ====== pick  ===============================================
 var epgid = [href, ""].pick();
+Function: $pick
+  Returns the first object if defined, otherwise returns the second.
 
 ====== $defined  ===============================================
 var $defined = function(obj){
@@ -23,21 +69,3 @@ var $defined = function(obj){
 if(obj != undefined){
     // do something
 }
-
-
-====== Event ===============================================
-event.page[z] : does not work, use event.pageX & event.pageY
-event.stop(): not defined, try stopImmediatePropagation()   (guess)
-
-
-====== Tips ===============================================
-this.tips.build: not defined. Use
-        this.tips.attach(elems_use);
-
-completely re-write hinttips.js:
-this relies on the implementation of the Hints class, which completely changed
-Here I gave up: Too much effort, too little benefit ...
-
-
-====== info-win ===============================================
-Also larger changes required ...

@@ -220,10 +220,16 @@ async function actionOnMarkedRecordings(form, act) {
     return;
   }
   if (typeof liveEnhanced !== 'undefined') {
-    var event_ = new Event(event);
-    var infowin = new InfoWin.Ajax(epgid, "epginfo.html?epgid="+encodeURIComponent(epgid), $merge(liveEnhanced.options.infoWinOptions,
-      { onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced) }
-    ));
+    var event_;
+    var merged_options;
+    if (MooTools.version == '1.11') {
+      event_ = new Event(event);
+      merged_options = $merge(liveEnhanced.options.infoWinOptions, { onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced) });
+    } else {
+      event_ = new DOMEvent(event);
+      merged_options = Object.merge(liveEnhanced.options.infoWinOptions, { onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced) });
+    }
+    var infowin = new InfoWin.Ajax(epgid, "epginfo.html?epgid="+encodeURIComponent(epgid), merged_options);
     infowin.options.offsets.y = -400;
     infowin.show(event_);
     event_.stop();

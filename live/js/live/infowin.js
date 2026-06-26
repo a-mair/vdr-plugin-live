@@ -3,7 +3,7 @@
  *
  * InfoWin.js
  *
- * InfoWin class, InfoWin.Manager class, InfoWin.Ajax class.
+ * InfoWin class, InfoWin.Manager class, InfoWin_Ajax class.
  *
  * Extension of mootools to display a popup window with some HTML
  * code.
@@ -33,6 +33,7 @@ Note:
                  will remain invisible.
  */
 var InfoWin = new Class({
+    Implements: [Options],
     options: {
       timeout: 0,
       onShow: Class.empty,
@@ -60,7 +61,7 @@ var InfoWin = new Class({
       winFrameId = id + this.options.classSuffix + this.options.idSuffix;
       this.css = {'selector': 'div#' + winFrameId + ' '};
       this.winFrame = $(winFrameId);
-      if (!$defined(this.winFrame)){
+      if (this.winFrame == undefined){
         this.buildFrame(id);
         this.build(id);
         this.wm.register(this);
@@ -106,7 +107,12 @@ var InfoWin = new Class({
           'alt': 'pin'
         }).inject(this.buttonBox);
       this.pinButton.addEvent('click', function(event){
-          var event = new Event(event);
+          var event_;
+          if (MooTools.version == '1.11') {
+            event_ = new Event(event);
+          } else {
+            event_ = new DOMEvent(event);
+          }
           winFrameRect = this.winFrame.getBoundingClientRect();
           if (this.winFrame.style.position == 'fixed') {
             // floating coordinates refer to the 'content' element
@@ -123,7 +129,7 @@ var InfoWin = new Class({
             this.winFrame.style.top  = winFrameRect.top  + 'px';
             this.pinButton.src = this.options.pinnedImg;
           }
-          event.stop();
+          event_.stop();
           return false;
         }.bind(this));
       closeButton = new Element('img', {
@@ -132,8 +138,13 @@ var InfoWin = new Class({
           'alt': 'close'
         }).inject(this.buttonBox);
       closeButton.addEvent('click', function(event){
-          var event = new Event(event);
-          event.stop();
+          var event_;
+          if (MooTools.version == '1.11') {
+            event_ = new Event(event);
+          } else {
+            event_ = new DOMEvent(event);
+          }
+          event_.stop();
           return this.hide();
         }.bind(this));
 
@@ -220,7 +231,7 @@ var InfoWin = new Class({
     fillBody: function(id_select_html_elements, epgid){
       if (!epgid) return false;
       var bodyElems = $$('#'+ id_select_html_elements + ' ' + this.options.bodySelect);
-      if ($defined(bodyElems) && bodyElems.length > 0) {
+      if ((bodyElems != undefined) && bodyElems.length > 0) {
         this.winBody.empty();
         this.fireEvent('onDomExtend', [id_select_html_elements, bodyElems]);
         this.winBody.adopt(bodyElems);
@@ -237,8 +248,13 @@ var InfoWin = new Class({
               await action(epgid);
               if (history_num_back > 0) { history.go(-history_num_back); }
               else { location.reload(); }
-              var event = new Event(event);
-              event.stop();
+              var event_;
+              if (MooTools.version == '1.11') {
+                event_ = new Event(event);
+              } else {
+                event_ = new DOMEvent(event);
+              }
+              event_.stop();
               return this.hide();
             }.bind(this));
         }
@@ -246,7 +262,12 @@ var InfoWin = new Class({
         if (close_button) {
           close_button.onclick = null;
           close_button.addEvent('click', function(event) {
-              var event_ = new Event(event);
+              var event_;
+              if (MooTools.version == '1.11') {
+                event_ = new Event(event);
+              } else {
+                event_ = new DOMEvent(event);
+              }
               event_.stop();
               return this.hide();
             }.bind(this));
@@ -263,7 +284,7 @@ var InfoWin = new Class({
 
     fillTitle: function(id_select_html_elements){
       var titleElems = $$('#' + id_select_html_elements + ' ' + this.options.titleSelect);
-      if ($defined(titleElems) && titleElems.length > 0) {
+      if ((titleElems != undefined) && titleElems.length > 0) {
         this.titleBox.empty().adopt(titleElems);
         return true;
       }
@@ -272,16 +293,26 @@ var InfoWin = new Class({
 
     position: function(event){
       var prop = {'x': 'left', 'y': 'top'};
-      var pos = event.page['y'] + this.options.offsets['y'];
+      var posx;
+      var posy;
+      if (MooTools.version == '1.11') {
+        posx = event.page['x'];
+        posy = event.page['y'];
+      } else {
+        event_ = new DOMEvent(event);
+        posx = event_.page['x'];
+        posy = event_.page['y'];
+      }
+      posy += this.options.offsets['y'];
       content = document.getElementById('content');
       contentRect = content.getBoundingClientRect();
-      if (pos < contentRect.y) pos = contentRect.y;
-      this.winFrame.setStyle(prop['y'], pos);
-      pos = event.page['x'] + this.options.offsets['x'];
+      if (posy < contentRect.y) posy = contentRect.y;
+      this.winFrame.setStyle(prop['y'], posy);
+      posx += this.options.offsets['x'];
       var width = this.winFrame.getBoundingClientRect().width;
-      if (pos > window.innerWidth - width) pos = window.innerWidth - width;
-      if (pos < 1) pos = 1;
-      this.winFrame.setStyle(prop['x'], pos);
+      if (posx > window.innerWidth - width) posx = window.innerWidth - width;
+      if (posx < 1) posx = 1;
+      this.winFrame.setStyle(prop['x'], posx);
     }
   });
 
@@ -294,6 +325,7 @@ Class: InfoWin.Manager
   and used again if a window with a closed id is opened again.
 */
 InfoWin.Manager = new Class({
+    Implements: [Options],
     options: {
       closedContainer: 'infowin-closed',
       openedContainer: 'infowin-opened',
@@ -310,7 +342,7 @@ InfoWin.Manager = new Class({
           var wins = kind + 'Wins';
           var opts = this.options[kind + 'Container'];
           this[wins] = $(opts);
-          if (!$defined(this[wins])){
+          if (this[wins] == undefined){
             this[wins] = new Element('div', {
                 'id': opts,
                 'styles' : {
@@ -354,7 +386,7 @@ window.addEvent('domready', function(){
   });
 
 /*
-Class: InfoWin.Ajax
+Class: InfoWin_Ajax
 
   Asynchronously request the content of an info win using fetch
 */
@@ -416,7 +448,9 @@ if (history_num_back < 0) return url;
 return url.substring(0, ind_history) + history_num_back + url.substring(ind_history_e);
 }
 
-InfoWin.Ajax = InfoWin.extend({
+// var InfoWin_Ajax = new Class({
+//  Extends: InfoWin,
+InfoWin_Ajax = InfoWin.extend({
   options: {
     loadingMsg: 'loading',
     errorMsg: 'an error occurred!',
@@ -436,7 +470,7 @@ InfoWin.Ajax = InfoWin.extend({
     if (!text) return false;
     var id_select_html_elements;
     var found = /<input type="hidden" name="id_select_html_elements" value="(\w+)"/.exec(text);
-    if ($defined(found) && found.length > 1) {
+    if ((found != undefined) && found.length > 1) {
       id_select_html_elements = found[1];
     } else {
       id_select_html_elements = epgid;
@@ -453,7 +487,7 @@ InfoWin.Ajax = InfoWin.extend({
     let id = 'A' + cyrb53(epgid);
     this.parent(id, options);
     var url = decrease_history_num_back(url_in)+'&async=1';
-    if ($defined(this.ajaxResponse)) {
+    if (this.ajaxResponse != undefined) {
       this.get_content(epgid, url);
     }
   },

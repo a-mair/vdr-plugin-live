@@ -9,6 +9,7 @@
  */
 
 var PageEnhance = new Class({
+    Implements: [Options],
     options: {
       epgLinkSelector: 'a[href^="epginfo.html?epgid"], *[xlink:href="epginfo.html?epgid=rcKeys"]',
       actionLinkSelector: 'a[href^="vdr_request/"]',
@@ -62,39 +63,50 @@ var PageEnhance = new Class({
       if (typeof(href) === 'object') {
         href = href.baseVal ?? "";
       }
-      var epgid = $pick(href, "");
-      if (epgid != "") {
-        var extractId = /epgid=(\w+)/;
-        var found = extractId.exec(epgid);
-        if ($defined(found) && found.length > 1) {
-          epgid = found[1];
+      if (href != undefined && href != "") {
+        var found = /epgid=(\w+)/.exec(href);
+        if ((found != undefined) && found.length > 1) {
+          var epgid = found[1];
           el.addEvent('click', async function(event){
-              if (epgid.length > 4 && is_popup_disabled(epgid)) {
-                var event_ = new Event(event);
-                event_.stop();
-                await action(epgid);
-                location.reload();
-                return false;
-              }
-              if (window.matchMedia("(max-width: 600px)").matches) {
-                location.replace(href);
-                return true;
-              }
-              var event_ = new Event(event);
-              var infowin = new InfoWin.Ajax(epgid, href, $merge(this.options.infoWinOptions, {
-                onDomExtend: this.domExtend.bind(this)
-              }));
-              infowin.show(event_);
+            var event_;
+            if (MooTools.version == '1.11') {
+              event_ = new Event(event);
+            } else {
+              event_ = new DOMEvent(event);
+            }
+            if (epgid.length > 4 && is_popup_disabled(epgid)) {
               event_.stop();
+              await action(epgid);
+              location.reload();
               return false;
-            }.bind(this));
+            }
+            if (window.matchMedia("(max-width: 600px)").matches) {
+              location.replace(href);
+              return true;
+            }
+            var merged_options;
+            var infowin;
+            if (MooTools.version == '1.11') {
+              merged_options = $merge(this.options.infoWinOptions, {
+                              onDomExtend: this.domExtend.bind(this) });
+              infowin = new InfoWin_Ajax(epgid, href, merged_options);
+            } else {
+              merged_options = Object.merge(this.options.infoWinOptions, {
+                              onDomExtend: this.domExtend.bind(this) });
+              infowin = new InfoWin_Ajax(epgid, href, merged_options);
+//            infowin.initialize(epgid, href, merged_options);
+            }
+            console.log("epgPopup, href = "+href+" epgid = "+epgid);
+            infowin.show(event_);
+            event_.stop();
+            return false;
+          }.bind(this));
         }
       }
     },
 
     // function that requests an action from the server VDR.
     vdrRequest_fetch: async function(href, event){
-      event.stop();
       try {
         const response = await fetch(href + '&async=1');
         var xmldoc = new window.DOMParser().parseFromString(await response.text(), "text/xml");
@@ -108,15 +120,28 @@ var PageEnhance = new Class({
       }
     },
     vdrRequest: function(el){
-      el.addEvent('click', function(event, element){
-        var href = $pick(element.href, "");
-        if (href != "") {
+      el.addEvent('click', function(element, event){
+        if (element.href != undefined && element.href != "") {
+          var event_
+          if (MooTools.version == '1.11') {
+            event_ = new Event(event);
+          } else {
+            event_ = new DOMEvent(event);
+          }
+          event_.stop();
           this.$notifyCount++;
-          this.vdrRequest_fetch(href, event);
+          this.vdrRequest_fetch(element.href, event_);
           return false;
         }
         return true;
-      }.bindWithEvent(this, el));
+      }.bind(this, el));
+//    }.bindWithEvent(this, el));
+// https://stackoverflow.com/questions/4259938/bindwithevent-mootools-1-3
+// The simplest solution is to reverse arguments in the method :) so if you have method like this
+// because event is always the last argument.
+//
+//  bindWithEvent: function(bind, args){
+//        return this.create({'bind': bind, 'arguments': args, 'event': Event});
     },
 
     // change normal 'title'-Attributes into enhanced hinttips
@@ -129,7 +154,7 @@ var PageEnhance = new Class({
           } else {
             elems_use = elems;
            }
-      if (!$defined(this.tips)) {
+      if (this.tips == undefined) {
         this.tips = new HintTips(elems_use, {
             maxTitleChars: 100,
             className: this.options.hintClassName

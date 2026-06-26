@@ -19,6 +19,7 @@ Options:
 Note:
 */
 var BrowserWin = new Class({
+    Implements: [Options],
     options: {
       size: { width: 720, height: 640 },
       toolbar: false,
@@ -48,10 +49,10 @@ var BrowserWin = new Class({
       winOpts += ",menubar=" + this.options.menubar;
       winOpts += ",scrollbars=" + this.options.scrollbars;
       winOpts += ",resizable=" + this.options.resizable;
-      if ($defined(this.options.top)) {
+      if (this.options.top != undefined) {
         winOpts += ",top=" + this.options.top;
       }
-      if ($defined(this.options.left)) {
+      if (this.options.left != undefined) {
         winOpts += ",left=" + this.options.left;
       }
       this.$winRef = window.open(url, this.id, winOpts);
@@ -65,6 +66,7 @@ var BrowserWin = new Class({
 BrowserWin.implement(new Events, new Options);
 
 BrowserWin.Manager = new Class({
+    Implements: [Options],
     options: {
       onRegister: Class.empty,
       onUnregister: Class.empty

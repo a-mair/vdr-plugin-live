@@ -94,11 +94,11 @@ class LiveVdrInfo {
     setInfoMessage(xmldoc)
     {
       var info = xmldoc.getElementsByTagName('info').item(0);
-      if (! $defined(info))
+      if (info == undefined)
         return;
 
       var messagebar = $('messagebar');
-      if (! $defined(messagebar))
+      if (messagebar == undefined)
         return;
 
       var message = xmldoc.getElementsByTagName('message').item(0);
@@ -106,7 +106,7 @@ class LiveVdrInfo {
 
       if (message.firstChild.nodeValue != "") {
         $('mbmessage').setText(message.firstChild.nodeValue);
-        if ($defined(url.firstChild)) {
+        if (url.firstChild != undefined) {
           $('mbdelimiter').removeClass('notpresent');
           $('mbreact').setProperty('href', url.firstChild.nodeValue);
         }
