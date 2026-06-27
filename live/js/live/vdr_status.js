@@ -26,11 +26,13 @@ class LiveVdrInfo {
         response = await fetch(this.url+'?update=0');
       const text = await response.text();
       if (!text || text == '') {
+        console.log("async request(update): text empty");
         this.reportError(true);
         return;
       }
       const xmldoc = new window.DOMParser().parseFromString(text, "text/xml");
       if (!xmldoc || xmldoc == '') {
+        console.log("async request(update): xmldoc empty");
         this.reportError(true);
         return;
       }
@@ -49,6 +51,7 @@ class LiveVdrInfo {
         this.setUpdate(xmldoc);
       }
       catch (e) {
+        console.log("showInfo(text, xmldoc), error: "+e.message);
         this.reportError(null);
       }
     }
@@ -200,19 +203,15 @@ class LiveVdrInfo {
       if (rel != this.reload) {
         this.reload = rel;
         var img = $('statusReloadBtn');
-        if (img != null) {
-          // change image according to state
-          if (this.reload) {
-            var icon = getThemedLink('img', 'stop_update.svg');
-            var tooltip = this.tooltipStopUpdate;
-          } else {
-            var icon = getThemedLink('img', 'reload.svg');
-            var tooltip = this.tooltipStartUpdate;
-          }
-          img.src = icon;
+        if (img) {
           var link = img.parentElement;
-          if (tooltip && link != null) {
-            link.$tmp.myText = link.$tmp.myText.replace(/\>[^<>]*\</, '>' + tooltip + '<');
+          // change image and tooltip according to state
+          if (this.reload) {
+            img.src = getThemedLink('img', 'stop_update.svg');
+            link.store('tip:title', this.tooltipStopUpdate)
+          } else {
+            img.src = getThemedLink('img', 'reload.svg');
+            link.store('tip:title', this.tooltipStartUpdate)
           }
         }
       }
@@ -225,7 +224,9 @@ class LiveVdrInfo {
     {
       if (this.reload) {
         if (this.timer != null) {
-          this.timer = $clear(this.timer);
+          clearTimeout(this.timer);
+          clearInterval(this.timer);
+          this.timer = null;
         }
       }
       this.request(!this.reload);
@@ -235,7 +236,9 @@ class LiveVdrInfo {
     {
       if (this.reload) {
         if (this.timer != null) {
-          this.timer = $clear(this.timer);
+          clearTimeout(this.timer);
+          clearInterval(this.timer);
+          this.timer = null;
         }
       }
       this.cancel();

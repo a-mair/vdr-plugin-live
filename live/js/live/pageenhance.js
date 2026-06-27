@@ -94,9 +94,8 @@ var PageEnhance = new Class({
               merged_options = Object.merge(this.options.infoWinOptions, {
                               onDomExtend: this.domExtend.bind(this) });
               infowin = new InfoWin_Ajax(epgid, href, merged_options);
-//            infowin.initialize(epgid, href, merged_options);
             }
-            console.log("epgPopup, href = "+href+" epgid = "+epgid);
+//          console.log("epgPopup, href = "+href+" epgid = "+epgid);
             infowin.show(event_);
             event_.stop();
             return false;
@@ -111,7 +110,7 @@ var PageEnhance = new Class({
         const response = await fetch(href + '&async=1');
         var xmldoc = new window.DOMParser().parseFromString(await response.text(), "text/xml");
         var success = xmldoc.getElementsByTagName('response').item(0).firstChild.nodeValue;
-        new InfoWin.Notifier(this.options.notifyIdPrefix + this.$notifyCount, {
+        new InfoWin_Notifier(this.options.notifyIdPrefix + this.$notifyCount, {
             className: success == '1' ? 'ok' : 'err',
             message: success == '1' ? this.options.notifyStrings.successMsg : this.options.notifyStrings.errorMsg
           }).show(event);
@@ -151,17 +150,17 @@ var PageEnhance = new Class({
       elems_use = elems.filter(
         function(item, index){ return !item.hasClass('apopup'); }
         );
-          } else {
-            elems_use = elems;
-           }
+      } else {
+        elems_use = elems;
+      }
       if (this.tips == undefined) {
-        this.tips = new HintTips(elems_use, {
+        this.tips = new Tips(elems_use, {
             maxTitleChars: 100,
             className: this.options.hintClassName
           });
       }
       else {
-        $$(elems_use).each(this.tips.build, this.tips);
+        this.tips.attach(elems_use);
       }
     }
   });

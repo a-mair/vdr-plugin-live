@@ -448,9 +448,8 @@ if (history_num_back < 0) return url;
 return url.substring(0, ind_history) + history_num_back + url.substring(ind_history_e);
 }
 
-// var InfoWin_Ajax = new Class({
-//  Extends: InfoWin,
-InfoWin_Ajax = InfoWin.extend({
+var InfoWin_Ajax = new Class({
+  Extends: InfoWin,
   options: {
     loadingMsg: 'loading',
     errorMsg: 'an error occurred!',
@@ -496,7 +495,8 @@ InfoWin_Ajax = InfoWin.extend({
   // created a DOM subtree for an infowin.
   build: function(id){
     if (!this.parent(id)) {
-      this.titleBox.setHTML(this.options.loadingMsg);
+//    this.titleBox.setHTML(this.options.loadingMsg);
+      this.titleBox.innerHTML = this.options.loadingMsg;
       this.ajaxResponse = new Element('div', {
           'styles' : {
             'display': 'none'
@@ -508,13 +508,14 @@ InfoWin_Ajax = InfoWin.extend({
 
 
 /*
-Class: Infowin.Notifier
+Class: Infowin__otifier
 
 Creates a notification popup that disappears automatically.
 Useful for a confirmation message after a AJAX action request.
 */
 
-InfoWin.Notifier = InfoWin.extend({
+var InfoWin_Notifier = new Class({
+  Extends: InfoWin,
   options: {
     timeout: 2500,
     destroyOnHide: true,
@@ -538,7 +539,8 @@ InfoWin.Notifier = InfoWin.extend({
 
   fillBody: function(id){
     this.winFrame.setStyle('position', 'fixed');
-    this.winBody.empty().setHTML(this.options.message);
+//  this.winBody.empty().setHTML(this.options.message);
+    this.winBody.empty().innerHTML = this.options.message;
     return true;
   },
 

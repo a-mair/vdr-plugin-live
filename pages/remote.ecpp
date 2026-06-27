@@ -199,13 +199,15 @@ last_page="remote";
     changeScreenContent();
     $('osd').addEvents({
         'click': function(ev){
-            $clear(clkTimer);
+            clearTimeout(clkTimer);
+            clearInterval(clkTimer);
             clkTimer = (function(){
               handleOSD(ev.target, false);
             }).delay(200, this);
         },
         'dblclick': function(ev){
-            $clear(clkTimer);
+            clearTimeout(clkTimer);
+            clearInterval(clkTimer);
             handleOSD(ev.target, true);
         }
     });
@@ -231,13 +233,16 @@ last_page="remote";
     try{
       var upd = parseInt(text.match(/data-time="(\\d+)"/)[1]);
       if ( OSD_fetch_lastUpd != upd ){
-        $('osd').empty().setHTML(text);
+//      $('osd').empty().setHTML(text);
+        $('osd').empty().innerHTML=text;
         OSD_fetch_lastUpd = upd;
         var sOsdItems= $$('#screenshot .osdItems');
         var sSelected= $$('#screenshot .selected');
         if (sOsdItems.length > 0 && sSelected.length > 0) sOsdItems[0].scrollTop= sSelected[0].offsetTop - 40;
       }
-    } catch (e) {}
+    } catch (e) {
+      console.log("remote.ecpp, fetch OSD, error = "+e.message);
+    }
     window.clearInterval(osdTimeout);
     osdTimeout= window.setTimeout("OSDLoad()",1000);
   }

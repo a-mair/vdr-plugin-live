@@ -22,11 +22,20 @@ Tips are altered such that the DOM structure of the tip elements themselves are 
 Tips no longer take an offsets option but rather an offset option (that does the same thing).
 
 
+this.timer = $clear(this.timer) ->
+          clearTimeout(this.timer);
+          clearInterval(this.timer);
+          this.timer = null;
+
 
 Function.empty is deprecated; use $empty.
 Class.empty in 1.1 is just $empty in 1.2
 
 setHTML is deprecated, use set('html', {html})
+  setHTML: function(){
+    this.innerHTML = $A(arguments).join('');
+    return this;
+  },
 
 
 

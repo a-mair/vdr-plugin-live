@@ -260,7 +260,7 @@ div.cast_crew.tabular {
    #############################
 */
 
-.hint-tip {
+div.hint {
   max-width: calc(min(var(--popup-width), 40vw));
   margin: 0px auto;
   background: var(--hint-popup-background-color);
@@ -271,24 +271,24 @@ div.cast_crew.tabular {
   z-index: var(--popup-z-index, 300);
 }
 
-.hint-tip hr {
+div.hint hr {
   color: var(--hint-popup-color);
 }
 
-.hint-title {
+div.tip-text {
   display: none;
 }
 
-.hint-tip-body {
+div.tip {
   margin: var(--popup-body-margin);
 }
 
-.hint-tip-body p {
+div.tip p {
   margin: var(--text-line-gap) 0px;
 }
 
-.hint-tip-body p.click-action:not(:first-child),
-.hint-tip-body p.click-details:not(:first-child) {
+div.tip p.click-action:not(:first-child),
+div.tip p.click-details:not(:first-child) {
   padding-top: var(--text-block-gap);
 }
 
@@ -2812,7 +2812,7 @@ img.thumb, img.thumbpt {
     width: calc(var(--epg-photo-width) * 0.6);
   }
 
-  .hint-tip {
+  div.hint {
     max-width: 200px;
   }
 

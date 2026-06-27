@@ -392,9 +392,9 @@ if (!rfid.empty() ) {
 <# ---------------------------------------------------------------------- #>
 
 <%def ajax_js>
-  <script type="text/javascript" src="js/mootools/mootools.v1.11.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
+  <script type="text/javascript" src="js/mootools/MooTools-Core-1.6.0.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
+  <script type="text/javascript" src="js/mootools/MooTools-More-1.6.0.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript" src="js/live/infowin.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
-  <script type="text/javascript" src="js/live/hinttips.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript" src="js/live/browserwin.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript" src="js/live/pageenhance.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript"><!--
