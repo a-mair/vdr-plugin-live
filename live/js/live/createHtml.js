@@ -229,7 +229,7 @@ async function actionOnMarkedRecordings(form, act) {
       event_ = new DOMEvent(event);
       merged_options = Object.merge(liveEnhanced.options.infoWinOptions, { onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced) });
     }
-    var infowin = new InfoWin.Ajax(epgid, "epginfo.html?epgid="+encodeURIComponent(epgid), merged_options);
+    var infowin = new InfoWin_Ajax(epgid, "epginfo.html?epgid="+encodeURIComponent(epgid), merged_options);
     infowin.options.offsets.y = -400;
     infowin.show(event_);
     event_.stop();

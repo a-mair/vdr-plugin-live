@@ -241,6 +241,5 @@ class LiveVdrInfo {
           this.timer = null;
         }
       }
-      this.cancel();
     }
 }
