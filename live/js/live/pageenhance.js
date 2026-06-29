@@ -11,7 +11,7 @@
 var PageEnhance = new Class({
     Implements: [Options],
     options: {
-      epgLinkSelector: 'a[href^="epginfo.html?epgid"], *[xlink:href="epginfo.html?epgid=rcKeys"]',
+      epgLinkSelector: 'a[href^="epginfo.html?epgid"], a[*|href="epginfo.html?epgid=rcKeys"]',
       actionLinkSelector: 'a[href^="vdr_request/"]',
       hintTipSelector: '*[title], *[xlink:title]',
       hintClassName: 'hint',
@@ -49,7 +49,7 @@ var PageEnhance = new Class({
     // registered as 'onDomExtend' event for InfoWin. Takes care to
     // enhance the new DOM elements, too.
     domExtend: function(id, elems){
-      var sel = '#' + id + ' ' + this.options.hintTipSelector;
+      const sel = '#' + id + ' ' + this.options.hintTipSelector;
       elems = $$(sel);
       this.addHintTips(elems);
       $$('#' + id + ' ' + this.options.actionLinkSelector).each(this.vdrRequest.bind(this));
@@ -58,22 +58,17 @@ var PageEnhance = new Class({
     // EPG popup function. Apply to all elements that should
     // pop up an EPG InfowWin window.
     epgPopup: function(el){
-      var href = el.href;
+      let href = el.href;
       // xlink:href returns an animation object
       if (typeof(href) === 'object') {
         href = href.baseVal ?? "";
       }
-      if (href != undefined && href != "") {
-        var found = /epgid=(\w+)/.exec(href);
-        if ((found != undefined) && found.length > 1) {
-          var epgid = found[1];
+      if (href && href != "") {
+        const found = /epgid=(\w+)/.exec(href);
+        if (found && found.length > 1) {
+          const epgid = found[1];
           el.addEvent('click', async function(event){
-            var event_;
-            if (MooTools.version == '1.11') {
-              event_ = new Event(event);
-            } else {
-              event_ = new DOMEvent(event);
-            }
+            const event_ = new DOMEvent(event);
             if (epgid.length > 4 && is_popup_disabled(epgid)) {
               event_.stop();
               await action(epgid);
@@ -84,17 +79,9 @@ var PageEnhance = new Class({
               location.replace(href);
               return true;
             }
-            var merged_options;
-            var infowin;
-            if (MooTools.version == '1.11') {
-              merged_options = $merge(this.options.infoWinOptions, {
-                              onDomExtend: this.domExtend.bind(this) });
-              infowin = new InfoWin_Ajax(epgid, href, merged_options);
-            } else {
-              merged_options = Object.merge(this.options.infoWinOptions, {
-                              onDomExtend: this.domExtend.bind(this) });
-              infowin = new InfoWin_Ajax(epgid, href, merged_options);
-            }
+            const merged_options = Object.merge(this.options.infoWinOptions, {
+                                      onDomExtend: this.domExtend.bind(this) });
+            const infowin = new InfoWin_Ajax(epgid, href, merged_options);
 //          console.log("epgPopup, href = "+href+" epgid = "+epgid);
             infowin.show(event_);
             event_.stop();
@@ -108,8 +95,8 @@ var PageEnhance = new Class({
     vdrRequest_fetch: async function(href, event){
       try {
         const response = await fetch(href + '&async=1');
-        var xmldoc = new window.DOMParser().parseFromString(await response.text(), "text/xml");
-        var success = xmldoc.getElementsByTagName('response').item(0).firstChild.nodeValue;
+        const xmldoc = new window.DOMParser().parseFromString(await response.text(), "text/xml");
+        const success = xmldoc.getElementsByTagName('response').item(0).firstChild.nodeValue;
         new InfoWin_Notifier(this.options.notifyIdPrefix + this.$notifyCount, {
             className: success == '1' ? 'ok' : 'err',
             message: success == '1' ? this.options.notifyStrings.successMsg : this.options.notifyStrings.errorMsg
@@ -121,12 +108,7 @@ var PageEnhance = new Class({
     vdrRequest: function(el){
       el.addEvent('click', function(element, event){
         if (element.href != undefined && element.href != "") {
-          var event_
-          if (MooTools.version == '1.11') {
-            event_ = new Event(event);
-          } else {
-            event_ = new DOMEvent(event);
-          }
+          const event_ = new DOMEvent(event);
           event_.stop();
           this.$notifyCount++;
           this.vdrRequest_fetch(element.href, event_);
@@ -146,20 +128,20 @@ var PageEnhance = new Class({
     // change normal 'title'-Attributes into enhanced hinttips
     // used by domExtend and domReadySetup functions.
     addHintTips: function(elems) {
+      let elems_use;
       if (window.matchMedia("(hover: none)").matches) {
-      elems_use = elems.filter(
-        function(item, index){ return !item.hasClass('apopup'); }
-        );
+        elems_use = elems.filter(
+          function(item, index){ return !item.hasClass('apopup'); }
+          );
       } else {
         elems_use = elems;
       }
-      if (this.tips == undefined) {
+      if (!this.tips) {
         this.tips = new Tips(elems_use, {
             maxTitleChars: 100,
             className: this.options.hintClassName
           });
-      }
-      else {
+      } else {
         this.tips.attach(elems_use);
       }
     }

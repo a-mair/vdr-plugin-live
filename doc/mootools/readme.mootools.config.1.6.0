@@ -1,4 +1,4 @@
-Move to 1.6
+======= For MooTools 1.6.0:  ==========================
 
 from https://mootools.net/core/builder, select:
   Class.Extras
@@ -9,6 +9,10 @@ from https://mootools.net/more/builder, select:
   Drag.Move
   Tips
   Hash
+
+The original MooTools-Core-1.6.0.js and MooTools-More-1.6.0.js created with these selections are available in doc/mootools/
+
+
 
 
 ====== Changes =============================================
@@ -21,24 +25,31 @@ Class.extend in 1.1 is accomplished by using the Extends mutator in 1.2.
 Tips are altered such that the DOM structure of the tip elements themselves are different with different class names. This will require you to update your CSS a bit.
 Tips no longer take an offsets option but rather an offset option (that does the same thing).
 
+====== setHTML =============================================
+From the official docs: setHTML is deprecated, use set('html', {html})
 
-this.timer = $clear(this.timer) ->
-          clearTimeout(this.timer);
-          clearInterval(this.timer);
-          this.timer = null;
+Actually, setHTML still exists. But does something differnt :(
+-> replace all element.setHTML("html text") with element.innerHTML = "html text");
 
-
-Function.empty is deprecated; use $empty.
-Class.empty in 1.1 is just $empty in 1.2
-
-setHTML is deprecated, use set('html', {html})
+definition in 1.1:
   setHTML: function(){
     this.innerHTML = $A(arguments).join('');
     return this;
   },
 
 
+====== $clear ==============================================
+this.timer = $clear(this.timer) ->
+          clearTimeout(this.timer);
+          clearInterval(this.timer);
+          this.timer = null;
 
+
+====== empty  ==============================================
+Outdated hints:
+- Function.empty is deprecated; use $empty.
+- Class.empty in 1.1 is just $empty in 1.2
+Note: $empty is NOT defined in 1.6. But: element.empty() can still be used
 
 
 ============================================================

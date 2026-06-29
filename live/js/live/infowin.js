@@ -58,10 +58,10 @@ var InfoWin = new Class({
     initialize: function(id, options){
       this.setOptions(options);
       this.wm = this.options.wm || InfoWin.$wm;
-      winFrameId = id + this.options.classSuffix + this.options.idSuffix;
+      const winFrameId = id + this.options.classSuffix + this.options.idSuffix;
       this.css = {'selector': 'div#' + winFrameId + ' '};
       this.winFrame = $(winFrameId);
-      if (this.winFrame == undefined){
+      if (!this.winFrame){
         this.buildFrame(id);
         this.build(id);
         this.wm.register(this);
@@ -76,7 +76,7 @@ var InfoWin = new Class({
     // with the user data, false otherwise.
     build: function(id){
       // header of window: upper shadows, corners title and controls
-      var top = new Element('div', {
+      const top = new Element('div', {
           'class': this.options.className + this.options.classSuffix + '-top'
         }).inject(this.winFrame);
       if (this.options.draggable) {
@@ -107,17 +107,12 @@ var InfoWin = new Class({
           'alt': 'pin'
         }).inject(this.buttonBox);
       this.pinButton.addEvent('click', function(event){
-          var event_;
-          if (MooTools.version == '1.11') {
-            event_ = new Event(event);
-          } else {
-            event_ = new DOMEvent(event);
-          }
-          winFrameRect = this.winFrame.getBoundingClientRect();
+          const event_ = new DOMEvent(event);
+          const winFrameRect = this.winFrame.getBoundingClientRect();
           if (this.winFrame.style.position == 'fixed') {
             // floating coordinates refer to the 'content' element
-            content = document.getElementById('content');
-            contentRect = content.getBoundingClientRect();
+            const content = document.getElementById('content');
+            const contentRect = content.getBoundingClientRect();
             this.winFrame.style.position = "absolute";
             this.winFrame.style.left = (winFrameRect.left - contentRect.left + content.scrollLeft) + 'px';
             this.winFrame.style.top  = (winFrameRect.top  - contentRect.top  + content.scrollTop ) + 'px';
@@ -132,18 +127,13 @@ var InfoWin = new Class({
           event_.stop();
           return false;
         }.bind(this));
-      closeButton = new Element('img', {
+      const closeButton = new Element('img', {
           'src': this.options.closeImg,
           'class': 'iconic button close',
           'alt': 'close'
         }).inject(this.buttonBox);
       closeButton.addEvent('click', function(event){
-          var event_;
-          if (MooTools.version == '1.11') {
-            event_ = new Event(event);
-          } else {
-            event_ = new DOMEvent(event);
-          }
+          const event_ = new DOMEvent(event);
           event_.stop();
           return this.hide();
         }.bind(this));
@@ -157,10 +147,10 @@ var InfoWin = new Class({
       // if unsupported, and as fall-back approach, we inject a distinct
       // resize element for the resize handle of the mootools.
       if (this.options.resizable) {
-        var resizeBox = new Element('div', {
+        const resizeBox = new Element('div', {
             'class': this.options.className + this.options.classSuffix + '-resize'
           }).inject(this.winFrame);
-        var icon = new Element('img', {
+        const icon = new Element('img', {
             'src': this.options.resizeImg,
             'class': 'icon resize',
             'alt': 'resize'
@@ -194,8 +184,8 @@ var InfoWin = new Class({
       if (event_) this.position(event_);
       if (this.winFrame.style.position != 'fixed') {
         // floating coordinates refer to the 'content' element
-        content = document.getElementById('content');
-        contentRect = content.getBoundingClientRect();
+        const content = document.getElementById('content');
+        const contentRect = content.getBoundingClientRect();
         this.winFrame.style.position = "absolute";
         this.winFrame.style.left = (parseInt(this.winFrame.style.left) - contentRect.left + content.scrollLeft) + 'px';
         this.winFrame.style.top  = (parseInt(this.winFrame.style.top)  - contentRect.top  + content.scrollTop ) + 'px';
@@ -216,8 +206,8 @@ var InfoWin = new Class({
       else {
         if (this.winFrame.style.position == 'fixed') {
             // floating coordinates refer to the 'content' element
-            content = document.getElementById('content');
-            contentRect = content.getBoundingClientRect();
+            const content = document.getElementById('content');
+            const contentRect = content.getBoundingClientRect();
             this.winFrame.style.position = "absolute";
             this.winFrame.style.left = (winFrameRect.left - contentRect.left + content.scrollLeft) + 'px';
             this.winFrame.style.top  = (winFrameRect.top  - contentRect.top  + content.scrollTop ) + 'px';
@@ -230,17 +220,17 @@ var InfoWin = new Class({
 
     fillBody: function(id_select_html_elements, epgid){
       if (!epgid) return false;
-      var bodyElems = $$('#'+ id_select_html_elements + ' ' + this.options.bodySelect);
-      if ((bodyElems != undefined) && bodyElems.length > 0) {
+      const bodyElems = $$('#'+ id_select_html_elements + ' ' + this.options.bodySelect);
+      if (bodyElems && bodyElems.length > 0) {
         this.winBody.empty();
         this.fireEvent('onDomExtend', [id_select_html_elements, bodyElems]);
         this.winBody.adopt(bodyElems);
-        var history_num_back = 0;
-        var history_back = this.winBody.getElementById('history_' + id_select_html_elements);
+        let history_num_back = 0;
+        const history_back = this.winBody.getElementById('history_' + id_select_html_elements);
         if (history_back) {
           history_num_back = Number(history_back.value);
         }
-        var confirm_ = this.winBody.getElementById('confirm_' + id_select_html_elements);
+        const confirm_ = this.winBody.getElementById('confirm_' + id_select_html_elements);
         if (confirm_) {
           confirm_.onclick = null;
           confirm_.addEvent('click', async function(event) {
@@ -248,33 +238,23 @@ var InfoWin = new Class({
               await action(epgid);
               if (history_num_back > 0) { history.go(-history_num_back); }
               else { location.reload(); }
-              var event_;
-              if (MooTools.version == '1.11') {
-                event_ = new Event(event);
-              } else {
-                event_ = new DOMEvent(event);
-              }
+              const event_ = new DOMEvent(event);
               event_.stop();
               return this.hide();
             }.bind(this));
         }
-        var close_button = this.winBody.getElementById('close_' + id_select_html_elements);
+        const close_button = this.winBody.getElementById('close_' + id_select_html_elements);
         if (close_button) {
           close_button.onclick = null;
           close_button.addEvent('click', function(event) {
-              var event_;
-              if (MooTools.version == '1.11') {
-                event_ = new Event(event);
-              } else {
-                event_ = new DOMEvent(event);
-              }
+              const event_ = new DOMEvent(event);
               event_.stop();
               return this.hide();
             }.bind(this));
         }
-        var firstScript = bodyElems.getElement('script.injectIcons');
+        const firstScript = bodyElems.getElement('script.injectIcons');
         if (firstScript && firstScript.length && firstScript[0]) {
-          var js_m = new Element('div').adopt(firstScript).firstChild.textContent;
+          const js_m = new Element('div').adopt(firstScript).firstChild.textContent;
           eval(js_m);
         }
         return true;
@@ -284,7 +264,7 @@ var InfoWin = new Class({
 
     fillTitle: function(id_select_html_elements){
       var titleElems = $$('#' + id_select_html_elements + ' ' + this.options.titleSelect);
-      if ((titleElems != undefined) && titleElems.length > 0) {
+      if (titleElems && titleElems.length > 0) {
         this.titleBox.empty().adopt(titleElems);
         return true;
       }
@@ -292,27 +272,16 @@ var InfoWin = new Class({
     },
 
     position: function(event){
-      var prop = {'x': 'left', 'y': 'top'};
-      var posx;
-      var posy;
-      if (MooTools.version == '1.11') {
-        posx = event.page['x'];
-        posy = event.page['y'];
-      } else {
-        event_ = new DOMEvent(event);
-        posx = event_.page['x'];
-        posy = event_.page['y'];
-      }
-      posy += this.options.offsets['y'];
-      content = document.getElementById('content');
-      contentRect = content.getBoundingClientRect();
-      if (posy < contentRect.y) posy = contentRect.y;
-      this.winFrame.setStyle(prop['y'], posy);
-      posx += this.options.offsets['x'];
-      var width = this.winFrame.getBoundingClientRect().width;
-      if (posx > window.innerWidth - width) posx = window.innerWidth - width;
-      if (posx < 1) posx = 1;
-      this.winFrame.setStyle(prop['x'], posx);
+      event_ = new DOMEvent(event);
+      let posy = event_.page['y'] + this.options.offsets['y'];
+      const contentRect = document.getElementById('content').getBoundingClientRect();
+      posy = Math.max(posy, contentRect.y);
+      this.winFrame.setStyle('top', posy);
+
+      let posx = event_.page['x'] + this.options.offsets['x'];
+      posx = Math.min(posx, window.innerWidth - this.winFrame.getBoundingClientRect().width);
+      posx = Math.max(posx, 1);
+      this.winFrame.setStyle('left', posx);
     }
   });
 
@@ -390,13 +359,6 @@ Class: InfoWin_Ajax
 
   Asynchronously request the content of an info win using fetch
 */
-function is_digit(c){
-  if (c >= '0' && c <= '9') {
-    return true;
-  } else {
-    return false;
-  }
-}
 /*  cyrb53 (c) 2018 bryc (github.com/bryc)
  *  License: Public domain (or MIT if needed). Attribution appreciated.
  *  A fast and simple 53-bit string hash function with decent collision resistance.
@@ -437,15 +399,19 @@ const cyrb53a_beta = function(str, seed = 0) {
   return 2097152 * (h2 >>> 0) + (h1 >>> 11);
 };
 
+function is_digit(c){
+  return c >= '0' && c <= '9';
+}
 function decrease_history_num_back(url) {
-var ind_history = url.indexOf("history_num_back=");
-if (ind_history == -1) return url;
-ind_history += 17;
-for (var ind_history_e = ind_history; ind_history_e < url.length && is_digit(url.substring(ind_history_e, ind_history_e+1)); ++ind_history_e);
-if (ind_history_e <= ind_history) return url;
-var history_num_back = Number(url.substring(ind_history, ind_history_e))-1;
-if (history_num_back < 0) return url;
-return url.substring(0, ind_history) + history_num_back + url.substring(ind_history_e);
+  var ind_history = url.indexOf("history_num_back=");
+  if (ind_history == -1) return url;
+  ind_history += 17;
+  for (var ind_history_e = ind_history; ind_history_e < url.length && is_digit(url[ind_history_e]); ++ind_history_e);
+  if (ind_history_e <= ind_history) return url;
+  var history_num_back = Number(url.substring(ind_history, ind_history_e))-1;
+  if (history_num_back < 0) return url;
+//console.log("hist_num_back, url = "+url+" new url = "+url.substring(0, ind_history) + history_num_back + url.substring(ind_history_e));
+  return url.substring(0, ind_history) + history_num_back + url.substring(ind_history_e);
 }
 
 var InfoWin_Ajax = new Class({
@@ -495,7 +461,6 @@ var InfoWin_Ajax = new Class({
   // created a DOM subtree for an infowin.
   build: function(id){
     if (!this.parent(id)) {
-//    this.titleBox.setHTML(this.options.loadingMsg);
       this.titleBox.innerHTML = this.options.loadingMsg;
       this.ajaxResponse = new Element('div', {
           'styles' : {
@@ -508,7 +473,7 @@ var InfoWin_Ajax = new Class({
 
 
 /*
-Class: Infowin__otifier
+Class: Infowin_Notifier
 
 Creates a notification popup that disappears automatically.
 Useful for a confirmation message after a AJAX action request.
@@ -539,7 +504,6 @@ var InfoWin_Notifier = new Class({
 
   fillBody: function(id){
     this.winFrame.setStyle('position', 'fixed');
-//  this.winBody.empty().setHTML(this.options.message);
     this.winBody.empty().innerHTML = this.options.message;
     return true;
   },

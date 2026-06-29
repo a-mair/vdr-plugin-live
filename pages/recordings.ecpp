@@ -261,7 +261,7 @@ else active_r = "recordings";
     <tr><td>
       <form method="post" name="recordings" id="form_recordings" action="recordings.ecpp">
         <div class="recordings">
-          <div class="recordingslist">
+          <div id="root_recordingslist" class="recordingslist">
             <& recordings.recordings_item iRecItem=(iRecItemRoot) irecording_item=(irecording_item) iOpenTreeNodes=(iOpenTreeNodes) &>
           </div>
         </div>
@@ -451,33 +451,42 @@ recs[<$$cToSvInt(rPtr->Id())$>]=[<$$ *recording_item $>]
 }
   if (l_rec_iterator == iterator_end()) {
     if (!hasSubDirs) {
+      if (!parentIdHash.empty()) {
       </%cpp>
-      <script>
-        rec_ids["<$ parentIdHash $>"] = []
-        document.write(
-          '<table class="recordings" width="100%">' +
-            '<tbody>' +
-              '<tr class="recording_item">' +
-                '<td class="message"><$ tr("No matching recordings found") $></td>' +
-              '</tr>' +
-            '</tbody>' +
-          '</table>'
-        )
-      </script>
+        <script>
+          rec_ids["<$ parentIdHash $>"] = []
+        </script>
+%     }
+      <table class="recordings" width="100%">
+        <tbody>
+          <tr class="recording_item">
+            <td class="message"><$ tr("No matching recordings found") $></td>
+          </tr>
+        </tbody>
+      </table>
       <%cpp>
     }
   } else {
     bool first = true;
-    const char *displayFolder = "1";
     recording_item->clear();
     RecordingsItemRec::AppendAsJSArray(*recording_item, l_rec_iterator, first);
     </%cpp>
       <script>
-%   if (level == 0) {
-        document.write(rec_string_d([<$level$>, <$displayFolder$>, [ <$$ *recording_item $> ]], '0'))
-%   } else if (!parentIdHash.empty()) {
-        rec_ids["<$ parentIdHash $>"] = [<$level$>, <$displayFolder$>, [ <$$ *recording_item $> ]]
-%   }
+%     if (level == 0) {
+        const root_recordingslist = document.getElementById("root_recordingslist");
+        if (root_recordingslist) {
+          const st = Object.create(null)
+          st.a = ""
+          RecordingsSt_int(st, <$level$>, '1', [ <$$ *recording_item $> ], '0');
+
+          const child = document.createElement("div");
+          root_recordingslist.appendChild(child);
+          child.innerHTML=st.a;
+        } else console.log('pages/recordings.ecpp ERROR element with ID "root_recordingslist" not found');
+//        document.write(rec_string_d([<$level$>, '1', [ <$$ *recording_item $> ]], '0'))
+%     } else if (!parentIdHash.empty()) {
+        rec_ids["<$ parentIdHash $>"] = [<$level$>, '1', [ <$$ *recording_item $> ]]
+%     }
       </script>
     <%cpp>
   }
