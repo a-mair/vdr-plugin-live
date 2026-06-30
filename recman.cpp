@@ -429,6 +429,7 @@ int RecordingsManager::PurgeRecording(cSv hash, std::string *name) {
 
 
 bool split_recordings_hash(cSv recordings_hash, cSv &folder, cSv &recordings) {
+// folder can also be a reccrding command
 // recordings_hash:
 //  0..9 recording_
 // 10..? int folder_length, end with _
@@ -503,6 +504,29 @@ std::string RecordingsManager_MoveConfirmationQuestion(cSv recordings_hash) {
   }
   return std::string(cToSvFormatted(tr("Move the following %i recordings to folder \"%.*s\"?"), num_recs, static_cast<int>(folder.length()), folder.data() ));
 }
+std::string RecordingsManager_CommandConfirmationQuestion(cSv recordings_hash) {
+  cSv text;
+  cSv recordings;
+  if (!split_recordings_hash(recordings_hash, text, recordings)) {
+    return "Error in split_recordings_hash";
+  }
+  size_t command_pos = text.find(':');
+  if (command_pos == std::string::npos) {
+    esyslog3("text \"", text, "\" invalid: ':' missing");
+    return "Recording command text invalid: ':' missing";
+  }
+  cSv display_text = trim(cSv(text).substr(0, command_pos));
+  if (!display_text.empty() && display_text[display_text.length()-1] == '?') display_text.remove_suffix(1);
+
+  int num_recs = std::count(recordings.begin(), recordings.end(), '_');
+  if (num_recs == 0) return tr("Nothing selected!");
+  if (num_recs == 1) {
+    const char *name = RecordingsManager::GetNameByHash(recordings.substr(0, 32));
+    if (name) return std::string(cToSvFormatted(tr("Execute command \"%.*s\" on recording \"%s\"?"), static_cast<int>(display_text.length()), display_text.data(), name));
+    return tr("Execute command on recording [recording name unavailable]?");
+  }
+  return std::string(cToSvFormatted(tr("Execute command \"%.*s\" on the following %i recordings?"), static_cast<int>(display_text.length()), display_text.data(), num_recs));
+}
 std::string RecordingsManager_RestoreConfirmationQuestion(cSv recordings_hash) {
   int num_recs = get_number_of_objects(recordings_hash);
   if (num_recs == 0) return tr("Nothing selected!");
@@ -552,6 +576,80 @@ int RecordingsManager_DeleteRecording(cSv recordings_hash, std::string &message)
     }
   }
   return result;
+}
+
+bool is_in_command_list(cList<cNestedItem> *commands, cSv text) {
+  for (cNestedItem *Command = commands->First(); Command; Command = commands->Next(Command)) {
+    if (Command->SubItems()) {
+      bool in_sublist = is_in_command_list(Command->SubItems(), text);
+      if (in_sublist) return true;
+    } else if (text == Command->Text()) return true;
+  }
+  return false;
+}
+
+int RecordingsManager_CommandRecording(cSv recordings_hash, std::string &message) {
+  cSv text;
+  cSv recordings;
+  if (!split_recordings_hash(recordings_hash, text, recordings)) {
+    message = "Error in split_recordings_hash";
+    esyslog3("Error in split_recordings_hash");
+    return 1000;
+  }
+// security check to prevent execution of arbitrary commands
+  if (!is_in_command_list(&RecordingCommands, text)) {
+    message = "Illegal command";
+    esyslog3("text \"", text, "\" not in reccommands list. Someone might try to attack your system");
+    return 1001;
+  }
+  dsyslog2("recordings command text '", text, "'");
+  size_t command_pos = text.find(':');
+  if (command_pos == std::string::npos) {
+    message = "Recording command text invalid: ':' missing";
+    esyslog3("text \"", text, "\" invalid: ':' missing");
+    return 1002;
+  }
+  message.clear();
+  cToSvConcat result;
+  int error_code = 0;
+  for (cSv id: cSplit(recordings, '_')) if (id.length() == 32) {
+    cToSvConcat command(trim(cSv(text).substr(command_pos+1)));
+    {
+      LOCK_RECORDINGS_READ;
+      const cRecording *recording = RecordingsManager::GetByHash(id, Recordings);
+      if (!recording) {
+        message.append("Couldn't find recording ID ").append(id).append(".");
+        esyslog3("recording with recid ", id, " not found");
+        ++error_code;
+        continue;
+      }
+    // cString::sprintf("\"%s\"", *strescape(ri->Recording()->FileName(), "\\\"$"))));
+      cToSvConcat rec_filename(recording->FileName());
+      rec_filename.replaceAll('\\', "\\\\");
+      rec_filename.replaceAll('"', "\\\"");
+      rec_filename.replaceAll('$', "\\$");
+      command << " \"" << rec_filename << '"';
+    }
+    isyslog3("executing ", command);
+
+    cPipe p;
+    if (p.Open(command.c_str(), "r")) {
+      if (!result.empty()) result << '\n';
+      int c;
+      while ((c = fgetc(p)) != EOF) result << (char)c;
+      p.Close();
+    } else {
+      esyslog3("opening pipe for command \"", command, "\" failed");
+      message.append("Opening pipe for command \"").append(command).append("\" failed.");
+    }
+    dsyslog3("result = \"", result, "\"");
+  }
+  if (error_code == 0) {
+    cToSvConcat html_result;
+    AppendHtmlEscapedAndCorrectNonUTF8(html_result, result);
+    message = html_result;
+  }
+  return error_code;
 }
 int RecordingsManager_MoveRecording(cSv recordings_hash, std::string &message) {
   cSv folder;
@@ -668,14 +766,14 @@ int RecordingsManager::CheckReplay(cSv hash, std::string *fileName) {
 bool RecordingsManager::StateChanged ()
 {
 // will return true only, if the Recordings List has been changed since last read
-  bool rec_changed = (cRecordings::GetRecordingsRead(m_recordingsStateKey) != nullptr);
+  bool rec_changed = cRecordings::GetRecordingsRead(m_recordingsStateKey) != nullptr;
   if (rec_changed) {
     m_recordingsStateKey.Remove();
     dsyslog2("VDR recordings changed");
   }
 
 #if VDRVERSNUM >= 20708
-  bool del_rec_changed = (cRecordings::GetDeletedRecordingsRead(m_deletedRecordingsStateKey) != nullptr);
+  bool del_rec_changed = cRecordings::GetDeletedRecordingsRead(m_deletedRecordingsStateKey) != nullptr;
   if (del_rec_changed) {
     m_deletedRecordingsStateKey.Remove();
     dsyslog2("VDR deleted recordings changed");

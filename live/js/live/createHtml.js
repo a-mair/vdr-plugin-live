@@ -24,13 +24,6 @@ function addEncodeHtml(s, str) {
   s.a += str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/[\n\r]/g, '<br/>');
 }
 
-function addIfWide(text) {
- if (!window.matchMedia("(max-width: 600px)").matches) document.write(text);
-}
-function addIfSmall(text) {
- if (window.matchMedia("(max-width: 600px)").matches) document.write(text);
-}
-
 function truncateOnWordIdx(str, limit) {
   var b = str.indexOf('&lt;br/&gt;')
   if (b >= 0 && b<= limit) return b
@@ -192,10 +185,10 @@ async function actionOnMarkedRecordings(form, act) {
 // act = 'del' or 'pur' or "res' or 'mov'
   let epgid=act+'_recording_';
   if (act == 'mov') {
-    var folder;
-    var newdir = form.getElementById("newdir");
+    let folder;
+    const newdir = form.getElementById("newdir");
     if (newdir.disabled) {
-      var dir = form.getElementById("directory");
+      const dir = form.getElementById("directory");
       folder = dir.value;
     } else {
       folder = newdir.value;
@@ -206,7 +199,7 @@ async function actionOnMarkedRecordings(form, act) {
     epgid += '_';
   }
 
-  var inputs = form.getElementsByTagName('input');
+  const inputs = form.getElementsByTagName('input');
   for (var i = 0; i<inputs.length; i++) {
     if (inputs[i].type == 'checkbox' && inputs[i].checked &&
         inputs[i].value && inputs[i].value.startsWith('recording_')) {
@@ -220,21 +213,47 @@ async function actionOnMarkedRecordings(form, act) {
     return;
   }
   if (typeof liveEnhanced !== 'undefined') {
-    var event_;
-    var merged_options;
-    if (MooTools.version == '1.11') {
-      event_ = new Event(event);
-      merged_options = $merge(liveEnhanced.options.infoWinOptions, { onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced) });
-    } else {
-      event_ = new DOMEvent(event);
-      merged_options = Object.merge(liveEnhanced.options.infoWinOptions, { onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced) });
-    }
-    var infowin = new InfoWin_Ajax(epgid, "epginfo.html?epgid="+encodeURIComponent(epgid), merged_options);
+    const event_ = new DOMEvent(event);
+    const merged_options = Object.merge(liveEnhanced.options.infoWinOptions, { onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced) });
+    const infowin = new InfoWin_Ajax(epgid, "epginfo.html?epgid="+encodeURIComponent(epgid), merged_options);
     infowin.options.offsets.y = -400;
     infowin.show(event_);
     event_.stop();
   } else alert("ERROR createHtml.js, actionOnMarkedRecordings, liveEnhanced not defined");
 
+}
+async function execute_rec_command(text, recid, confirm_) {
+  let epgid='rcd_recording_';
+  epgid += text.length;
+  epgid += '_';
+  epgid += text;
+  epgid += '_';
+
+  if (recid == '') {
+    const inputs = document.getElementsByTagName('input');
+    for (var i = 0; i<inputs.length; i++) {
+      if (inputs[i].type == 'checkbox' && inputs[i].checked &&
+          inputs[i].value && inputs[i].value.startsWith('recording_')) {
+        epgid += inputs[i].value.substring(10);
+        epgid += '_';
+      }
+    }
+  } else {
+    epgid += recid.substring(10);
+    epgid += '_';
+  }
+  if (!confirm_ || is_popup_disabled(epgid) ) {
+    await action(epgid);
+    return;
+  }
+  if (typeof liveEnhanced !== 'undefined') {
+    const event_ = new DOMEvent(event);
+    const merged_options = Object.merge(liveEnhanced.options.infoWinOptions, { onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced) });
+    const infowin = new InfoWin_Ajax(epgid, "epginfo.html?epgid="+encodeURIComponent(epgid), merged_options);
+    infowin.options.offsets.y = -400;
+    infowin.show(event_);
+    event_.stop();
+  } else alert("ERROR createHtml.js, execute_rec_command, liveEnhanced not defined");
 }
 async function execute(url) {
 /*
@@ -255,7 +274,7 @@ async function execute(url) {
     },
   });
   const req_responseXML = new window.DOMParser().parseFromString(await response.text(), "text/xml");
-  var ret_object = new Object();
+  const ret_object = new Object();
   ret_object.success = false;
   if (!req_responseXML) {
     ret_object.error = "invalid XML, no responseXML";
@@ -273,6 +292,12 @@ async function execute(url) {
   }
   if (response_child_nodes[0].nodeValue == "1") {
     ret_object.success = true;
+    const message_array = req_responseXML.getElementsByTagName("message");
+    if (message_array.length != 1) return ret_object;
+    var message_child_nodes = message_array[0].childNodes;
+    if (message_child_nodes.length != 1) return ret_object;
+
+    ret_object.message = message_child_nodes[0].nodeValue;
     return ret_object;
   }
   if (response_child_nodes[0].nodeValue != "0") {
@@ -280,12 +305,12 @@ async function execute(url) {
     return ret_object;
   }
 
-  var error_array = req_responseXML.getElementsByTagName("error");
+  const error_array = req_responseXML.getElementsByTagName("error");
   if (error_array.length != 1) {
     ret_object.error = "invalid XML, no error tag or several error tags";
     return ret_object;
   }
-  var error_child_nodes = error_array[0].childNodes;
+  const error_child_nodes = error_array[0].childNodes;
   if (error_child_nodes.length != 1) {
     ret_object.error = "invalid XML, no child of error tag or several children of error tag";
     return ret_object;
@@ -303,10 +328,15 @@ function disable_popup_if_user_checked(id, param) {
 }
 async function action(id)
 {
-  let id_enc = encodeURIComponent(id);
-  var ret_object;
-  ret_object = await execute('action.html?id=' + id_enc);
-  if (!ret_object.success) alert (ret_object.error);
+  const ret_object = await execute('action.html?id=' + encodeURIComponent(id));
+  if (!ret_object.success) {
+    alert (ret_object.error);
+  } else {
+    if (id.substring(0, 4) == 'rcd_') {
+      if (ret_object.message)
+        document.getElementById('display_execute_rec_command_result').innerHTML = ret_object.message;
+    }
+  }
 }
 async function action_back(id, param, history_num_back)
 {
@@ -320,12 +350,6 @@ async function createTimer(epgid) {
   location.reload();
   return false;
 }
-async function execute_rec_command(text, recid) {
-  const response = await fetch('recording_command.html?text='+encodeURIComponent(text)+
-    '&recid='+encodeURIComponent(recid));
-  const re_text = await response.text();
-  document.getElementById('display_execute_rec_command_result').innerHTML = re_text;
-}
 function back_depending_referrer(back_epginfo, back_others) {
   if (document.referrer.indexOf("epginfo.html?") != -1) {
     history.go(-back_epginfo);
@@ -337,13 +361,6 @@ async function rec_string_d_a(rec_ids, folderId) {
   const st = Object.create(null)
   st.a = ""
   let res = await RecordingsSt_a(st, rec_ids[0], rec_ids[1], rec_ids[2], folderId)
-  return st.a
-}
-
-function rec_string_d(rec_ids, folderId) {
-  const st = Object.create(null)
-  st.a = ""
-  RecordingsSt_int(st, rec_ids[0], rec_ids[1], rec_ids[2], folderId)
   return st.a
 }
 

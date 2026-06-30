@@ -17,6 +17,7 @@ const char *XMLHEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
   std::string value;
   bool result;
   std::string error;
+  std::string message;
 </%args>
 <$$ XMLHEADER $>
 <service>
@@ -25,6 +26,7 @@ const char *XMLHEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
   </request>
   <response><$ result $></response>
   <error><$ error $></error>
+  <message><$ message $></message>
 </service>
 </%def>
 

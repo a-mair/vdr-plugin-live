@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-25 09:06+0200\n"
+"POT-Creation-Date: 2026-06-30 19:18+0200\n"
 "PO-Revision-Date: 2007-08-19 20:15+0200\n"
 "Last-Translator: Valdemaras Pipiras <varas@ambernet.lt>\n"
 "Language-Team: see developers in README\n"
@@ -39,6 +39,17 @@ msgstr ""
 
 #, c-format
 msgid "Move the following %i recordings to folder \"%.*s\"?"
+msgstr ""
+
+#, c-format
+msgid "Execute command \"%.*s\" on recording \"%s\"?"
+msgstr ""
+
+msgid "Execute command on recording [recording name unavailable]?"
+msgstr ""
+
+#, c-format
+msgid "Execute command \"%.*s\" on the following %i recordings?"
 msgstr ""
 
 #, c-format
@@ -197,47 +208,94 @@ msgstr "nesklandumai"
 msgid "Sorry, no permission. Please contact your administrator!"
 msgstr "Atleiskit, bet jūs neturite užtektinai teisių. Susisiekite su sistemos administratoriumi!"
 
-msgid "Please set a name for the recording!"
+msgid "Couldn't find recording or no recordings available"
+msgstr "Negali rasti įrašo arba įrašų iš vis nėra"
+
+msgid "Cannot control playback!"
+msgstr "Negali valdyti grojimo!"
+
+msgid "Couldn't find timer. Maybe you mistyped your request?"
+msgstr "Toks laikmatis nerastas. Gal įvedėte klaidingą paieškos frazę?"
+
+msgid "No timer defined"
+msgstr "Nenustatytas laikmatis"
+
+msgid "Duration"
 msgstr ""
 
-msgid "Cannot copy, rename or move the recording."
+msgid "Timer is recording"
+msgstr "Laikmatis įrašinėja."
+
+msgid "Timer has a conflict"
+msgstr "Laikmatis turi klaidų."
+
+msgid "Timer is active"
+msgstr "Laikmatis įjungtas."
+
+msgid "Transponder"
 msgstr ""
 
-msgid "Edit recording"
-msgstr ""
+msgid "Toggle timer (in)active"
+msgstr "Perjungti laikmačio aktyvumo/neaktyvumo būseną"
 
-msgid "Name"
-msgstr "Vardas"
+msgid "Delete timer"
+msgstr "Ištrinti laikmatį"
 
-msgid "Directory"
-msgstr "Katalogas"
+msgid "New timer"
+msgstr "Naujas laikmatis"
 
-msgid "Create new directory"
-msgstr ""
+msgid "Timer conflicts"
+msgstr "Laikmačio klaidos"
 
-msgid "Separate directories with a tilde '~'; directory names must not start with a tilde, dot, or whitespace"
-msgstr ""
+msgid "Please set a title for the timer!"
+msgstr "Laikmačiui būtina įvesti pavadinimą!"
 
-msgid "Delete resume information"
-msgstr ""
-
-msgid "Delete marks information"
-msgstr ""
+msgid "Edit timer"
+msgstr "Koreguoti laikmatį"
 
 msgid "Title"
 msgstr "Pavadinimas"
 
-#, fuzzy
-msgid "Short description"
-msgstr "Aprašymas"
-
-msgid "Description"
-msgstr "Aprašymas"
-
-msgid "Parental rating"
+msgid "Server"
 msgstr ""
 
-msgid "Auxiliary info"
+msgid "Directory"
+msgstr "Katalogas"
+
+msgid "Weekday"
+msgstr "Savaitės diena"
+
+msgid "Monday"
+msgstr "Pirmadienis"
+
+msgid "Tuesday"
+msgstr "Antradienis"
+
+msgid "Wednesday"
+msgstr "Trečiadienis"
+
+msgid "Thursday"
+msgstr "Ketvirtadienis"
+
+msgid "Friday"
+msgstr "Penktadienis"
+
+msgid "Saturday"
+msgstr "Šeštadienis"
+
+msgid "Sunday"
+msgstr "Sekmadienis"
+
+msgid "Monitoring"
+msgstr ""
+
+msgid "none"
+msgstr ""
+
+msgid "event ID"
+msgstr ""
+
+msgid "event time"
 msgstr ""
 
 msgid "Save"
@@ -246,17 +304,480 @@ msgstr "Išsaugoti"
 msgid "Cancel"
 msgstr "Atmesti"
 
+msgid "Find more in the IMDb (Internet Movie Database)"
+msgstr "Gauti daugiau informacijos iš IMDb."
+
+msgid "Play this channel in the browser"
+msgstr ""
+
+msgid "Play this recording in the browser"
+msgstr ""
+
+msgid "Play this channel in the media player"
+msgstr ""
+
+msgid "Play this recording in the media player"
+msgstr ""
+
+msgid "Stream this recording"
+msgstr ""
+
+msgid "Record this"
+msgstr "Įrašyti"
+
+msgid "Loading data ..."
+msgstr "duomenys kraunami"
+
+msgid "An error occurred!"
+msgstr "klaida!"
+
+msgid "Request succeeded"
+msgstr "Užklausa pavyko!"
+
+msgid "Request failed!"
+msgstr "Užklausa nepavyko!"
+
+msgid "Infobox update is on. Click to turn it off"
+msgstr ""
+
+msgid "Infobox update is off. Click to turn it on"
+msgstr ""
+
+msgid "Retrieving status ..."
+msgstr "užklausos būklė ..."
+
+msgid "Stop playback"
+msgstr "sustapdyti grojimą"
+
+msgid "Resume playback"
+msgstr "paleisti grojimą iš naujo"
+
+msgid "Pause playback"
+msgstr "pristapdyti grojimą"
+
+msgid "Fast rewind"
+msgstr "greitas atsukimas atgal"
+
+msgid "Fast forward"
+msgstr "greitas prasukimas pirmyn"
+
+msgid "Previous channel"
+msgstr "prieš tai buvęs kanalas"
+
+msgid "Next channel"
+msgstr "sekantis kanalas"
+
+msgid "No server response!"
+msgstr "Serveris neatsako!"
+
+msgid "Failed to update infobox!"
+msgstr "Negali atnaujinti infolentelės!"
+
+msgid "Switch to this channel"
+msgstr "Pereiti į šį kanalą."
+
+msgid "Search for repeats"
+msgstr "Ieškoti pasikartojimų."
+
+msgid "Scraper"
+msgstr ""
+
+msgid "Actors"
+msgstr ""
+
+msgid "Artwork"
+msgstr ""
+
+msgid "Recording length"
+msgstr ""
+
+msgid "Event duration"
+msgstr ""
+
+msgid "Title:"
+msgstr ""
+
+msgid "Original title:"
+msgstr ""
+
+msgid "Episode:"
+msgstr ""
+
+msgid "Episode overview:"
+msgstr ""
+
+msgid "Episode vote average/count:"
+msgstr ""
+
+msgid "Episode first aired:"
+msgstr ""
+
+msgid "Episode runtime:"
+msgstr ""
+
+msgid "IMDb episode"
+msgstr ""
+
+msgid "Guest stars and crew"
+msgstr ""
+
+msgid "Writer"
+msgstr ""
+
+msgid "Director"
+msgstr ""
+
+msgid "Tagline:"
+msgstr ""
+
+msgid "Overview:"
+msgstr ""
+
+msgid "Genres:"
+msgstr ""
+
+msgid "Homepage"
+msgstr "Pradžia"
+
+msgid "Release date:"
+msgstr ""
+
+msgid "Runtime:"
+msgstr ""
+
+msgid "Popularity:"
+msgstr ""
+
+msgid "Vote average/count:"
+msgstr ""
+
+msgid "IMDb"
+msgstr ""
+
+msgid "Budget:"
+msgstr ""
+
+msgid "Revenue:"
+msgstr ""
+
+msgid "Collection name:"
+msgstr ""
+
+msgid "Status:"
+msgstr ""
+
+msgid "Cast and crew"
+msgstr ""
+
+msgid "Content"
+msgstr "Turinys"
+
+msgid "Parental rating"
+msgstr ""
+
 msgid "Execute this recording command"
 msgstr ""
 
-msgid "Couldn't find search timer. Maybe you mistyped your request?"
-msgstr "Nerandamas paieškos laikmatis. Gal pateikėte netikslią užklausą?"
+msgid "Authors"
+msgstr "Autoriai"
+
+msgid "Project Idea"
+msgstr "Projekto idėja"
+
+msgid "Webserver"
+msgstr "Web serveris"
+
+msgid "Project leader"
+msgstr "Projekto vadovas"
+
+msgid "Graphics"
+msgstr "Grafika"
+
+msgid "Current Maintainer"
+msgstr ""
+
+msgid "Previous Maintainer"
+msgstr ""
+
+msgid "Information"
+msgstr "Informacija"
+
+msgid "LIVE version"
+msgstr "LIVE versija"
+
+msgid "VDR version"
+msgstr "VDR versija"
+
+msgid "Features"
+msgstr "Savybės"
+
+msgid "active"
+msgstr "aktyvus"
+
+msgid "required"
+msgstr "reikalingas"
+
+msgid "Information providers"
+msgstr ""
+
+msgid "Bugs and suggestions"
+msgstr "Klaidos ir pasiūlymai"
+
+msgid "If you encounter any bugs or would like to suggest new features, please use our bugtracker"
+msgstr "Jei radote klaidų ar norėtumėte pasiūlyti naujų savybių, rašykit į mūsų bugtrakerį"
+
+msgid "No recording errors"
+msgstr ""
+
+msgid "Number of recording errors:"
+msgstr ""
+
+msgid "Recording errors unknown"
+msgstr ""
+
+msgid "Duration deviation from event length"
+msgstr ""
+
+msgid "min"
+msgstr ""
+
+msgid "h"
+msgstr ""
+
+msgid "Number of PES files"
+msgstr ""
+
+msgid "Number of TS files"
+msgstr ""
+
+msgid "Existing Recording:"
+msgstr ""
+
+msgid "Click to view details"
+msgstr "Spustelkit kad gautumėt daugiau informacijos."
+
+msgid "Play this recording"
+msgstr ""
+
+msgid "Edit recording"
+msgstr ""
+
+msgid "Delete this recording"
+msgstr "Ištrinti šį įrašą iš disko!"
+
+msgid "Restore this recording"
+msgstr ""
+
+msgid "Permanently delete this recording"
+msgstr ""
+
+msgid "Warning: This cannot be undone!"
+msgstr ""
+
+msgid "Select all recordings in this folder"
+msgstr ""
+
+msgid "List of recordings"
+msgstr "Įrašų sąrašas"
+
+msgid "List of deleted recordings"
+msgstr ""
+
+msgid "No recordings found"
+msgstr "Įrašų nėra"
+
+msgid "No deleted recordings found"
+msgstr ""
+
+msgid "Move selected recordings"
+msgstr ""
+
+msgid "Create new directory"
+msgstr ""
+
+msgid "Separate directories with a tilde '~'; directory names must not start with a tilde, dot, or whitespace"
+msgstr ""
+
+msgid "Delete selected recordings"
+msgstr ""
+
+msgid "Warning: Permanently deleted recordings cannot be recovered!"
+msgstr ""
+
+msgid "Restore selected recordings"
+msgstr ""
+
+msgid "Permanently delete selected recordings"
+msgstr ""
+
+msgid "Deselect all recordings in this folder"
+msgstr ""
+
+msgid "No matching recordings found"
+msgstr ""
+
+msgid "Sort:"
+msgstr ""
+
+msgid "Name"
+msgstr "Vardas"
+
+msgid "Date"
+msgstr ""
+
+msgid "Duplicates"
+msgstr ""
+
+msgid "Errors"
+msgstr ""
+
+msgid "Look in recordings titles and subtitles for the given string and display only the matching ones. You may also use perl compatible regular expressions (PCRE)."
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "Clear filter"
+msgstr ""
+
+msgid "Expand all folders"
+msgstr ""
+
+msgid "Collapse all folders"
+msgstr ""
+
+msgid "Electronic program guide information"
+msgstr "Elektroninis programų gidas"
+
+msgid "Do not ask again during this session"
+msgstr ""
+
+msgid "Couldn't find channel or no channels available. Maybe you mistyped your request?"
+msgstr "Kanalas nerastas arba jo iš vis nėra. Gal klaidingai įvedėte paieškos frazę?"
+
+msgid "No schedules available for this channel"
+msgstr "Šis kanalas neturi programos"
+
+msgid "No events available for this channel"
+msgstr ""
+
+msgid "Channel"
+msgstr "Kanalas"
+
+msgid "Prev. entry"
+msgstr ""
+
+msgid "Next entry"
+msgstr ""
+
+msgid "MultiSchedule"
+msgstr ""
+
+msgid "All channels"
+msgstr ""
+
+msgid "First (unnamed) group"
+msgstr ""
+
+msgid "Now"
+msgstr "Dabar"
+
+msgid "Time"
+msgstr ""
+
+msgid "more"
+msgstr "daugiau"
+
+#, c-format
+msgid "%a, %x"
+msgstr "%a, %x"
+
+msgid "What's running on"
+msgstr "Kas rodoma"
+
+msgid "at"
+msgstr " "
+
+msgid "What's on next?"
+msgstr "Kas bus transliuojama po to?"
+
+msgid "Favorites"
+msgstr "Mėgiamiausi"
+
+msgid "View the schedule of this channel"
+msgstr "Žiūrėti šio kanalo programą"
+
+msgid "No events found"
+msgstr ""
+
+msgid "Next"
+msgstr "Sekantis"
+
+msgid "What's on"
+msgstr "Kas rodoma šio metu"
+
+msgid "Details view"
+msgstr "Detalus sąrašas"
+
+msgid "List view"
+msgstr "Sąrašas"
+
+msgid "Couldn't find channel or no channels available."
+msgstr "Nerastas arba neegzistuojantis kanalas."
+
+msgid "Couldn't switch to channel."
+msgstr "Negali perjungti kanalo."
+
+msgid "Keyboard help"
+msgstr ""
+
+msgid "Remote Control"
+msgstr "Distancinis pultas"
+
+msgid "Selection"
+msgstr "Pasirinkimas"
+
+msgid "Snapshot interval"
+msgstr "Momentinių nuotraukų intervalas"
+
+msgid "Stop"
+msgstr "Sustapdyti"
+
+msgid "Page error"
+msgstr "Puslapio klaida"
+
+msgid "Search timers"
+msgstr "Paieškos laikmačiai"
+
+msgid "Expression"
+msgstr "Išraiška"
+
+msgid "Starts between"
+msgstr "Prasideda tarp"
+
+msgid "Toggle search timer actions (in)active"
+msgstr "Įjungti/Išjungti paieškos laikmačio aktyvumą"
+
+msgid "Browse search timer results"
+msgstr "Naršyti po paieškos laikmačio rezultatus"
 
 msgid "Edit search timer"
 msgstr "Koreguoti paieškos laikmatį"
 
+msgid "Delete search timer"
+msgstr "Ištrinti paieškos laikmatį"
+
+msgid "No searchtimers found"
+msgstr ""
+
 msgid "New search timer"
 msgstr "Naujas paieškos laikmatis"
+
+msgid "Trigger search timer update"
+msgstr "Įjungti paieškos laikmačio atnaujinimą"
+
+msgid "Couldn't find search timer. Maybe you mistyped your request?"
+msgstr "Nerandamas paieškos laikmatis. Gal pateikėte netikslią užklausą?"
 
 msgid "Search text too short - use anyway?"
 msgstr "Ieškoma frazė per trumpa - vistiek ją naudoti?"
@@ -296,6 +817,9 @@ msgstr "Ieškoti"
 
 msgid "Episode"
 msgstr "Epizodas"
+
+msgid "Description"
+msgstr "Aprašymas"
 
 msgid "Use parental rating"
 msgstr ""
@@ -390,35 +914,11 @@ msgstr "Max. trukmė"
 msgid "Use day of week"
 msgstr "Naudoti savaitės dianą"
 
-msgid "Monday"
-msgstr "Pirmadienis"
-
-msgid "Tuesday"
-msgstr "Antradienis"
-
-msgid "Wednesday"
-msgstr "Trečiadienis"
-
-msgid "Thursday"
-msgstr "Ketvirtadienis"
-
-msgid "Friday"
-msgstr "Penktadienis"
-
-msgid "Saturday"
-msgstr "Šeštadienis"
-
-msgid "Sunday"
-msgstr "Sekmadienis"
-
 msgid "Use blacklists"
 msgstr "Naudoti juoduosius sąrašus"
 
 msgid "only global"
 msgstr ""
-
-msgid "Selection"
-msgstr "Pasirinkimas"
 
 msgid "all"
 msgstr "visi"
@@ -543,104 +1043,41 @@ msgstr "Pabandyti"
 msgid "Save as new"
 msgstr ""
 
-msgid "Couldn't find timer. Maybe you mistyped your request?"
-msgstr "Toks laikmatis nerastas. Gal įvedėte klaidingą paieškos frazę?"
+msgid "Search results"
+msgstr "Paieškos rezultatai"
 
-msgid "Please set a title for the timer!"
-msgstr "Laikmačiui būtina įvesti pavadinimą!"
+msgid "No search results"
+msgstr "Nėra paieškos rezultatų"
 
-msgid "New timer"
-msgstr "Naujas laikmatis"
+msgid "Search"
+msgstr "Paieška"
 
-msgid "Edit timer"
-msgstr "Koreguoti laikmatį"
+msgid "Search settings"
+msgstr "Paieškos nustatymai"
 
-msgid "Server"
+msgid "Extended search"
+msgstr "Išplėstinė paieška"
+
+msgid "The search lacks some form fields, so that their values cannot be used for searching the EPG. Please upgrade to the most recent version of EPGsearch."
 msgstr ""
 
-msgid "Weekday"
-msgstr "Savaitės diena"
-
-msgid "Monitoring"
+msgid "The search supports extra fields. These will be not be taken into account."
 msgstr ""
 
-msgid "none"
-msgstr ""
+msgid "Wrong username or password"
+msgstr "Blogas prisijungimo vardas arba slapyvardis"
 
-msgid "event ID"
-msgstr ""
+msgid "Login"
+msgstr "Prisijungimas"
 
-msgid "event time"
-msgstr ""
+msgid "VDR Live Login"
+msgstr "VDR Live prisijungimas"
 
-msgid "Couldn't find user. Maybe you mistyped your request?"
-msgstr "Toks vartotojas nerastas. Gal klaidingai įvedėte užklausos frazę?"
-
-msgid "This user name is already in use!"
-msgstr "Toks vartotojo vardas jau naudojamas!"
-
-msgid "Edit user"
-msgstr "Koreguoti vartotoją"
-
-msgid "New user"
-msgstr "Naujas vartotojas"
+msgid "User"
+msgstr "Vartotojo vardas"
 
 msgid "Password"
 msgstr "Slapyvardis"
-
-msgid "User rights"
-msgstr "Vartotojo teisės"
-
-msgid "Edit setup"
-msgstr "Koreguoti nustatymus"
-
-msgid "Add or edit timers"
-msgstr "Pridėti arba koreguoti laikmačius"
-
-msgid "Delete timers"
-msgstr "Ištrinti laikmačius"
-
-msgid "Delete recordings"
-msgstr "Ištrinti įrašus"
-
-msgid "Use remote menu"
-msgstr "Naudoti nuotolinį meniu"
-
-msgid "Start replay"
-msgstr "Paleisti kartojimą"
-
-msgid "Switch channel"
-msgstr "Perjungti kanalą"
-
-msgid "Add or edit search timers"
-msgstr "Pridėti arba koreguoti paieškos laikmačius"
-
-msgid "Delete search timers"
-msgstr "Ištrinti paieškos laikmačius"
-
-msgid "Edit recordings"
-msgstr ""
-
-msgid "Electronic program guide information"
-msgstr "Elektroninis programų gidas"
-
-msgid "Couldn't find recording or no recordings available"
-msgstr "Negali rasti įrašo arba įrašų iš vis nėra"
-
-msgid "Do not ask again during this session"
-msgstr ""
-
-msgid "Page error"
-msgstr "Puslapio klaida"
-
-msgid "Not playing a recording"
-msgstr "Negroja įrašo."
-
-msgid "Not playing the same recording as from request"
-msgstr "Negroja to paties norimo įrašo."
-
-msgid "Cannot control playback!"
-msgstr "Negali valdyti grojimo!"
 
 msgid "Playing recording"
 msgstr "grojamas įrašas"
@@ -657,455 +1094,11 @@ msgstr "nėra šito kanalo!"
 msgid "%I:%M:%S %p"
 msgstr "%I:%M:%S %p"
 
-msgid "No recording errors"
-msgstr ""
-
-msgid "Number of recording errors:"
-msgstr ""
-
-msgid "Recording errors unknown"
-msgstr ""
-
-msgid "Duration deviation from event length"
-msgstr ""
-
-msgid "min"
-msgstr ""
-
-msgid "Recording length"
-msgstr ""
-
-msgid "h"
-msgstr ""
-
-msgid "Number of PES files"
-msgstr ""
-
-msgid "Number of TS files"
-msgstr ""
-
-msgid "Find more in the IMDb (Internet Movie Database)"
-msgstr "Gauti daugiau informacijos iš IMDb."
-
-msgid "Record this"
-msgstr "Įrašyti"
-
-msgid "Search for repeats"
-msgstr "Ieškoti pasikartojimų."
-
-msgid "Existing Recording:"
-msgstr ""
-
-msgid "Play this recording in the browser"
-msgstr ""
-
-msgid "Click to view details"
-msgstr "Spustelkit kad gautumėt daugiau informacijos."
-
-msgid "Play this recording"
-msgstr ""
-
-msgid "Delete this recording"
-msgstr "Ištrinti šį įrašą iš disko!"
-
-msgid "Restore this recording"
-msgstr ""
-
-msgid "Permanently delete this recording"
-msgstr ""
-
-msgid "Warning: This cannot be undone!"
-msgstr ""
-
-msgid "Select all recordings in this folder"
-msgstr ""
-
-msgid "Wrong username or password"
-msgstr "Blogas prisijungimo vardas arba slapyvardis"
-
-msgid "Login"
-msgstr "Prisijungimas"
-
-msgid "VDR Live Login"
-msgstr "VDR Live prisijungimas"
-
-msgid "User"
-msgstr "Vartotojo vardas"
-
-msgid "What's on?"
-msgstr "Kas rodoma šiuo metu?"
-
-msgid "MultiSchedule"
-msgstr ""
-
-msgid "Search"
-msgstr "Paieška"
-
-msgid "Search timers"
-msgstr "Paieškos laikmačiai"
-
-msgid "Recordings (flat)"
-msgstr ""
-
-msgid "Remote Control"
-msgstr "Distancinis pultas"
-
-msgid "Web-Streaming"
-msgstr ""
-
-msgid "Logout"
-msgstr "Atsijungti"
-
-msgid "Your attention is required"
-msgstr "Dėmesio"
-
-msgid "React"
-msgstr "Reguoti"
-
-msgid "Dismiss"
-msgstr "Atmesti"
-
-msgid "All channels"
-msgstr ""
-
-msgid "First (unnamed) group"
-msgstr ""
-
-msgid "Now"
-msgstr "Dabar"
-
-msgid "Time"
-msgstr ""
-
-msgid "Switch to this channel"
-msgstr "Pereiti į šį kanalą."
-
-msgid "more"
-msgstr "daugiau"
-
-msgid "Channel"
-msgstr "Kanalas"
-
-msgid "Prev. entry"
-msgstr ""
-
-msgid "Next entry"
-msgstr ""
-
-msgid "Play this channel in the browser"
-msgstr ""
-
-msgid "Play this channel in the media player"
-msgstr ""
-
-msgid "Play this recording in the media player"
-msgstr ""
-
-msgid "Stream this recording"
-msgstr ""
-
-msgid "Loading data ..."
-msgstr "duomenys kraunami"
-
-msgid "An error occurred!"
-msgstr "klaida!"
-
-msgid "Request succeeded"
-msgstr "Užklausa pavyko!"
-
-msgid "Request failed!"
-msgstr "Užklausa nepavyko!"
-
-msgid "Infobox update is on. Click to turn it off"
-msgstr ""
-
-msgid "Infobox update is off. Click to turn it on"
-msgstr ""
-
-msgid "Retrieving status ..."
-msgstr "užklausos būklė ..."
-
-msgid "Stop playback"
-msgstr "sustapdyti grojimą"
-
-msgid "Resume playback"
-msgstr "paleisti grojimą iš naujo"
-
-msgid "Pause playback"
-msgstr "pristapdyti grojimą"
-
-msgid "Fast rewind"
-msgstr "greitas atsukimas atgal"
-
-msgid "Fast forward"
-msgstr "greitas prasukimas pirmyn"
-
-msgid "Previous channel"
-msgstr "prieš tai buvęs kanalas"
-
-msgid "Next channel"
-msgstr "sekantis kanalas"
-
-msgid "No server response!"
-msgstr "Serveris neatsako!"
-
-msgid "Failed to update infobox!"
-msgstr "Negali atnaujinti infolentelės!"
-
-msgid "Scraper"
-msgstr ""
-
-msgid "Actors"
-msgstr ""
-
-msgid "Artwork"
-msgstr ""
-
-msgid "Event duration"
-msgstr ""
-
-msgid "Title:"
-msgstr ""
-
-msgid "Original title:"
-msgstr ""
-
-msgid "Episode:"
-msgstr ""
-
-msgid "Episode overview:"
-msgstr ""
-
-msgid "Episode vote average/count:"
-msgstr ""
-
-msgid "Episode first aired:"
-msgstr ""
-
-msgid "Episode runtime:"
-msgstr ""
-
-msgid "IMDb episode"
-msgstr ""
-
-msgid "Guest stars and crew"
-msgstr ""
-
-msgid "Writer"
-msgstr ""
-
-msgid "Director"
-msgstr ""
-
-msgid "Tagline:"
-msgstr ""
-
-msgid "Overview:"
-msgstr ""
-
-msgid "Genres:"
-msgstr ""
-
-msgid "Homepage"
-msgstr "Pradžia"
-
-msgid "Release date:"
-msgstr ""
-
-msgid "Runtime:"
-msgstr ""
-
-msgid "Popularity:"
-msgstr ""
-
-msgid "Vote average/count:"
-msgstr ""
-
-msgid "IMDb"
-msgstr ""
-
-msgid "Budget:"
-msgstr ""
-
-msgid "Revenue:"
-msgstr ""
-
-msgid "Collection name:"
-msgstr ""
-
-msgid "Status:"
-msgstr ""
-
-msgid "Cast and crew"
-msgstr ""
-
-msgid "Content"
-msgstr "Turinys"
-
-msgid "Authors"
-msgstr "Autoriai"
-
-msgid "Project Idea"
-msgstr "Projekto idėja"
-
-msgid "Webserver"
-msgstr "Web serveris"
-
-msgid "Project leader"
-msgstr "Projekto vadovas"
-
-msgid "Graphics"
-msgstr "Grafika"
-
-msgid "Current Maintainer"
-msgstr ""
-
-msgid "Previous Maintainer"
-msgstr ""
-
-msgid "Information"
-msgstr "Informacija"
-
-msgid "LIVE version"
-msgstr "LIVE versija"
-
-msgid "VDR version"
-msgstr "VDR versija"
-
-msgid "Features"
-msgstr "Savybės"
-
-msgid "active"
-msgstr "aktyvus"
-
-msgid "required"
-msgstr "reikalingas"
-
-msgid "Information providers"
-msgstr ""
-
-msgid "Bugs and suggestions"
-msgstr "Klaidos ir pasiūlymai"
-
-msgid "If you encounter any bugs or would like to suggest new features, please use our bugtracker"
-msgstr "Jei radote klaidų ar norėtumėte pasiūlyti naujų savybių, rašykit į mūsų bugtrakerį"
-
-msgid "Couldn't find channel or no channels available. Maybe you mistyped your request?"
-msgstr "Kanalas nerastas arba jo iš vis nėra. Gal klaidingai įvedėte paieškos frazę?"
-
-msgid "List of recordings"
-msgstr "Įrašų sąrašas"
-
-msgid "List of deleted recordings"
-msgstr ""
-
-msgid "No recordings found"
-msgstr "Įrašų nėra"
-
-msgid "No deleted recordings found"
-msgstr ""
-
-msgid "Move selected recordings"
-msgstr ""
-
-msgid "Delete selected recordings"
-msgstr ""
-
-msgid "Warning: Permanently deleted recordings cannot be recovered!"
-msgstr ""
-
-msgid "Restore selected recordings"
-msgstr ""
-
-msgid "Permanently delete selected recordings"
-msgstr ""
-
-msgid "Deselect all recordings in this folder"
-msgstr ""
-
-msgid "No matching recordings found"
-msgstr ""
-
-msgid "Sort:"
-msgstr ""
-
-msgid "Date"
-msgstr ""
-
-msgid "Duplicates"
-msgstr ""
-
-msgid "Errors"
-msgstr ""
-
-msgid "Look in recordings titles and subtitles for the given string and display only the matching ones. You may also use perl compatible regular expressions (PCRE)."
-msgstr ""
-
-msgid "Filter"
-msgstr ""
-
-msgid "Clear filter"
-msgstr ""
-
-msgid "Expand all folders"
-msgstr ""
-
-msgid "Collapse all folders"
-msgstr ""
-
-msgid "Keyboard help"
-msgstr ""
-
-msgid "Snapshot interval"
-msgstr "Momentinių nuotraukų intervalas"
-
-msgid "Stop"
-msgstr "Sustapdyti"
-
-msgid "No schedules available for this channel"
-msgstr "Šis kanalas neturi programos"
-
-msgid "No events available for this channel"
-msgstr ""
-
-msgid "Search settings"
-msgstr "Paieškos nustatymai"
-
-msgid "Extended search"
-msgstr "Išplėstinė paieška"
-
-msgid "The search lacks some form fields, so that their values cannot be used for searching the EPG. Please upgrade to the most recent version of EPGsearch."
-msgstr ""
-
-msgid "The search supports extra fields. These will be not be taken into account."
-msgstr ""
-
-msgid "Search results"
-msgstr "Paieškos rezultatai"
-
-msgid "No search results"
-msgstr "Nėra paieškos rezultatų"
-
-msgid "Expression"
-msgstr "Išraiška"
-
-msgid "Starts between"
-msgstr "Prasideda tarp"
-
-msgid "Toggle search timer actions (in)active"
-msgstr "Įjungti/Išjungti paieškos laikmačio aktyvumą"
-
-msgid "Browse search timer results"
-msgstr "Naršyti po paieškos laikmačio rezultatus"
-
-msgid "Delete search timer"
-msgstr "Ištrinti paieškos laikmatį"
-
-msgid "No searchtimers found"
-msgstr ""
-
-msgid "Trigger search timer update"
-msgstr "Įjungti paieškos laikmačio atnaujinimą"
+msgid "Not playing a recording"
+msgstr "Negroja įrašo."
+
+msgid "Not playing the same recording as from request"
+msgstr "Negroja to paties norimo įrašo."
 
 msgid "Please set login and password!"
 msgstr "Nurodykite prisijungimo vardą ir slapyvardį!"
@@ -1201,10 +1194,92 @@ msgstr "Rodyti EPG neturinčius kanalis"
 msgid "Start page"
 msgstr "Pradinis puslapis"
 
+msgid "Recordings (flat)"
+msgstr ""
+
 msgid "Theme"
 msgstr "Tema"
 
 msgid "Use browser-specific theme"
+msgstr ""
+
+msgid "No timer conflicts"
+msgstr "Nėra laikmačio klaidų"
+
+msgid "local"
+msgstr ""
+
+msgid "Users"
+msgstr "Vartotojai"
+
+msgid "Edit user"
+msgstr "Koreguoti vartotoją"
+
+msgid "Delete user"
+msgstr "Ištrinti vartotoją"
+
+msgid "No users configured"
+msgstr ""
+
+msgid "New user"
+msgstr "Naujas vartotojas"
+
+msgid "Couldn't find user. Maybe you mistyped your request?"
+msgstr "Toks vartotojas nerastas. Gal klaidingai įvedėte užklausos frazę?"
+
+msgid "This user name is already in use!"
+msgstr "Toks vartotojo vardas jau naudojamas!"
+
+msgid "User rights"
+msgstr "Vartotojo teisės"
+
+msgid "Edit setup"
+msgstr "Koreguoti nustatymus"
+
+msgid "Add or edit timers"
+msgstr "Pridėti arba koreguoti laikmačius"
+
+msgid "Delete timers"
+msgstr "Ištrinti laikmačius"
+
+msgid "Delete recordings"
+msgstr "Ištrinti įrašus"
+
+msgid "Use remote menu"
+msgstr "Naudoti nuotolinį meniu"
+
+msgid "Start replay"
+msgstr "Paleisti kartojimą"
+
+msgid "Switch channel"
+msgstr "Perjungti kanalą"
+
+msgid "Add or edit search timers"
+msgstr "Pridėti arba koreguoti paieškos laikmačius"
+
+msgid "Delete search timers"
+msgstr "Ištrinti paieškos laikmačius"
+
+msgid "Edit recordings"
+msgstr ""
+
+msgid "Please set a name for the recording!"
+msgstr ""
+
+msgid "Cannot copy, rename or move the recording."
+msgstr ""
+
+msgid "Delete resume information"
+msgstr ""
+
+msgid "Delete marks information"
+msgstr ""
+
+#, fuzzy
+msgid "Short description"
+msgstr "Aprašymas"
+
+msgid "Auxiliary info"
 msgstr ""
 
 msgid "Couldn't find recording or no recordings available. Maybe you mistyped your request?"
@@ -1213,90 +1288,26 @@ msgstr ""
 msgid "Couldn't find channel for recording."
 msgstr ""
 
-#, c-format
-msgid "%a, %x"
-msgstr "%a, %x"
-
-msgid "View the schedule of this channel"
-msgstr "Žiūrėti šio kanalo programą"
-
 msgid "Recording"
 msgstr ""
 
-msgid "Couldn't find channel or no channels available."
-msgstr "Nerastas arba neegzistuojantis kanalas."
+msgid "What's on?"
+msgstr "Kas rodoma šiuo metu?"
 
-msgid "Couldn't switch to channel."
-msgstr "Negali perjungti kanalo."
-
-msgid "Timer conflicts"
-msgstr "Laikmačio klaidos"
-
-msgid "No timer conflicts"
-msgstr "Nėra laikmačio klaidų"
-
-msgid "local"
+msgid "Web-Streaming"
 msgstr ""
 
-msgid "Timer has a conflict"
-msgstr "Laikmatis turi klaidų."
+msgid "Logout"
+msgstr "Atsijungti"
 
-msgid "Timer is active"
-msgstr "Laikmatis įjungtas."
+msgid "Your attention is required"
+msgstr "Dėmesio"
 
-msgid "Transponder"
-msgstr ""
+msgid "React"
+msgstr "Reguoti"
 
-msgid "Toggle timer (in)active"
-msgstr "Perjungti laikmačio aktyvumo/neaktyvumo būseną"
-
-msgid "Delete timer"
-msgstr "Ištrinti laikmatį"
-
-msgid "No timer defined"
-msgstr "Nenustatytas laikmatis"
-
-msgid "Duration"
-msgstr ""
-
-msgid "Timer is recording"
-msgstr "Laikmatis įrašinėja."
-
-msgid "Users"
-msgstr "Vartotojai"
-
-msgid "Delete user"
-msgstr "Ištrinti vartotoją"
-
-msgid "No users configured"
-msgstr ""
-
-msgid "What's running on"
-msgstr "Kas rodoma"
-
-msgid "at"
-msgstr " "
-
-msgid "What's on next?"
-msgstr "Kas bus transliuojama po to?"
-
-msgid "Favorites"
-msgstr "Mėgiamiausi"
-
-msgid "No events found"
-msgstr ""
-
-msgid "Next"
-msgstr "Sekantis"
-
-msgid "What's on"
-msgstr "Kas rodoma šio metu"
-
-msgid "Details view"
-msgstr "Detalus sąrašas"
-
-msgid "List view"
-msgstr "Sąrašas"
+msgid "Dismiss"
+msgstr "Atmesti"
 
 msgid "Live Interactive VDR Environment"
 msgstr "Live interaktyvioji VDR aplinka"
@@ -1323,6 +1334,12 @@ msgid "Move recordings"
 msgstr ""
 
 msgid "Move"
+msgstr ""
+
+msgid "Recording commands"
+msgstr ""
+
+msgid "Execute"
 msgstr ""
 
 #~ msgid "Recordings"

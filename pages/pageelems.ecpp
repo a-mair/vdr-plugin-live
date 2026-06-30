@@ -1036,6 +1036,54 @@ for (const cTvMedia &media: *media_v) {
 </%def>
 
 <# ---------------------------------------------------------------------- #>
+<%def reccomands_tree>
+<%args>
+  uintptr_t ireccomands_subtree = 0;
+  std::string recid;   // if this is empty the command will be executed on all selected recordings
+  int level = 0;
+</%args>
+<%cpp>
+  cNestedItemList *reccomands_subtree = static_cast<cNestedItemList *>((void *)ireccomands_subtree);
+  for (cNestedItem *Command = reccomands_subtree->First(); Command; Command = reccomands_subtree->Next(Command)) {
+    if (Command->SubItems()) {
+</%cpp>
+      <div class="reccomands" style="--reccomands-level: <$ level $>">
+        <b> <$Command->Text()$> </b>
+      </div>
+      <&reccomands_tree ireccomands_subtree=((uintptr_t)Command->SubItems()) recid=(recid) level=(level+1) &>
+%   } else {
+      <&one_reccomands_line text=(Command->Text()) recid=(recid) level=(level)&>
+%   }
+% }
+</%def>
+
+
+<%def one_reccomands_line>
+<%args>
+  std::string text;
+  std::string recid;
+  int level = 0;
+</%args>
+<%cpp>
+  size_t col_pos = text.find(':');
+  if (col_pos == std::string::npos) {
+    esyslog2("pageelems.one_reccomands_line, text \"", text, "\" contains no ':', recid = ", recid);
+  } else {
+    const char *confirm = "false";
+    cSv display_text = trim(cSv(text).substr(0, col_pos));
+    if (!display_text.empty() && display_text[display_text.length()-1] == '?') {
+      confirm = "true";
+      display_text.remove_suffix(1);
+    }
+</%cpp>
+    <div class="reccomands" style="--reccomands-level: <$ level $>">
+      <a onclick="execute_rec_command('<$text$>', '<$recid$>', <$confirm$>)" title="<$tr("Execute this recording command")$>">
+      <$display_text$>
+    </a></div>
+% }
+<# <div><img class="icon" src="<$ GetThemedLink("img", "icon_regular_active.svg") $>"/></div> #>
+</%def>
+<# ---------------------------------------------------------------------- #>
 
 <%def about_tt_box>
   <div class="epg_description" id="aboutBox">

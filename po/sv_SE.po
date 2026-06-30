@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-25 09:06+0200\n"
+"POT-Creation-Date: 2026-06-30 19:18+0200\n"
 "PO-Revision-Date: 2013-06-21 20:15+0200\n"
 "Last-Translator: Fredrik Olofsson <fredrik.olofsson@freddano.se>\n"
 "Language-Team: see developers in README\n"
@@ -39,6 +39,17 @@ msgstr ""
 
 #, c-format
 msgid "Move the following %i recordings to folder \"%.*s\"?"
+msgstr ""
+
+#, c-format
+msgid "Execute command \"%.*s\" on recording \"%s\"?"
+msgstr ""
+
+msgid "Execute command on recording [recording name unavailable]?"
+msgstr ""
+
+#, c-format
+msgid "Execute command \"%.*s\" on the following %i recordings?"
 msgstr ""
 
 #, c-format
@@ -197,47 +208,95 @@ msgstr "konflikter"
 msgid "Sorry, no permission. Please contact your administrator!"
 msgstr "Inte tillåtet för dig. Kontakta din administratör!"
 
-msgid "Please set a name for the recording!"
-msgstr "Bestäm namn för inspelningen"
+msgid "Couldn't find recording or no recordings available"
+msgstr "Kunde inte hitta inspelning eller inga inspelningar tillgängliga"
 
-msgid "Cannot copy, rename or move the recording."
-msgstr "Kan inte kopiera, byta namn på eller flytta inspelningen "
+msgid "Cannot control playback!"
+msgstr "Kan inte styra uppspelning!"
 
-msgid "Edit recording"
-msgstr "Redigera inspelningen"
+msgid "Couldn't find timer. Maybe you mistyped your request?"
+msgstr "Kan inte hitta timer. Kontrollera stavningen?"
 
-msgid "Name"
-msgstr "Namn"
+msgid "No timer defined"
+msgstr "Ingen timer definierad"
 
-msgid "Directory"
-msgstr "Bibliotek"
-
-msgid "Create new directory"
+msgid "Duration"
 msgstr ""
 
-msgid "Separate directories with a tilde '~'; directory names must not start with a tilde, dot, or whitespace"
+msgid "Timer is recording"
+msgstr "Timern spelar in."
+
+msgid "Timer has a conflict"
+msgstr "Upptäckt konflikt för timern"
+
+msgid "Timer is active"
+msgstr "Timern är aktiv"
+
+msgid "Transponder"
 msgstr ""
 
-msgid "Delete resume information"
-msgstr "Radera information för att återuppta"
+msgid "Toggle timer (in)active"
+msgstr "Välj aktiv/inaktiv för timer"
 
-msgid "Delete marks information"
-msgstr "Ta bort märkningsinformation"
+msgid "Delete timer"
+msgstr "Ta bort timer"
+
+msgid "New timer"
+msgstr "Ny timer"
+
+msgid "Timer conflicts"
+msgstr "Timerkonflikter"
+
+msgid "Please set a title for the timer!"
+msgstr "Sätt ett namn på timern!"
+
+msgid "Edit timer"
+msgstr "Redigera timer"
 
 msgid "Title"
 msgstr "Titel"
 
-msgid "Short description"
-msgstr "Kort beskrivning"
-
-msgid "Description"
-msgstr "Beskrivning"
-
-msgid "Parental rating"
+msgid "Server"
 msgstr ""
 
-msgid "Auxiliary info"
-msgstr "Ytterligare information"
+msgid "Directory"
+msgstr "Bibliotek"
+
+msgid "Weekday"
+msgstr "Veckodag"
+
+msgid "Monday"
+msgstr "Måndag"
+
+msgid "Tuesday"
+msgstr "Tisdag"
+
+msgid "Wednesday"
+msgstr "Onsdag"
+
+msgid "Thursday"
+msgstr "Torsdag"
+
+msgid "Friday"
+msgstr "Fredag"
+
+msgid "Saturday"
+msgstr "Lördag"
+
+msgid "Sunday"
+msgstr "Söndag"
+
+msgid "Monitoring"
+msgstr ""
+
+msgid "none"
+msgstr ""
+
+msgid "event ID"
+msgstr ""
+
+msgid "event time"
+msgstr ""
 
 msgid "Save"
 msgstr "Spara"
@@ -245,17 +304,480 @@ msgstr "Spara"
 msgid "Cancel"
 msgstr "Avbryt"
 
+msgid "Find more in the IMDb (Internet Movie Database)"
+msgstr "Hitta mera på IMDb"
+
+msgid "Play this channel in the browser"
+msgstr ""
+
+msgid "Play this recording in the browser"
+msgstr ""
+
+msgid "Play this channel in the media player"
+msgstr ""
+
+msgid "Play this recording in the media player"
+msgstr ""
+
+msgid "Stream this recording"
+msgstr ""
+
+msgid "Record this"
+msgstr "Spela in detta."
+
+msgid "Loading data ..."
+msgstr "Laddar data"
+
+msgid "An error occurred!"
+msgstr "Ett fel inträffade!"
+
+msgid "Request succeeded"
+msgstr "Begäran lyckades!"
+
+msgid "Request failed!"
+msgstr "Begäran misslyckades!"
+
+msgid "Infobox update is on. Click to turn it off"
+msgstr ""
+
+msgid "Infobox update is off. Click to turn it on"
+msgstr ""
+
+msgid "Retrieving status ..."
+msgstr "Hämtar status ..."
+
+msgid "Stop playback"
+msgstr "stoppa uppspelning"
+
+msgid "Resume playback"
+msgstr "återuppta uppspelning"
+
+msgid "Pause playback"
+msgstr "pausa uppspelning"
+
+msgid "Fast rewind"
+msgstr "spola bakåt"
+
+msgid "Fast forward"
+msgstr "spola framåt"
+
+msgid "Previous channel"
+msgstr "förra kanalen"
+
+msgid "Next channel"
+msgstr "nästa kanal"
+
+msgid "No server response!"
+msgstr "Inget svar från servern!"
+
+msgid "Failed to update infobox!"
+msgstr "Misslyckades att uppdatera info-rutan!"
+
+msgid "Switch to this channel"
+msgstr "Byt till denna kanal."
+
+msgid "Search for repeats"
+msgstr "Sök efter upprepningar."
+
+msgid "Scraper"
+msgstr ""
+
+msgid "Actors"
+msgstr ""
+
+msgid "Artwork"
+msgstr ""
+
+msgid "Recording length"
+msgstr ""
+
+msgid "Event duration"
+msgstr ""
+
+msgid "Title:"
+msgstr ""
+
+msgid "Original title:"
+msgstr ""
+
+msgid "Episode:"
+msgstr ""
+
+msgid "Episode overview:"
+msgstr ""
+
+msgid "Episode vote average/count:"
+msgstr ""
+
+msgid "Episode first aired:"
+msgstr ""
+
+msgid "Episode runtime:"
+msgstr ""
+
+msgid "IMDb episode"
+msgstr ""
+
+msgid "Guest stars and crew"
+msgstr ""
+
+msgid "Writer"
+msgstr ""
+
+msgid "Director"
+msgstr ""
+
+msgid "Tagline:"
+msgstr ""
+
+msgid "Overview:"
+msgstr ""
+
+msgid "Genres:"
+msgstr ""
+
+msgid "Homepage"
+msgstr "Hemsida"
+
+msgid "Release date:"
+msgstr ""
+
+msgid "Runtime:"
+msgstr ""
+
+msgid "Popularity:"
+msgstr ""
+
+msgid "Vote average/count:"
+msgstr ""
+
+msgid "IMDb"
+msgstr ""
+
+msgid "Budget:"
+msgstr ""
+
+msgid "Revenue:"
+msgstr ""
+
+msgid "Collection name:"
+msgstr ""
+
+msgid "Status:"
+msgstr ""
+
+msgid "Cast and crew"
+msgstr ""
+
+msgid "Content"
+msgstr "Innehåll"
+
+msgid "Parental rating"
+msgstr ""
+
 msgid "Execute this recording command"
 msgstr ""
 
-msgid "Couldn't find search timer. Maybe you mistyped your request?"
-msgstr "Kunde inte hitta sök-timer. Kontrollera stavningen?"
+msgid "Authors"
+msgstr "Författare"
+
+msgid "Project Idea"
+msgstr "Projekt-idé"
+
+msgid "Webserver"
+msgstr "Webserver"
+
+msgid "Project leader"
+msgstr "Projektledare"
+
+msgid "Graphics"
+msgstr "Grafik"
+
+msgid "Current Maintainer"
+msgstr ""
+
+msgid "Previous Maintainer"
+msgstr ""
+
+msgid "Information"
+msgstr ""
+
+msgid "LIVE version"
+msgstr "Version av LIVE"
+
+msgid "VDR version"
+msgstr "Version av VDR"
+
+msgid "Features"
+msgstr ""
+
+msgid "active"
+msgstr "aktiv"
+
+msgid "required"
+msgstr "krävs"
+
+msgid "Information providers"
+msgstr ""
+
+msgid "Bugs and suggestions"
+msgstr "Felrapporter och förslag"
+
+msgid "If you encounter any bugs or would like to suggest new features, please use our bugtracker"
+msgstr "Om du hittar några fel eller vill föreslå nya funktioner, vänligen använd vår bugg-tracker"
+
+msgid "No recording errors"
+msgstr ""
+
+msgid "Number of recording errors:"
+msgstr ""
+
+msgid "Recording errors unknown"
+msgstr ""
+
+msgid "Duration deviation from event length"
+msgstr ""
+
+msgid "min"
+msgstr ""
+
+msgid "h"
+msgstr ""
+
+msgid "Number of PES files"
+msgstr ""
+
+msgid "Number of TS files"
+msgstr ""
+
+msgid "Existing Recording:"
+msgstr ""
+
+msgid "Click to view details"
+msgstr "Klicka för detaljer"
+
+msgid "Play this recording"
+msgstr ""
+
+msgid "Edit recording"
+msgstr "Redigera inspelningen"
+
+msgid "Delete this recording"
+msgstr "Ta bort den inspelning från hårddisken!"
+
+msgid "Restore this recording"
+msgstr ""
+
+msgid "Permanently delete this recording"
+msgstr ""
+
+msgid "Warning: This cannot be undone!"
+msgstr ""
+
+msgid "Select all recordings in this folder"
+msgstr ""
+
+msgid "List of recordings"
+msgstr "Lista över inspelningar"
+
+msgid "List of deleted recordings"
+msgstr ""
+
+msgid "No recordings found"
+msgstr "Inga inspelningar funna"
+
+msgid "No deleted recordings found"
+msgstr ""
+
+msgid "Move selected recordings"
+msgstr ""
+
+msgid "Create new directory"
+msgstr ""
+
+msgid "Separate directories with a tilde '~'; directory names must not start with a tilde, dot, or whitespace"
+msgstr ""
+
+msgid "Delete selected recordings"
+msgstr "Ta bort valda"
+
+msgid "Warning: Permanently deleted recordings cannot be recovered!"
+msgstr ""
+
+msgid "Restore selected recordings"
+msgstr ""
+
+msgid "Permanently delete selected recordings"
+msgstr ""
+
+msgid "Deselect all recordings in this folder"
+msgstr ""
+
+msgid "No matching recordings found"
+msgstr ""
+
+msgid "Sort:"
+msgstr ""
+
+msgid "Name"
+msgstr "Namn"
+
+msgid "Date"
+msgstr ""
+
+msgid "Duplicates"
+msgstr ""
+
+msgid "Errors"
+msgstr ""
+
+msgid "Look in recordings titles and subtitles for the given string and display only the matching ones. You may also use perl compatible regular expressions (PCRE)."
+msgstr "Titta efter given sträng i inspelningarnas titlar och undertitlar och visa endast de som matchar. Du kan också använda PERL-kompatibla reguljära uttryck. (PCRE)"
+
+msgid "Filter"
+msgstr ""
+
+msgid "Clear filter"
+msgstr ""
+
+msgid "Expand all folders"
+msgstr "Utöka alla bibliotek"
+
+msgid "Collapse all folders"
+msgstr "Kollapsa alla bibliotek"
+
+msgid "Electronic program guide information"
+msgstr "EPG-information"
+
+msgid "Do not ask again during this session"
+msgstr ""
+
+msgid "Couldn't find channel or no channels available. Maybe you mistyped your request?"
+msgstr "Kan inte hitta kanal eller inga kanaler är tillgängliga. Kontrollera stavningen?"
+
+msgid "No schedules available for this channel"
+msgstr "Inga scheman för denna kanal!"
+
+msgid "No events available for this channel"
+msgstr ""
+
+msgid "Channel"
+msgstr "Kanal"
+
+msgid "Prev. entry"
+msgstr ""
+
+msgid "Next entry"
+msgstr ""
+
+msgid "MultiSchedule"
+msgstr "MultiSchema"
+
+msgid "All channels"
+msgstr ""
+
+msgid "First (unnamed) group"
+msgstr ""
+
+msgid "Now"
+msgstr "Nu"
+
+msgid "Time"
+msgstr "Tid"
+
+msgid "more"
+msgstr "mera"
+
+#, c-format
+msgid "%a, %x"
+msgstr ""
+
+msgid "What's running on"
+msgstr "Vad körs på"
+
+msgid "at"
+msgstr "kl"
+
+msgid "What's on next?"
+msgstr "Vad är nästa program?"
+
+msgid "Favorites"
+msgstr "Favoriter"
+
+msgid "View the schedule of this channel"
+msgstr "Visa schemat för denna kanal"
+
+msgid "No events found"
+msgstr ""
+
+msgid "Next"
+msgstr "Nästa"
+
+msgid "What's on"
+msgstr "Vad är på?"
+
+msgid "Details view"
+msgstr "Detaljvy"
+
+msgid "List view"
+msgstr "Listvy"
+
+msgid "Couldn't find channel or no channels available."
+msgstr "Kunde inte hitta kanal eller inga kanaler tillgängliga"
+
+msgid "Couldn't switch to channel."
+msgstr "Kunde inte byta till kanal."
+
+msgid "Keyboard help"
+msgstr ""
+
+msgid "Remote Control"
+msgstr "Fjärrkontroll"
+
+msgid "Selection"
+msgstr "Val"
+
+msgid "Snapshot interval"
+msgstr ""
+
+msgid "Stop"
+msgstr "Stop"
+
+msgid "Page error"
+msgstr "Fel på sidan"
+
+msgid "Search timers"
+msgstr "Sök-timers"
+
+msgid "Expression"
+msgstr "Uttryck"
+
+msgid "Starts between"
+msgstr "Börjar mellan"
+
+msgid "Toggle search timer actions (in)active"
+msgstr ""
+
+msgid "Browse search timer results"
+msgstr "Visa söktimer-resultat"
 
 msgid "Edit search timer"
 msgstr "Redigera sök-timer"
 
+msgid "Delete search timer"
+msgstr "Ta bort sök-timer"
+
+msgid "No searchtimers found"
+msgstr ""
+
 msgid "New search timer"
 msgstr "Ny sök-timer"
+
+msgid "Trigger search timer update"
+msgstr "Tvinga sök-timer uppdatering"
+
+msgid "Couldn't find search timer. Maybe you mistyped your request?"
+msgstr "Kunde inte hitta sök-timer. Kontrollera stavningen?"
 
 msgid "Search text too short - use anyway?"
 msgstr "Sök-timerns text är för kort. Använd ändå?"
@@ -295,6 +817,9 @@ msgstr "Sök i"
 
 msgid "Episode"
 msgstr "Avsnitt"
+
+msgid "Description"
+msgstr "Beskrivning"
 
 msgid "Use parental rating"
 msgstr ""
@@ -389,35 +914,11 @@ msgstr "Största längd"
 msgid "Use day of week"
 msgstr "Använd veckodag"
 
-msgid "Monday"
-msgstr "Måndag"
-
-msgid "Tuesday"
-msgstr "Tisdag"
-
-msgid "Wednesday"
-msgstr "Onsdag"
-
-msgid "Thursday"
-msgstr "Torsdag"
-
-msgid "Friday"
-msgstr "Fredag"
-
-msgid "Saturday"
-msgstr "Lördag"
-
-msgid "Sunday"
-msgstr "Söndag"
-
 msgid "Use blacklists"
 msgstr "Använd svartlista"
 
 msgid "only global"
 msgstr ""
-
-msgid "Selection"
-msgstr "Val"
 
 msgid "all"
 msgstr "alla"
@@ -542,104 +1043,41 @@ msgstr "Test"
 msgid "Save as new"
 msgstr ""
 
-msgid "Couldn't find timer. Maybe you mistyped your request?"
-msgstr "Kan inte hitta timer. Kontrollera stavningen?"
+msgid "Search results"
+msgstr "Sökresultat"
 
-msgid "Please set a title for the timer!"
-msgstr "Sätt ett namn på timern!"
+msgid "No search results"
+msgstr "Inga sökresultat"
 
-msgid "New timer"
-msgstr "Ny timer"
+msgid "Search"
+msgstr "Sök"
 
-msgid "Edit timer"
-msgstr "Redigera timer"
+msgid "Search settings"
+msgstr "Sök inställningar"
 
-msgid "Server"
+msgid "Extended search"
+msgstr "Utökad sökning"
+
+msgid "The search lacks some form fields, so that their values cannot be used for searching the EPG. Please upgrade to the most recent version of EPGsearch."
 msgstr ""
 
-msgid "Weekday"
-msgstr "Veckodag"
-
-msgid "Monitoring"
+msgid "The search supports extra fields. These will be not be taken into account."
 msgstr ""
 
-msgid "none"
+msgid "Wrong username or password"
+msgstr "Fel användarnamn eller lösenord"
+
+msgid "Login"
 msgstr ""
 
-msgid "event ID"
-msgstr ""
+msgid "VDR Live Login"
+msgstr "VDR Live Login"
 
-msgid "event time"
-msgstr ""
-
-msgid "Couldn't find user. Maybe you mistyped your request?"
-msgstr "Kan inte hitta användare. Kontrollera stavningen?"
-
-msgid "This user name is already in use!"
-msgstr "Användarnamnet används redan!"
-
-msgid "Edit user"
-msgstr "Redigera användare"
-
-msgid "New user"
-msgstr "Ny användare"
+msgid "User"
+msgstr "Användare"
 
 msgid "Password"
 msgstr "Lösenord"
-
-msgid "User rights"
-msgstr "Användarrättigheter"
-
-msgid "Edit setup"
-msgstr "Redigera inställningar"
-
-msgid "Add or edit timers"
-msgstr "Lägg till eller ta bort timers"
-
-msgid "Delete timers"
-msgstr "Radera timers"
-
-msgid "Delete recordings"
-msgstr "Radera inspelningar"
-
-msgid "Use remote menu"
-msgstr "Använd fjärrmeny"
-
-msgid "Start replay"
-msgstr "Påbörja repetetionsuppspelning"
-
-msgid "Switch channel"
-msgstr "Byt kanal"
-
-msgid "Add or edit search timers"
-msgstr "Lägg till eller redigera sök-timers"
-
-msgid "Delete search timers"
-msgstr "Radera sök-timers"
-
-msgid "Edit recordings"
-msgstr "Redigera inspelningar"
-
-msgid "Electronic program guide information"
-msgstr "EPG-information"
-
-msgid "Couldn't find recording or no recordings available"
-msgstr "Kunde inte hitta inspelning eller inga inspelningar tillgängliga"
-
-msgid "Do not ask again during this session"
-msgstr ""
-
-msgid "Page error"
-msgstr "Fel på sidan"
-
-msgid "Not playing a recording"
-msgstr "Spelar inte en inspelning"
-
-msgid "Not playing the same recording as from request"
-msgstr "Spelar inte samma inspelnging som begärdes."
-
-msgid "Cannot control playback!"
-msgstr "Kan inte styra uppspelning!"
 
 msgid "Playing recording"
 msgstr "Spelar upp inspelning"
@@ -656,455 +1094,11 @@ msgstr "Ingen nuvarande kanal!"
 msgid "%I:%M:%S %p"
 msgstr "%H:%M:%S"
 
-msgid "No recording errors"
-msgstr ""
-
-msgid "Number of recording errors:"
-msgstr ""
-
-msgid "Recording errors unknown"
-msgstr ""
-
-msgid "Duration deviation from event length"
-msgstr ""
-
-msgid "min"
-msgstr ""
-
-msgid "Recording length"
-msgstr ""
-
-msgid "h"
-msgstr ""
-
-msgid "Number of PES files"
-msgstr ""
-
-msgid "Number of TS files"
-msgstr ""
-
-msgid "Find more in the IMDb (Internet Movie Database)"
-msgstr "Hitta mera på IMDb"
-
-msgid "Record this"
-msgstr "Spela in detta."
-
-msgid "Search for repeats"
-msgstr "Sök efter upprepningar."
-
-msgid "Existing Recording:"
-msgstr ""
-
-msgid "Play this recording in the browser"
-msgstr ""
-
-msgid "Click to view details"
-msgstr "Klicka för detaljer"
-
-msgid "Play this recording"
-msgstr ""
-
-msgid "Delete this recording"
-msgstr "Ta bort den inspelning från hårddisken!"
-
-msgid "Restore this recording"
-msgstr ""
-
-msgid "Permanently delete this recording"
-msgstr ""
-
-msgid "Warning: This cannot be undone!"
-msgstr ""
-
-msgid "Select all recordings in this folder"
-msgstr ""
-
-msgid "Wrong username or password"
-msgstr "Fel användarnamn eller lösenord"
-
-msgid "Login"
-msgstr ""
-
-msgid "VDR Live Login"
-msgstr "VDR Live Login"
-
-msgid "User"
-msgstr "Användare"
-
-msgid "What's on?"
-msgstr "Vad spelas?"
-
-msgid "MultiSchedule"
-msgstr "MultiSchema"
-
-msgid "Search"
-msgstr "Sök"
-
-msgid "Search timers"
-msgstr "Sök-timers"
-
-msgid "Recordings (flat)"
-msgstr ""
-
-msgid "Remote Control"
-msgstr "Fjärrkontroll"
-
-msgid "Web-Streaming"
-msgstr ""
-
-msgid "Logout"
-msgstr "Logga ut"
-
-msgid "Your attention is required"
-msgstr "Din uppmärksamhet krävs"
-
-msgid "React"
-msgstr "Reagera"
-
-msgid "Dismiss"
-msgstr "Avfärda"
-
-msgid "All channels"
-msgstr ""
-
-msgid "First (unnamed) group"
-msgstr ""
-
-msgid "Now"
-msgstr "Nu"
-
-msgid "Time"
-msgstr "Tid"
-
-msgid "Switch to this channel"
-msgstr "Byt till denna kanal."
-
-msgid "more"
-msgstr "mera"
-
-msgid "Channel"
-msgstr "Kanal"
-
-msgid "Prev. entry"
-msgstr ""
-
-msgid "Next entry"
-msgstr ""
-
-msgid "Play this channel in the browser"
-msgstr ""
-
-msgid "Play this channel in the media player"
-msgstr ""
-
-msgid "Play this recording in the media player"
-msgstr ""
-
-msgid "Stream this recording"
-msgstr ""
-
-msgid "Loading data ..."
-msgstr "Laddar data"
-
-msgid "An error occurred!"
-msgstr "Ett fel inträffade!"
-
-msgid "Request succeeded"
-msgstr "Begäran lyckades!"
-
-msgid "Request failed!"
-msgstr "Begäran misslyckades!"
-
-msgid "Infobox update is on. Click to turn it off"
-msgstr ""
-
-msgid "Infobox update is off. Click to turn it on"
-msgstr ""
-
-msgid "Retrieving status ..."
-msgstr "Hämtar status ..."
-
-msgid "Stop playback"
-msgstr "stoppa uppspelning"
-
-msgid "Resume playback"
-msgstr "återuppta uppspelning"
-
-msgid "Pause playback"
-msgstr "pausa uppspelning"
-
-msgid "Fast rewind"
-msgstr "spola bakåt"
-
-msgid "Fast forward"
-msgstr "spola framåt"
-
-msgid "Previous channel"
-msgstr "förra kanalen"
-
-msgid "Next channel"
-msgstr "nästa kanal"
-
-msgid "No server response!"
-msgstr "Inget svar från servern!"
-
-msgid "Failed to update infobox!"
-msgstr "Misslyckades att uppdatera info-rutan!"
-
-msgid "Scraper"
-msgstr ""
-
-msgid "Actors"
-msgstr ""
-
-msgid "Artwork"
-msgstr ""
-
-msgid "Event duration"
-msgstr ""
-
-msgid "Title:"
-msgstr ""
-
-msgid "Original title:"
-msgstr ""
-
-msgid "Episode:"
-msgstr ""
-
-msgid "Episode overview:"
-msgstr ""
-
-msgid "Episode vote average/count:"
-msgstr ""
-
-msgid "Episode first aired:"
-msgstr ""
-
-msgid "Episode runtime:"
-msgstr ""
-
-msgid "IMDb episode"
-msgstr ""
-
-msgid "Guest stars and crew"
-msgstr ""
-
-msgid "Writer"
-msgstr ""
-
-msgid "Director"
-msgstr ""
-
-msgid "Tagline:"
-msgstr ""
-
-msgid "Overview:"
-msgstr ""
-
-msgid "Genres:"
-msgstr ""
-
-msgid "Homepage"
-msgstr "Hemsida"
-
-msgid "Release date:"
-msgstr ""
-
-msgid "Runtime:"
-msgstr ""
-
-msgid "Popularity:"
-msgstr ""
-
-msgid "Vote average/count:"
-msgstr ""
-
-msgid "IMDb"
-msgstr ""
-
-msgid "Budget:"
-msgstr ""
-
-msgid "Revenue:"
-msgstr ""
-
-msgid "Collection name:"
-msgstr ""
-
-msgid "Status:"
-msgstr ""
-
-msgid "Cast and crew"
-msgstr ""
-
-msgid "Content"
-msgstr "Innehåll"
-
-msgid "Authors"
-msgstr "Författare"
-
-msgid "Project Idea"
-msgstr "Projekt-idé"
-
-msgid "Webserver"
-msgstr "Webserver"
-
-msgid "Project leader"
-msgstr "Projektledare"
-
-msgid "Graphics"
-msgstr "Grafik"
-
-msgid "Current Maintainer"
-msgstr ""
-
-msgid "Previous Maintainer"
-msgstr ""
-
-msgid "Information"
-msgstr ""
-
-msgid "LIVE version"
-msgstr "Version av LIVE"
-
-msgid "VDR version"
-msgstr "Version av VDR"
-
-msgid "Features"
-msgstr ""
-
-msgid "active"
-msgstr "aktiv"
-
-msgid "required"
-msgstr "krävs"
-
-msgid "Information providers"
-msgstr ""
-
-msgid "Bugs and suggestions"
-msgstr "Felrapporter och förslag"
-
-msgid "If you encounter any bugs or would like to suggest new features, please use our bugtracker"
-msgstr "Om du hittar några fel eller vill föreslå nya funktioner, vänligen använd vår bugg-tracker"
-
-msgid "Couldn't find channel or no channels available. Maybe you mistyped your request?"
-msgstr "Kan inte hitta kanal eller inga kanaler är tillgängliga. Kontrollera stavningen?"
-
-msgid "List of recordings"
-msgstr "Lista över inspelningar"
-
-msgid "List of deleted recordings"
-msgstr ""
-
-msgid "No recordings found"
-msgstr "Inga inspelningar funna"
-
-msgid "No deleted recordings found"
-msgstr ""
-
-msgid "Move selected recordings"
-msgstr ""
-
-msgid "Delete selected recordings"
-msgstr "Ta bort valda"
-
-msgid "Warning: Permanently deleted recordings cannot be recovered!"
-msgstr ""
-
-msgid "Restore selected recordings"
-msgstr ""
-
-msgid "Permanently delete selected recordings"
-msgstr ""
-
-msgid "Deselect all recordings in this folder"
-msgstr ""
-
-msgid "No matching recordings found"
-msgstr ""
-
-msgid "Sort:"
-msgstr ""
-
-msgid "Date"
-msgstr ""
-
-msgid "Duplicates"
-msgstr ""
-
-msgid "Errors"
-msgstr ""
-
-msgid "Look in recordings titles and subtitles for the given string and display only the matching ones. You may also use perl compatible regular expressions (PCRE)."
-msgstr "Titta efter given sträng i inspelningarnas titlar och undertitlar och visa endast de som matchar. Du kan också använda PERL-kompatibla reguljära uttryck. (PCRE)"
-
-msgid "Filter"
-msgstr ""
-
-msgid "Clear filter"
-msgstr ""
-
-msgid "Expand all folders"
-msgstr "Utöka alla bibliotek"
-
-msgid "Collapse all folders"
-msgstr "Kollapsa alla bibliotek"
-
-msgid "Keyboard help"
-msgstr ""
-
-msgid "Snapshot interval"
-msgstr ""
-
-msgid "Stop"
-msgstr "Stop"
-
-msgid "No schedules available for this channel"
-msgstr "Inga scheman för denna kanal!"
-
-msgid "No events available for this channel"
-msgstr ""
-
-msgid "Search settings"
-msgstr "Sök inställningar"
-
-msgid "Extended search"
-msgstr "Utökad sökning"
-
-msgid "The search lacks some form fields, so that their values cannot be used for searching the EPG. Please upgrade to the most recent version of EPGsearch."
-msgstr ""
-
-msgid "The search supports extra fields. These will be not be taken into account."
-msgstr ""
-
-msgid "Search results"
-msgstr "Sökresultat"
-
-msgid "No search results"
-msgstr "Inga sökresultat"
-
-msgid "Expression"
-msgstr "Uttryck"
-
-msgid "Starts between"
-msgstr "Börjar mellan"
-
-msgid "Toggle search timer actions (in)active"
-msgstr ""
-
-msgid "Browse search timer results"
-msgstr "Visa söktimer-resultat"
-
-msgid "Delete search timer"
-msgstr "Ta bort sök-timer"
-
-msgid "No searchtimers found"
-msgstr ""
-
-msgid "Trigger search timer update"
-msgstr "Tvinga sök-timer uppdatering"
+msgid "Not playing a recording"
+msgstr "Spelar inte en inspelning"
+
+msgid "Not playing the same recording as from request"
+msgstr "Spelar inte samma inspelnging som begärdes."
 
 msgid "Please set login and password!"
 msgstr "Vänligen sätt login och lösenord!"
@@ -1199,36 +1193,14 @@ msgstr "Visa kanaler utan EPG"
 msgid "Start page"
 msgstr "Startsida"
 
+msgid "Recordings (flat)"
+msgstr ""
+
 msgid "Theme"
 msgstr "Tema"
 
 msgid "Use browser-specific theme"
 msgstr ""
-
-msgid "Couldn't find recording or no recordings available. Maybe you mistyped your request?"
-msgstr ""
-
-msgid "Couldn't find channel for recording."
-msgstr ""
-
-#, c-format
-msgid "%a, %x"
-msgstr ""
-
-msgid "View the schedule of this channel"
-msgstr "Visa schemat för denna kanal"
-
-msgid "Recording"
-msgstr ""
-
-msgid "Couldn't find channel or no channels available."
-msgstr "Kunde inte hitta kanal eller inga kanaler tillgängliga"
-
-msgid "Couldn't switch to channel."
-msgstr "Kunde inte byta till kanal."
-
-msgid "Timer conflicts"
-msgstr "Timerkonflikter"
 
 msgid "No timer conflicts"
 msgstr "Inga timerkonflikter"
@@ -1236,32 +1208,11 @@ msgstr "Inga timerkonflikter"
 msgid "local"
 msgstr ""
 
-msgid "Timer has a conflict"
-msgstr "Upptäckt konflikt för timern"
-
-msgid "Timer is active"
-msgstr "Timern är aktiv"
-
-msgid "Transponder"
-msgstr ""
-
-msgid "Toggle timer (in)active"
-msgstr "Välj aktiv/inaktiv för timer"
-
-msgid "Delete timer"
-msgstr "Ta bort timer"
-
-msgid "No timer defined"
-msgstr "Ingen timer definierad"
-
-msgid "Duration"
-msgstr ""
-
-msgid "Timer is recording"
-msgstr "Timern spelar in."
-
 msgid "Users"
 msgstr "Användare"
+
+msgid "Edit user"
+msgstr "Redigera användare"
 
 msgid "Delete user"
 msgstr "Radera användare"
@@ -1269,32 +1220,92 @@ msgstr "Radera användare"
 msgid "No users configured"
 msgstr ""
 
-msgid "What's running on"
-msgstr "Vad körs på"
+msgid "New user"
+msgstr "Ny användare"
 
-msgid "at"
-msgstr "kl"
+msgid "Couldn't find user. Maybe you mistyped your request?"
+msgstr "Kan inte hitta användare. Kontrollera stavningen?"
 
-msgid "What's on next?"
-msgstr "Vad är nästa program?"
+msgid "This user name is already in use!"
+msgstr "Användarnamnet används redan!"
 
-msgid "Favorites"
-msgstr "Favoriter"
+msgid "User rights"
+msgstr "Användarrättigheter"
 
-msgid "No events found"
+msgid "Edit setup"
+msgstr "Redigera inställningar"
+
+msgid "Add or edit timers"
+msgstr "Lägg till eller ta bort timers"
+
+msgid "Delete timers"
+msgstr "Radera timers"
+
+msgid "Delete recordings"
+msgstr "Radera inspelningar"
+
+msgid "Use remote menu"
+msgstr "Använd fjärrmeny"
+
+msgid "Start replay"
+msgstr "Påbörja repetetionsuppspelning"
+
+msgid "Switch channel"
+msgstr "Byt kanal"
+
+msgid "Add or edit search timers"
+msgstr "Lägg till eller redigera sök-timers"
+
+msgid "Delete search timers"
+msgstr "Radera sök-timers"
+
+msgid "Edit recordings"
+msgstr "Redigera inspelningar"
+
+msgid "Please set a name for the recording!"
+msgstr "Bestäm namn för inspelningen"
+
+msgid "Cannot copy, rename or move the recording."
+msgstr "Kan inte kopiera, byta namn på eller flytta inspelningen "
+
+msgid "Delete resume information"
+msgstr "Radera information för att återuppta"
+
+msgid "Delete marks information"
+msgstr "Ta bort märkningsinformation"
+
+msgid "Short description"
+msgstr "Kort beskrivning"
+
+msgid "Auxiliary info"
+msgstr "Ytterligare information"
+
+msgid "Couldn't find recording or no recordings available. Maybe you mistyped your request?"
 msgstr ""
 
-msgid "Next"
-msgstr "Nästa"
+msgid "Couldn't find channel for recording."
+msgstr ""
 
-msgid "What's on"
-msgstr "Vad är på?"
+msgid "Recording"
+msgstr ""
 
-msgid "Details view"
-msgstr "Detaljvy"
+msgid "What's on?"
+msgstr "Vad spelas?"
 
-msgid "List view"
-msgstr "Listvy"
+msgid "Web-Streaming"
+msgstr ""
+
+msgid "Logout"
+msgstr "Logga ut"
+
+msgid "Your attention is required"
+msgstr "Din uppmärksamhet krävs"
+
+msgid "React"
+msgstr "Reagera"
+
+msgid "Dismiss"
+msgstr "Avfärda"
 
 msgid "Live Interactive VDR Environment"
 msgstr ""
@@ -1321,6 +1332,12 @@ msgid "Move recordings"
 msgstr ""
 
 msgid "Move"
+msgstr ""
+
+msgid "Recording commands"
+msgstr ""
+
+msgid "Execute"
 msgstr ""
 
 #~ msgid "Copy only"

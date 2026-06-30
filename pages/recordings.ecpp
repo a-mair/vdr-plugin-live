@@ -285,6 +285,13 @@ else active_r = "recordings";
                 newdir.disabled = false;
               }
             </script>
+% if (RecordingCommands.First()) {
+            <div>
+              <b> <$ trVDR("Recording commands") $> </b>
+              <&pageelems.reccomands_tree ireccomands_subtree=((uintptr_t)&RecordingCommands) level=(0) &>
+              <div id="display_execute_rec_command_result"></div>
+            </div>
+% }
             <div class="button-panel hidden-xs">
               <div class="buttons">
                 <button class="green move" type="button" onclick="clearSavedSelection(); actionOnMarkedRecordings(document.getElementById('form_recordings'), 'mov')" ><$ tr("Move selected recordings") $></button>
@@ -479,11 +486,8 @@ recs[<$$cToSvInt(rPtr->Id())$>]=[<$$ *recording_item $>]
           st.a = ""
           RecordingsSt_int(st, <$level$>, '1', [ <$$ *recording_item $> ], '0');
 
-          const child = document.createElement("div");
-          root_recordingslist.appendChild(child);
-          child.innerHTML=st.a;
+          root_recordingslist.insertAdjacentHTML("beforeend", st.a);
         } else console.log('pages/recordings.ecpp ERROR element with ID "root_recordingslist" not found');
-//        document.write(rec_string_d([<$level$>, '1', [ <$$ *recording_item $> ]], '0'))
 %     } else if (!parentIdHash.empty()) {
         rec_ids["<$ parentIdHash $>"] = [<$level$>, '1', [ <$$ *recording_item $> ]]
 %     }

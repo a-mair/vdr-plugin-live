@@ -23,6 +23,7 @@ namespace vdrlive {
 //  "del_" delete recording
 //  "pur_" permanently delete recording
 //  "res_" restore recording
+//  "rcd_" recording command
 //  "mov_" move recordings
 //  "det_" delete timer
 //  "des_" delete search timer
@@ -79,6 +80,7 @@ inline static const cSortedVector<cConfirm, std::less<>> g_confirm_popups =
   { "res_", UR_DELRECS, trNOOP("Restore recording"), nullptr, trNOOP("Restore"), &RecordingsManager_RestoreConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_RestoreRecording},
   { "pur_", UR_DELRECS, trNOOP("Permanently delete recording"), trNOOP("Warning: This cannot be undone!"), trNOOP("Delete permanently"), &RecordingsManager_PurgeConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_PurgeRecording},
   { "mov_", UR_EDITRECS, trNOOP("Move recordings"), nullptr, trNOOP("Move"), &RecordingsManager_MoveConfirmationQuestion, &RecordingsManager_object_names_mov, &RecordingsManager_MoveRecording},
+  { "rcd_", UR_EDITRECS, trNOOP("Recording commands"), nullptr, trNOOP("Execute"), &RecordingsManager_CommandConfirmationQuestion, &RecordingsManager_object_names_mov, &RecordingsManager_CommandRecording},
   { "det_", UR_DELTIMERS, trNOOP("Delete timer"), nullptr, trNOOP("Delete"), &TimerManager_DeleteConfirmationQuestion, &one_object, &TimerManager_DeleteTimer},
   { "des_", UR_DELSTIMERS, trNOOP("Delete search timer"), nullptr, trNOOP("Delete"), &SearchTimers_DeleteConfirmationQuestion, &one_object, &SearchTimers_DeleteSearchTimer}
 

@@ -53,7 +53,12 @@ cToSvConcat command(trim(cSv(text).substr(command_pos+1)));
     esyslog2("recording_command.ecpp, recording with recid ", recid, " not found");
     throw HtmlError(tr("Couldn't find recording or no recordings available"));
   }
-  command << " '" << recording->FileName() << '\'';
+// cString::sprintf("\"%s\"", *strescape(ri->Recording()->FileName(), "\\\"$"))));
+  cToSvConcat rec_filename(recording->FileName());
+  rec_filename.replaceAll('\\', "\\\\");
+  rec_filename.replaceAll('"', "\\\"");
+  rec_filename.replaceAll('$', "\\$");
+  command << " \"" << rec_filename << '"';
 }
 isyslog2("recording_command.ecpp, executing ", command);
 
