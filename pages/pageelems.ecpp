@@ -485,7 +485,6 @@ if (!rfid.empty() ) {
   std::string title;
   time_t startTime;
   time_t endTime;
-  int lastCurrentChanel = int();
   std::string s_IMDB_ID;
 </%args>
 <%cpp>
@@ -1041,18 +1040,25 @@ for (const cTvMedia &media: *media_v) {
   uintptr_t ireccomands_subtree = 0;
   std::string recid;   // if this is empty the command will be executed on all selected recordings
   int level = 0;
+  std::string parentIdHash;
 </%args>
 <%cpp>
   cNestedItemList *reccomands_subtree = static_cast<cNestedItemList *>((void *)ireccomands_subtree);
+  int line_number = 0;
   for (cNestedItem *Command = reccomands_subtree->First(); Command; Command = reccomands_subtree->Next(Command)) {
     if (Command->SubItems()) {
+      cToSvXxHash32 idHash(cToSvConcat(parentIdHash, Command->Text()));
 </%cpp>
-      <div class="reccomands" style="--reccomands-level: <$ level $>">
+      <div id="fl_<$ idHash $>" class="reccomands" style="--reccomands-level: <$ level $>" onclick="click_reccomands_folder_line(event, '<$ idHash $>')">
+        <img class="iconic button recording-expander" id="pm_<$ idHash $>" src="<$ GetThemedLinkPrefixImg()$>icon_overlay_plus.svg" />
+        <img class="recordings_folder icon" id="fs_<$ idHash $>" src="<$ GetThemedLinkPrefixImg()$>folder_closed.svg" />
         <b> <$Command->Text()$> </b>
       </div>
-      <&reccomands_tree ireccomands_subtree=((uintptr_t)Command->SubItems()) recid=(recid) level=(level+1) &>
+      <div id="<$ idHash $>" class="reccomands_list" style="display: none;">
+        <&reccomands_tree ireccomands_subtree=((uintptr_t)Command->SubItems()) recid=(recid) level=(level+1) parentIdHash=(idHash) &>
+      </div>
 %   } else {
-      <&one_reccomands_line text=(Command->Text()) recid=(recid) level=(level)&>
+      <&one_reccomands_line text=(Command->Text()) recid=(recid) level=(level) line_number=(++line_number) &>
 %   }
 % }
 </%def>
@@ -1063,6 +1069,7 @@ for (const cTvMedia &media: *media_v) {
   std::string text;
   std::string recid;
   int level = 0;
+  int line_number = 0;
 </%args>
 <%cpp>
   size_t col_pos = text.find(':');
@@ -1077,7 +1084,17 @@ for (const cTvMedia &media: *media_v) {
     }
 </%cpp>
     <div class="reccomands" style="--reccomands-level: <$ level $>">
-      <a onclick="execute_rec_command('<$text$>', '<$recid$>', <$confirm$>)" title="<$tr("Execute this recording command")$>">
+%     if (true) {
+        <a onclick="execute_rec_command('<$text$>', '<$recid$>', <$confirm$>)" title="<$tr("Execute this recording command")$>">
+%     } else {
+%       cToSvConcat id("href_rec_command_", level, '_', line_number);
+        <a id="<$id$>" title="<$tr("Execute this recording command")$>">
+        <script>
+          ael = document.getElementById("<$id$>");
+          if (!ael) console.log('ERROR in pageelems.ecpp, !ael');
+          else ael.href="epginfo.html?epgid=rcd_recording_<$ cToSvInt(text.length()) $>_"+encodeURIComponent("<$text$>")+"_<$cSv(recid).substr(10)$>_&confirm=<$*confirm=='t'?'1':'0' $>";
+        </script>
+%     }
       <$display_text$>
     </a></div>
 % }

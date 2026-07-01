@@ -73,6 +73,18 @@ function uncheck_all(rec_list)
   }
 }
 
+function click_reccomands_folder_line(e, fldr_hash) {
+  const reccomands_list = document.getElementById(fldr_hash);
+  if (!reccomands_list) return;
+
+  if (reccomands_list.style.display == 'none') {
+    set_icons_open(document.getElementById('pm_'+fldr_hash), document.getElementById('fs_'+fldr_hash));
+    reccomands_list.style.display = '';
+  } else {
+    set_icons_closed(document.getElementById('pm_'+fldr_hash), document.getElementById('fs_'+fldr_hash));
+    reccomands_list.style.display = 'none';
+  }
+}
 async function click_folder_line (e, fldr_hash) {
 //alert('click_folder_line, currentTarget='+e.currentTarget.id+' target='+e.target.id+' fldr_hash='+fldr_hash);
 //alert('click_folder_line, target='+e.target.id+' fldr_hash='+fldr_hash);
@@ -268,11 +280,10 @@ const liveNamePrefixRecTree = liveNamePrefix + "Recordings-Tree-";
 const cookieNameOpenNodes = liveNamePrefixRecTree + "Open-Nodes";
 const sessionStorageNameSelection = liveNamePrefixRecTree + "Selection";
 
-async function DOMContentLoaded_() {
+async function recordings_DOMContentLoaded() {
   await openNodesOnPageLoad();
   restoreSelection();
   restoreScrollPosition();
   imgLoad();
 }
-document.addEventListener("DOMContentLoaded", DOMContentLoaded_);
 

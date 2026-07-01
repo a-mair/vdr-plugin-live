@@ -593,7 +593,7 @@ int RecordingsManager_CommandRecording(cSv recordings_hash, std::string &message
   cSv recordings;
   if (!split_recordings_hash(recordings_hash, text, recordings)) {
     message = "Error in split_recordings_hash";
-    esyslog3("Error in split_recordings_hash");
+    esyslog3("Error in split_recordings_hash recordings_hash = \"", recordings_hash, "\"");
     return 1000;
   }
 // security check to prevent execution of arbitrary commands

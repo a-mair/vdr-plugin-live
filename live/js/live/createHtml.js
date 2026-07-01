@@ -333,16 +333,19 @@ async function action(id)
     alert (ret_object.error);
   } else {
     if (id.substring(0, 4) == 'rcd_') {
-      if (ret_object.message)
+      if (ret_object.message) {
         document.getElementById('display_execute_rec_command_result').innerHTML = ret_object.message;
+        return ret_object;
+      }
     }
   }
 }
 async function action_back(id, param, history_num_back)
 {
   disable_popup_if_user_checked(id, param);
-  await action(param);
+  const ret_object = await action(param);
   history.go(-history_num_back);
+  if (ret_object) document.getElementById('display_execute_rec_command_result').innerHTML = ret_object.message;
 }
 async function createTimer(epgid) {
   ret_object = await execute('create_timer.html?epgid=event_' + epgid);

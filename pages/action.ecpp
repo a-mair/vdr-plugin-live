@@ -35,9 +35,9 @@ using namespace vdrlive;
   std::string message;
   int result = confirm->perform_action(id, message);
   if (result != 0)
-    esyslog2("in action.ecpp, id = ", id, "\" error_message = ", message);
+    esyslog2("in action.ecpp, id = \"", id, "\" error_message = ", message);
   else
-    dsyslog2("in action.ecpp, id = ", id, "\" message = ", message);
+    dsyslog2("in action.ecpp, id = \"", id, "\" message = ", message);
 
   bool ajaxReq = !async.empty() && (parse_int<int>(async) != 0);
   if (!ajaxReq) {

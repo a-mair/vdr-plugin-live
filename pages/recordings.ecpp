@@ -105,12 +105,6 @@ if (request.hasCookie("VDR-Live-Recordings-Tree-Open-Nodes")) {
 cToSvConcat<0> recording_item;
 recording_item.reserve(25000);
 
-#if TNTVERSION >= 30000
-const char *TNT_ARRAY = "[]";
-#else
-const char *TNT_ARRAY = "";
-#endif
-
 </%cpp>
 <& pageelems.doc_type &>
 <html>
@@ -122,12 +116,14 @@ const char *TNT_ARRAY = "";
     <& pageelems.scripts &>
     <& pageelems.create_html_js &>
     <& pageelems.ajax_js &>
+<script type="text/javascript" src="js/live/treeview.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
 <script type="text/javascript">
 const recycle_bin = <$ currentRecycle_bin $>;
 const recordings_tree_creation = <$ cToSvInt(RecordingsManager::GetLastRecordingsUpdate(true) ) $>;
 const recs = [];
 const rec_ids = Object.create(null)
 rec_ids["T"] = [1, 2]
+document.addEventListener("DOMContentLoaded", recordings_DOMContentLoaded);
 
 // Label and Action are used for the tooltip  (like "Play in media player"), and will be HTML-encoded here
 function RecordingActionS(s, id, A, Img, Label, Action) {
@@ -164,7 +160,6 @@ function addEventRec_r(s, eventid, title, displayFolder, folder, shortText, desc
   addEventRec(s, 'recording_', eventid, http_params, title, folder, shortText, description)
 }
 </script>
-<script type="text/javascript" src="js/live/treeview.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
 %if (lastRecycle_bin != currentRecycle_bin || lastFlat != currentFlat || last_page != "recordings") {
 <# clear at first call or when the context changes #>
   <script type="text/javascript">

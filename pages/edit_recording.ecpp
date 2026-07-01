@@ -130,6 +130,7 @@ std::string active_r;
 <%cpp>
   }
 </%cpp>
+  <script type="text/javascript" src="js/live/treeview.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript">
     function new_dir() {
       var dirSelection = document.getElementById("dirSelection");
