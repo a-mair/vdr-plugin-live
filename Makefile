@@ -32,7 +32,11 @@ ifeq ($(VERSION_SUFFIX),)
 endif
 
 
-PKG_CONFIG ?= pkg-config
+ifdef PKG_CONFIG
+  PKG_CONFIG := $(PKG_CONFIG)
+else
+  PKG_CONFIG := pkg-config
+endif
 
 ### The directory environment:
 # Use package data if installed...otherwise assume we're under the VDR source directory:
@@ -43,13 +47,21 @@ CFGDIR := $(call PKGCFG,configdir)
 PLGCFG := $(call PKGCFG,plgcfg)
 RESDIR := $(call PKGCFG,resdir)
 #
-TMPDIR ?= /tmp
+ifdef TMPDIR
+  TMPDIR := $(TMPDIR)
+else
+  TMPDIR := /tmp
+endif
 
 ### The compiler options:
 export CFLAGS   := $(call PKGCFG,cflags)
 export CXXFLAGS := $(call PKGCFG,cxxflags)
 
-ECPPC ?= ecppc
+ifdef ECPPC
+  ECPPC := $(ECPPC)
+else
+  ECPPC := ecppc
+endif
 
 ### The version number of VDR's plugin API:
 APIVERSION := $(call PKGCFG,apiversion)
@@ -83,19 +95,27 @@ endif
 
 CXXTOOLVER := $(shell echo $(CXXTOOLS_VERSION) | sed -e's/\.//g' | sed -e's/pre.*//g' | awk '/^..$$/ { print $$1."000"} /^...$$/ { print $$1."00"} /^....$$/ { print $$1."0" } /^.....$$/ { print $$1 }')
 
-# For rough image scaling, used by VDR core anyway
+# Project specific compiler flags
+
+# For rough image scaling
 LIBS += -ljpeg
+
+CXXFLAGS += -std=c++17 -Wfatal-errors -Wundef
+
+INCLUDES_PAGES += -I$(VDRDIR)/include -I. -I.. -I../live/img
+ECPPINCLUDES += -I. -Ipages -Ilive/img
+
+### Includes and Defines (add further entries here):
+DEFINES	+= -D_GNU_SOURCE -DPLUGIN_NAME_I18N='"$(PLUGIN)"' -DTNTVERSION=$(TNTVERSION) -DCXXTOOLVER=$(CXXTOOLVER)
+DEFINES	+= -DDISABLE_TEMPLATES_COLLIDING_WITH_STL
+DEFINES	+= -DVERSION_SUFFIX='"$(VERSION_SUFFIX)"'
 
 ### Optional configuration features
 PLUGINFEATURES :=
 
-CXXFLAGS += -std=c++17 -Wfatal-errors -Wundef
-
 ### export all vars for sub-makes, using absolute paths
 LIBDIR := $(abspath $(LIBDIR))
 LOCDIR := $(abspath $(LOCDIR))
-export
-unexport PLUGIN
 
 ### The name of the distribution archive:
 ARCHIVE := $(PLUGIN)-$(VERSION)
@@ -107,52 +127,16 @@ SOFILE := libvdr-$(PLUGIN).so
 ### Installed shared object file:
 SOINST := $(DESTDIR)$(LIBDIR)/$(SOFILE).$(APIVERSION)
 
-### Includes and Defines (add further entries here):
-DEFINES	+= -D_GNU_SOURCE -DPLUGIN_NAME_I18N='"$(PLUGIN)"' -DTNTVERSION=$(TNTVERSION) -DCXXTOOLVER=$(CXXTOOLVER)
-DEFINES	+= -DDISABLE_TEMPLATES_COLLIDING_WITH_STL
-DEFINES	+= -DVERSION_SUFFIX='"$(VERSION_SUFFIX)"'
-
 ### The object files (add further files here):
-PLUGINOBJS := $(PLUGIN).o recman.o epg_events.o thread.o tntconfig.o setup.o \
-              timers.o tools.o status.o epgsearch.o \
-              md5.o livefeatures.o timerconflict.o \
-              users.o osd_status.o ffmpeg.o xxhash.o content.o
-PLUGINSRCS := $(patsubst %.o,%.cpp,$(PLUGINOBJS))
+PLUGINSRCS := $(wildcard *.cpp)
+PLUGINOBJS := $(PLUGINSRCS:.cpp=.o)
 
-WEB_LIB_PAGES := libpages.a
-WEB_DIR_PAGES := pages
-WEB_PAGES     := $(WEB_DIR_PAGES)/$(WEB_LIB_PAGES)
+### The pages object files (add further files here):
+EPAGESRCS := $(wildcard pages/*.ecpp)
+PAGESRCS  := $(EPAGESRCS:.ecpp=.cpp)
+PAGESOBJS := $(PAGESRCS:.cpp=.o)
 
-WEBLIBS := $(WEB_PAGES)
-SUBDIRS := $(WEB_DIR_PAGES)
-
-### The main target:
-.PHONY: all
-all: version_suffix tool-versions lib i18n
-	@true
-
-### Implicit rules:
-$(WEB_DIR_PAGES)/%.o: $(WEB_DIR_PAGES)/%.cpp $(WEB_DIR_PAGES)/%.ecpp
-	@$(MAKE) -C $(WEB_DIR_PAGES) --no-print-directory PLUGINFEATURES="$(PLUGINFEATURES)" $(notdir $@)
-
-%.o: %.cpp
-	$(call PRETTY_PRINT,"CC" $@)
-	$(Q)$(CXX) $(CXXFLAGS) -c $(DEFINES) $(PLUGINFEATURES) $(INCLUDES) $<
-
-### Dependencies:
-MAKEDEP := $(CXX) -MM -MG
-DEPFILE := .dependencies
-$(DEPFILE): Makefile
-	@$(MAKEDEP) $(CXXFLAGS) $(DEFINES) $(PLUGINFEATURES) $(INCLUDES) $(PLUGINSRCS) > $@
-
-ifneq ($(MAKECMDGOALS),clean)
--include $(DEPFILE)
-endif
-
-### For all recursive Targets:
-
-recursive-%:
-	@$(MAKE) --no-print-directory VERSION=$(VERSION) VERSION_SUFFIX=$(VERSION_SUFFIX) $*
+EPAGESRCS_DEPS := $(patsubst %.o,.%.edep,$(PAGESOBJS))
 
 ### Internationalization (I18N):
 PODIR    := po
@@ -160,7 +144,35 @@ I18Npo   := $(wildcard $(PODIR)/*.po)
 I18Nmo   := $(addsuffix .mo, $(foreach file, $(I18Npo), $(basename $(file))))
 I18Nmsgs := $(addprefix $(DESTDIR)$(LOCDIR)/, $(addsuffix /LC_MESSAGES/vdr-$(PLUGIN).mo, $(notdir $(foreach file, $(I18Npo), $(basename $(file))))))
 I18Npot  := $(PODIR)/$(PLUGIN).pot
-I18Npot_deps := $(PLUGINSRCS) $(wildcard $(WEB_DIR_PAGES)/*.cpp) setup.h epg_events.h confirm.h
+I18Npot_deps := $(PLUGINSRCS) $(PAGESRCS) setup.h epg_events.h confirm.h
+
+### The main target:
+.PHONY: all
+all: print-versions sofile i18n
+	@true
+
+### Implicit rules:
+pages/%.edep: pages/%.ecpp
+	$(call PRETTY_PRINT,"EC" $@)
+	@$(ECPPC) -M $(ECPPFLAGS) $(ECPPFLAGS_CPP) $(ECPPINCLUDES) $< > $@
+
+pages/%.cpp: pages/%.ecpp
+	$(call PRETTY_PRINT,"EC" $@)
+	$(Q)$(ECPPC) $(ECPPFLAGS) $(ECPPFLAGS_CPP) $(ECPPINCLUDES) -o $@ $<
+
+%.o: %.cpp
+	$(call PRETTY_PRINT,"CC" $@)
+	$(Q)$(CXX) $(CXXFLAGS) -c $(DEFINES) $(PLUGINFEATURES) $(INCLUDES) $(INCLUDES_PAGES) -o $@ $<
+
+### Dependencies:
+MAKEDEP := $(CXX) -MM -MG
+.dependencies: Makefile $(PAGESRCS) $(EPAGESRCS)
+	@$(MAKEDEP) $(CXXFLAGS) $(DEFINES) $(PLUGINFEATURES) $(INCLUDES) $(PLUGINSRCS) $(PAGESRCS) > $@
+
+ifneq ($(MAKECMDGOALS),clean)
+-include .dependencies
+-include $(EPAGESRCS_DEPS)
+endif
 
 $(I18Npot): $(I18Npot_deps)
 	$(call PRETTY_PRINT,"GT" $@)
@@ -190,71 +202,47 @@ $(I18Nmsgs): $(DESTDIR)$(LOCDIR)/%/LC_MESSAGES/vdr-$(PLUGIN).mo: $(PODIR)/%.mo
 inst_I18Nmsg: $(I18Nmsgs)
 	@true
 
-# When building in parallel, this will tell make to keep an order in the steps
-recursive-I18Nmo: subdirs
-recursive-inst_I18Nmsg: recursive-I18Nmo
-
 .PHONY: i18n
-i18n: subdirs recursive-I18Nmo
+i18n: I18Nmo
 
 .PHONY: install-i18n
-install-i18n: version_suffix tool-versions i18n recursive-inst_I18Nmsg
+install-i18n: print-versions i18n inst_I18Nmsg
 
 ### Targets:
 
-.PHONY: subdirs $(SUBDIRS)
-subdirs: $(SUBDIRS)
+pages/libpages.a: $(PAGESOBJS)
+	$(call PRETTY_PRINT,"AR pages/" $@)
+	$(AR) r $@ $^
 
-$(SUBDIRS):
-ifneq ($(MAKECMDGOALS),clean)
-	@$(MAKE) -C $@ --no-print-directory PLUGINFEATURES="$(PLUGINFEATURES)" all
-else
-	@$(MAKE) -C $@ --no-print-directory clean
-endif
-
-$(SOFILE): $(PLUGINOBJS) $(WEBLIBS)
+$(SOFILE): $(PLUGINOBJS) $(PAGESOBJS)
 	$(call PRETTY_PRINT,"LD" $@)
-	$(Q)$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared $(PLUGINOBJS) -Wl,--whole-archive $(WEBLIBS) -Wl,--no-whole-archive $(LIBS) -o $@
+	$(Q)$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared $(PLUGINOBJS) -Wl,--whole-archive $(PAGESOBJS) -Wl,--no-whole-archive $(LIBS) -o $@
 
 .PHONY: sofile
 sofile: $(SOFILE)
 	@true
 
-# When building in parallel, this will tell make to keep an order in the steps
-recursive-sofile: subdirs
-recursive-soinst: recursive-sofile
-
-.PHONY: lib
-lib: subdirs $(PLUGINOBJS) recursive-sofile
-
-.PHONY: soinst
-soinst: $(SOINST)
+.PHONY: install-so
+install-so: $(SOINST)
 
 $(SOINST): $(SOFILE)
 	$(call PRETTY_PRINT,"Installing" $<)
 	$(Q) install -D $< $@
 
-.PHONY: version_suffix
-version_suffix:
+.PHONY: print-versions
+print-versions:
 	@echo "VERSION is $(VERSION)"
 	@echo "VERSION_SUFFIX = \"$(VERSION_SUFFIX)\""
-
-.PHONY: tool-versions
-tool-versions:
 	@echo "TNTNET_VERSION is ${TNTNET_VERSION}, adding \"-DTNTVERSION=$(TNTVERSION)\""
 	@echo "CXXTOOLS_VERSION is ${CXXTOOLS_VERSION}, adding \"-DCXXTOOLVER=$(CXXTOOLVER)\""
 
-
-.PHONY: install-lib
-install-lib: version_suffix lib recursive-soinst
-
 .PHONY: install-web
-install-web: version_suffix
+install-web: print-versions
 	@mkdir -p $(DESTDIR)$(RESDIR)/plugins/$(PLUGIN)
 	@cp -a live/* $(DESTDIR)$(RESDIR)/plugins/$(PLUGIN)/
 
 .PHONY: install-conf
-install-conf: version_suffix
+install-conf: print-versions
 	mkdir -p $(DESTDIR)$(CFGDIR)/plugins/$(PLUGIN)
 	@for i in conf/*; do\
 	    if ! [ -e $(DESTDIR)$(CFGDIR)/plugins/$(PLUGIN)/$$i ] ; then\
@@ -263,10 +251,11 @@ install-conf: version_suffix
 	done
 
 .PHONY: install
-install: install-lib install-i18n install-web install-conf
+install: install-so install-i18n install-web install-conf
 
 .PHONY: dist
 dist: $(I18Npo)
+	$(call PRETTY_PRINT,"make dist")
 	$(MAKE) --no-print-directory clean
 	@-rm -rf $(TMPDIR)/$(ARCHIVE)
 	@mkdir $(TMPDIR)/$(ARCHIVE)
@@ -276,13 +265,11 @@ dist: $(I18Npo)
 	@echo Distribution package created as $(TMPDIR)/$(PACKAGE).tar.gz
 
 .PHONY: clean
-clean: subdirs
-	$(call PRETTY_PRINT,"CLN top")
+clean:
+	$(call PRETTY_PRINT,"CLN")
 	@-rm -f $(I18Nmo) $(I18Npot)
-	@-rm -f $(PLUGINOBJS) $(DEPFILE) *.so *.tgz core* *~
+	@-rm -f $(PLUGINOBJS) .dependencies *.so *.tgz core* *~
+	@-rm -f $(PAGESRCS) $(PAGESOBJS) pages/.*.edep
 
 .PRECIOUS: $(I18Npo)
-
-.PHONY: FORCE
-FORCE:
 
