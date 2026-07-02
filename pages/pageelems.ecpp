@@ -1084,7 +1084,7 @@ for (const cTvMedia &media: *media_v) {
     }
 </%cpp>
     <div class="reccomands" style="--reccomands-level: <$ level $>">
-%     if (true) {
+%     if (recid.empty() ) {
         <a onclick="execute_rec_command('<$text$>', '<$recid$>', <$confirm$>)" title="<$tr("Execute this recording command")$>">
 %     } else {
 %       cToSvConcat id("href_rec_command_", level, '_', line_number);
@@ -1092,7 +1092,7 @@ for (const cTvMedia &media: *media_v) {
         <script>
           ael = document.getElementById("<$id$>");
           if (!ael) console.log('ERROR in pageelems.ecpp, !ael');
-          else ael.href="epginfo.html?epgid=rcd_recording_<$ cToSvInt(text.length()) $>_"+encodeURIComponent("<$text$>")+"_<$cSv(recid).substr(10)$>_&confirm=<$*confirm=='t'?'1':'0' $>";
+          else ael.href="epginfo.html?epgid=rcd_recording_<$ cToSvInt(text.length()) $>_"+encodeURIComponent("<$text$>")+"_<$cSv(recid).substr(10)$>_&confirm=<$*confirm=='t'?'1':'0' $>&history_num_back=1";
         </script>
 %     }
       <$display_text$>

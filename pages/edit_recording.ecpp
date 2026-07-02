@@ -242,6 +242,13 @@ std::string active_r;
             <td class="rightcol">
             <&pageelems.reccomands_tree ireccomands_subtree=((uintptr_t)&RecordingCommands) recid=(recid) level=(0) &>
             <div id="display_execute_rec_command_result"></div>
+            <script>
+              let message = sessionStorage.getItem("execute_rec_command_result");
+              if (message) {
+                document.getElementById('display_execute_rec_command_result').innerHTML = message;
+                sessionStorage.setItem("execute_rec_command_result", '');
+              }
+            </script>
             </td>
           </tr>
 % }

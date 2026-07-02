@@ -1723,29 +1723,29 @@ div.recordings {
 /* last displayed folder collapsed and hits the form's bottom border at: */
 /* level 0 */
 form div.recordings
-> div.recordingslist > div.folderslist:last-of-type
+> div.recordingslist:not(:has(> table.recordings)) > div.folderslist:last-of-type
 > div.recordings_folder:has(+ div.recordingslist:last-of-type:is([style*="display: none"])),
 /* level 1 */
 form div.recordings
-> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist:not(:has(> table.recordings)) > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
 > div.recordingslist > div.folderslist:last-of-type
 > div.recordings_folder:has(+ div.recordingslist:last-of-type:is([style*="display: none"])),
 /* level 2 */
 form div.recordings
-> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist:not(:has(> table.recordings)) > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
 > div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
 > div.recordingslist > div.folderslist:last-of-type
 > div.recordings_folder:has(+ div.recordingslist:last-of-type:is([style*="display: none"])),
 /* level 3 */
 form div.recordings
-> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist:not(:has(> table.recordings)) > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
 > div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
 > div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
 > div.recordingslist > div.folderslist:last-of-type
 > div.recordings_folder:has(+ div.recordingslist:last-of-type:is([style*="display: none"])),
 /* level 4 */
 form div.recordings
-> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist:not(:has(> table.recordings)) > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
 > div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
 > div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
 > div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
@@ -1753,7 +1753,7 @@ form div.recordings
 > div.recordings_folder:has(+ div.recordingslist:last-of-type:is([style*="display: none"])),
 /* level 5 */
 form div.recordings
-> div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
+> div.recordingslist:not(:has(> table.recordings)) > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
 > div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
 > div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))
 > div.recordingslist > div.folderslist:last-of-type:not(:has(> div.recordingslist > table.recordings))

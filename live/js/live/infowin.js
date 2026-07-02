@@ -52,7 +52,7 @@ var InfoWin = new Class({
       titleSelect: 'div.caption',
       classSuffix: '-win',
       idSuffix: '-id',
-      offsets: {'x': 0, 'y': 0}
+      offsets: {'x': -5, 'y': -5}
     },
 
     initialize: function(id, options){

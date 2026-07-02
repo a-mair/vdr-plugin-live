@@ -64,29 +64,39 @@ var PageEnhance = new Class({
         href = href.baseVal ?? "";
       }
       if (href && href != "") {
-        const found = /epgid=(\w+)/.exec(href);
+        const found = /epgid=([^&]+)/.exec(href);
         if (found && found.length > 1) {
-          const epgid = found[1];
-          el.addEvent('click', async function(event){
-            const event_ = new DOMEvent(event);
-            if (epgid.length > 4 && is_popup_disabled(epgid)) {
+          const epgid = decodeURIComponent(found[1]);
+          const found_confirm = /confirm=0/.exec(href);
+          if (found_confirm && epgid.length > 4){
+            el.addEvent('click', async function(event){
+              const event_ = new DOMEvent(event);
               event_.stop();
               await action(epgid);
-              location.reload();
               return false;
-            }
-            if (window.matchMedia("(max-width: 600px)").matches) {
-              location.replace(href);
-              return true;
-            }
-            const merged_options = Object.merge(this.options.infoWinOptions, {
-                                      onDomExtend: this.domExtend.bind(this) });
-            const infowin = new InfoWin_Ajax(epgid, href, merged_options);
-//          console.log("epgPopup, href = "+href+" epgid = "+epgid);
-            infowin.show(event_);
-            event_.stop();
-            return false;
-          }.bind(this));
+            }.bind(this));
+          } else {
+            el.addEvent('click', async function(event){
+              const event_ = new DOMEvent(event);
+              if (epgid.length > 4 && is_popup_disabled(epgid)) {
+                event_.stop();
+                await action(epgid);
+                location.reload();
+                return false;
+              }
+              if (window.matchMedia("(max-width: 600px)").matches) {
+                location.replace(href);
+                return true;
+              }
+              const merged_options = Object.merge(this.options.infoWinOptions, {
+                                        onDomExtend: this.domExtend.bind(this) });
+              const infowin = new InfoWin_Ajax(epgid, href, merged_options);
+  //          console.log("epgPopup, href = "+href+" epgid = "+epgid);
+              infowin.show(event_);
+              event_.stop();
+              return false;
+            }.bind(this));
+          }
         }
       }
     },
