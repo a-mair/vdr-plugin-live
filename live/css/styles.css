@@ -1943,8 +1943,81 @@ tr.existing_recording div.recording_sd_hd img.icon,
 tr.recording_item div.recording_sd_hd img.icon {
   width: var(--sdhd-width);
 }
-div.reccomands {
-  padding-left: calc(16px * var(--reccomands-level, 0));
+
+
+/* #############################
+   #  Recording commands
+   #############################
+*/
+
+div.rec-commands {
+  --rec-commands-folder-offset: var(--table-header-height);
+  --rec-commands-folder-height: calc(max(1lh, var(--iconic-button-height, 16px)));
+  --rec-commands-folder-indent: calc(var(--listing-border-width) + 2 * var(--border-spacing, 1px));
+}
+
+div.rec-commands-folder {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  column-gap: var(--margin-left-right);
+  top: calc(var(--rec-commands-folder-offset) + var(--rec-commands-folder-height) * calc(var(--rec-commands-level, 0) + 1));
+  z-index: calc(var(--listing-z-index, 100) - var(--rec-commands-level, 0) - 1);
+  overflow: hidden;
+  background: var(--body-background-color);
+}
+
+div.rec-commands-folder.root {
+  top: var(--rec-commands-folder-offset);
+}
+
+div.rec-commands-folder.sticky {
+  position: sticky;
+}
+
+#form_recordings div.rec-commands-folder {
+  padding-left: calc(var(--rec-commands-folder-indent) + calc(var(--icon-width, 16px) + var(--margin-left-right)) * var(--rec-commands-level, 0));
+}
+
+#form_recordings div.rec-commands-list.root {
+  padding-left: calc(var(--icon-width, 16px) + var(--margin-left-right));
+}
+
+table.form div.rec-commands {
+  margin-top: calc(max(var(--margin-top-bottom) - calc(var(--icon-height) - 1lh) / 2, 1px - var(--margin-top-bottom)));
+}
+
+table.form div.rec-commands-folder {
+  padding-left: calc(calc(var(--icon-width, 16px) + var(--margin-left-right)) * var(--rec-commands-level, 0));
+}
+
+div.rec-commands-list.item {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  min-height: calc(var(--icon-height, 16px) * 3/4);
+}
+
+#form_recordings div.rec-commands-list.item {
+  padding-left: calc(var(--rec-commands-folder-indent) + calc(var(--icon-width, 16px) + var(--margin-left-right)) * var(--rec-commands-level, 0) + var(--margin-left-right) + var(--icon-width));
+}
+
+table.form div.rec-commands-list.item {
+  padding-left: calc(calc(var(--icon-width, 16px) + var(--margin-left-right)) * var(--rec-commands-level, 0) + var(--margin-left-right) + var(--icon-width));
+}
+
+div.rec-commands-list.item a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+div.rec-commands-list.item a:hover {
+  font-weight: bold;
+}
+
+div.rec-commands.results {
+  max-height: calc(var(--text-line-height) * 10);
+  overflow-y: scroll;
 }
 
 

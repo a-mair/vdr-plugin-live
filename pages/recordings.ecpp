@@ -281,10 +281,15 @@ else active_r = "recordings";
               }
             </script>
 % if (RecordingCommands.First()) {
-            <div>
-              <b> <$ trVDR("Recording commands") $> </b>
-              <&pageelems.reccomands_tree ireccomands_subtree=((uintptr_t)&RecordingCommands) level=(0) &>
-              <div class="results"><pre id="display_execute_rec_command_result"></pre></div>
+            <div class="rec-commands">
+              <div id="fl_reccommands" class="rec-commands-folder root sticky" style="--rec-commands-level: 0" onclick="click_reccommands_folder_line(event, 'reccommands')">
+                <img class="iconic button recording-expander" id="pm_reccommands" src="<$ GetThemedLinkPrefixImg()$>icon_overlay_plus.svg" />
+                <b> <$ trVDR("Recording commands") $> </b>
+              </div>
+              <div id="reccommands" class="rec-commands-list root" style="display: none">
+                <&pageelems.reccommands_tree ireccommands_subtree=((uintptr_t)&RecordingCommands) id=("reccommands") level=(0) className="sticky" &>
+              </div>
+              <div class="results"><pre id="display_execute_rec_command_result" class="results"></pre></div>
             </div>
 % }
             <div class="button-panel hidden-xs">

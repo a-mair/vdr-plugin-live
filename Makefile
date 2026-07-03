@@ -41,6 +41,7 @@ endif
 ### The directory environment:
 # Use package data if installed...otherwise assume we're under the VDR source directory:
 PKGCFG = $(if $(VDRDIR),$(shell $(PKG_CONFIG) --variable=$(1) $(VDRDIR)/vdr.pc),$(shell PKG_CONFIG_PATH="$$PKG_CONFIG_PATH:../../.." $(PKG_CONFIG) --variable=$(1) vdr))
+# $(info $$PKGCFG is [${PKGCFG}])
 LIBDIR := $(call PKGCFG,libdir)
 LOCDIR := $(call PKGCFG,locdir)
 CFGDIR := $(call PKGCFG,configdir)
@@ -54,8 +55,10 @@ else
 endif
 
 ### The compiler options:
-export CFLAGS   := $(call PKGCFG,cflags)
-export CXXFLAGS := $(call PKGCFG,cxxflags)
+CFLAGS   := $(call PKGCFG,cflags)
+CXXFLAGS := $(call PKGCFG,cxxflags)
+# $(info $$CFLAGS is [${CFLAGS}])
+# $(info $$CXXFLAGS is [${CXXFLAGS}])
 
 ifdef ECPPC
   ECPPC := $(ECPPC)
@@ -74,23 +77,33 @@ include global.mk
 ### Determine tntnet and cxxtools versions:
 TNTNET-CONFIG := $(shell which tntnet-config 2>/dev/null)
 ifeq ($(TNTNET-CONFIG),)
-TNTNET_VERSION = $(shell $(PKG_CONFIG) --modversion tntnet)
-CXXFLAGS  += $(shell $(PKG_CONFIG) --cflags tntnet)
-LIBS      += $(shell $(PKG_CONFIG) --libs tntnet)
+	TNTNET_VERSION := $(shell $(PKG_CONFIG) --modversion tntnet)
+	CXXFLAGS  += $(shell $(PKG_CONFIG) --cflags tntnet)
+	LIBS      += $(shell $(PKG_CONFIG) --libs tntnet)
 else
-TNTNET_VERSION = $(shell tntnet-config --version)
-CXXFLAGS  += $(shell tntnet-config --cxxflags)
-LIBS      += $(shell tntnet-config --libs)
+	TNTNET_VERSION := $(shell tntnet-config --version)
+	CXXFLAGS  += $(shell tntnet-config --cxxflags)
+	LIBS      += $(shell tntnet-config --libs)
 endif
 
-TNTVERSION = $(shell echo $(TNTNET_VERSION) | sed -e's/\.//g' | sed -e's/pre.*//g' | awk '/^..$$/ { print $$1."000"} /^...$$/ { print $$1."00"} /^....$$/ { print $$1."0" } /^.....$$/ { print $$1 }')
+TNTVERSION := $(shell echo $(TNTNET_VERSION) | sed -e's/\.//g' | sed -e's/pre.*//g' | awk '/^..$$/ { print $$1."000"} /^...$$/ { print $$1."00"} /^....$$/ { print $$1."0" } /^.....$$/ { print $$1 }')
 # $(info $$TNTVERSION is [${TNTVERSION}])
+
+### Additional options to silence TNTNET warnings
+TNTNET_LEGACY := $(shell if [ `echo $(TNTNET_VERSION) | cut -d. -f1` -lt 3 ]; then echo true; else echo false; fi)
+ifeq ($(TNTNET_LEGACY),true)
+  TNTFLAGS := -Wno-unused-variable
+else
+  TNTFLAGS :=
+endif
+
+
 
 CXXTOOL-CONFIG := $(shell which cxxtools-config 2>/dev/null)
 ifeq ($(CXXTOOL-CONFIG),)
-CXXTOOLS_VERSION = $(shell $(PKG_CONFIG) --modversion cxxtools)
+	CXXTOOLS_VERSION := $(shell $(PKG_CONFIG) --modversion cxxtools)
 else
-CXXTOOLS_VERSION = $(shell cxxtools-config --version)
+	CXXTOOLS_VERSION := $(shell cxxtools-config --version)
 endif
 
 CXXTOOLVER := $(shell echo $(CXXTOOLS_VERSION) | sed -e's/\.//g' | sed -e's/pre.*//g' | awk '/^..$$/ { print $$1."000"} /^...$$/ { print $$1."00"} /^....$$/ { print $$1."0" } /^.....$$/ { print $$1 }')
@@ -163,7 +176,7 @@ pages/%.cpp: pages/%.ecpp
 
 %.o: %.cpp
 	$(call PRETTY_PRINT,"CC" $@)
-	$(Q)$(CXX) $(CXXFLAGS) -c $(DEFINES) $(PLUGINFEATURES) $(INCLUDES) $(INCLUDES_PAGES) -o $@ $<
+	$(Q)$(CXX) $(CXXFLAGS) $(TNTFLAGS) -c $(DEFINES) $(PLUGINFEATURES) $(INCLUDES) $(INCLUDES_PAGES) -o $@ $<
 
 ### Dependencies:
 MAKEDEP := $(CXX) -MM -MG

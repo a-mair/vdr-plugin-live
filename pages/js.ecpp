@@ -22,15 +22,15 @@ function set_icons_closed(img_plus_minus, img_folder_symbol) {
 // input: images nodes
 // -> set the images to the closed state, indicating the folder is currently closed
 
-  img_plus_minus.src="<$ GetThemedLinkPrefixImg()$>icon_overlay_plus.svg";
-  img_folder_symbol.src="<$ GetThemedLinkPrefixImg()$>folder_closed.svg";
+  if( img_plus_minus) img_plus_minus.src="<$ GetThemedLinkPrefixImg()$>icon_overlay_plus.svg";
+  if (img_folder_symbol) img_folder_symbol.src="<$ GetThemedLinkPrefixImg()$>folder_closed.svg";
 }
 function set_icons_open(img_plus_minus, img_folder_symbol) {
 // input: images nodes
 // -> set the images to the open state, indicating the folder is currently open
 
-  img_plus_minus.src="<$ GetThemedLinkPrefixImg()$>icon_overlay_minus.svg";
-  img_folder_symbol.src="<$ GetThemedLinkPrefixImg()$>folder_open.svg";
+  if( img_plus_minus) img_plus_minus.src="<$ GetThemedLinkPrefixImg()$>icon_overlay_minus.svg";
+  if (img_folder_symbol) img_folder_symbol.src="<$ GetThemedLinkPrefixImg()$>folder_open.svg";
 }
 
 function addErrorIcon(s, numErrors, durationDeviation, duration, numTsFiles, isPesRecording) {

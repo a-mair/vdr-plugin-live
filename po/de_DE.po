@@ -951,8 +951,11 @@ msgstr "Besetzung und Crew"
 msgid "Content"
 msgstr "Inhalte"
 
-msgid "Execute this recording command"
-msgstr "Diesen Befehl für diese Aufzeichnung ausführen"
+msgid "Execute this command for the selected recordings"
+msgstr "Diesen Befehl für die markierten Aufzeichnungen ausführen"
+
+msgid "Execute this command for the recording"
+msgstr "Diesen Befehl für die Aufzeichnung ausführen"
 
 msgid "Authors"
 msgstr "Autoren"

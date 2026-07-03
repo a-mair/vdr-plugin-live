@@ -73,16 +73,16 @@ function uncheck_all(rec_list)
   }
 }
 
-function click_reccomands_folder_line(e, fldr_hash) {
-  const reccomands_list = document.getElementById(fldr_hash);
-  if (!reccomands_list) return;
+function click_reccommands_folder_line(e, fldr_hash) {
+  const reccommands_list = document.getElementById(fldr_hash);
+  if (!reccommands_list) return;
 
-  if (reccomands_list.style.display == 'none') {
+  if (reccommands_list.style.display == 'none') {
     set_icons_open(document.getElementById('pm_'+fldr_hash), document.getElementById('fs_'+fldr_hash));
-    reccomands_list.style.display = '';
+    reccommands_list.style.display = '';
   } else {
     set_icons_closed(document.getElementById('pm_'+fldr_hash), document.getElementById('fs_'+fldr_hash));
-    reccomands_list.style.display = 'none';
+    reccommands_list.style.display = 'none';
   }
 }
 async function click_folder_line (e, fldr_hash) {

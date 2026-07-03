@@ -240,7 +240,9 @@ std::string active_r;
           <tr>
             <td class="label leftcol"><div class="withmargin"><$ trVDR("Recording commands") $>:</div></td>
             <td class="rightcol">
-            <&pageelems.reccomands_tree ireccomands_subtree=((uintptr_t)&RecordingCommands) recid=(recid) level=(0) &>
+            <div class="rec-commands">
+              <&pageelems.reccommands_tree ireccommands_subtree=((uintptr_t)&RecordingCommands) recid=(recid) id=("reccommands") level=(0) &>
+            </div>
             <div class="results"><pre id="display_execute_rec_command_result"></pre></div>
             <script>
               let message = sessionStorage.getItem("execute_rec_command_result");
