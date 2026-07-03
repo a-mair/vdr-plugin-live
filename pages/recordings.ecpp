@@ -284,12 +284,12 @@ else active_r = "recordings";
             <div>
               <b> <$ trVDR("Recording commands") $> </b>
               <&pageelems.reccomands_tree ireccomands_subtree=((uintptr_t)&RecordingCommands) level=(0) &>
-              <div id="display_execute_rec_command_result"></div>
+              <div class="results"><pre id="display_execute_rec_command_result"></pre></div>
             </div>
 % }
             <div class="button-panel hidden-xs">
               <div class="buttons">
-                <button class="green move" type="button" onclick="clearSavedSelection(); actionOnMarkedRecordings(document.getElementById('form_recordings'), 'mov')" ><$ tr("Move selected recordings") $></button>
+                <button class="green move" type="button" onclick="clearSavedSelection(); actionOnMarkedRecordings('mov')" ><$ tr("Move selected recordings") $></button>
                 <div class="destination">
                   <span class="label"><label for="dirSelection"><$ tr("Directory") $></label>:</span>
                   <div class="with-action-icon" id="dirSelection">
@@ -307,15 +307,15 @@ else active_r = "recordings";
                 </div>
               </div>
               <div class="buttons">
-                <button class="red delete" type="button" onclick="clearSavedSelection(); actionOnMarkedRecordings(document.getElementById('form_recordings'), 'del')" ><$ tr("Delete selected recordings") $></button>
+                <button class="red delete" type="button" onclick="clearSavedSelection(); actionOnMarkedRecordings('del')" ><$ tr("Delete selected recordings") $></button>
               </div>
             </div>
 %         } else {
           <div class="message warning"><$ tr("Warning: Permanently deleted recordings cannot be recovered!") $></div>
           <div class="button-panel hidden-xs">
             <div class="buttons">
-              <button class="green restore" type="button" onclick="clearSavedSelection(); actionOnMarkedRecordings(document.getElementById('form_recordings'), 'res')" ><$ tr("Restore selected recordings") $></button>
-              <button class="red purge" type="button" onclick="clearSavedSelection(); actionOnMarkedRecordings(document.getElementById('form_recordings'), 'pur')" ><$ tr("Permanently delete selected recordings") $></button>
+              <button class="green restore" type="button" onclick="clearSavedSelection(); actionOnMarkedRecordings('res')" ><$ tr("Restore selected recordings") $></button>
+              <button class="red purge" type="button" onclick="clearSavedSelection(); actionOnMarkedRecordings('pur')" ><$ tr("Permanently delete selected recordings") $></button>
             </div>
           </div>
 %         }

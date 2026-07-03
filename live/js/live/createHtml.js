@@ -181,7 +181,8 @@ function clearCheckboxes(form) {
     }
   }
 }
-async function actionOnMarkedRecordings(form, act) {
+/*
+async function actionOnMarkedRecordings_old(form, act) {
 // act = 'del' or 'pur' or "res' or 'mov'
   let epgid=act+'_recording_';
   if (act == 'mov') {
@@ -222,6 +223,51 @@ async function actionOnMarkedRecordings(form, act) {
   } else alert("ERROR createHtml.js, actionOnMarkedRecordings, liveEnhanced not defined");
 
 }
+*/
+async function actionOnMarkedRecordings(act, text, confirm_ = true) {
+// act = 'del' or 'pur' or "res' or 'mov' oe 'rcd'
+// if (act == 'mov'), teext is ignored / replaced with the folder
+// if text is available, it will be encoded in recid
+//
+  let epgid=act+'_recording_';
+  if (act == 'mov') {
+    const newdir = form.getElementById("newdir");
+    if (newdir.disabled) {
+      const dir = form.getElementById("directory");
+      text = dir.value;
+    } else {
+      text = newdir.value;
+    }
+  }
+  if (text) {
+    epgid += text.length;
+    epgid += '_';
+    epgid += text;
+    epgid += '_';
+  }
+
+  const inputs = document.getElementsByTagName('input');
+  for (var i = 0; i<inputs.length; i++) {
+    if (inputs[i].type == 'checkbox' && inputs[i].checked &&
+        inputs[i].value && inputs[i].value.startsWith('recording_')) {
+      epgid += inputs[i].value.substring(10);
+      epgid += '_';
+    }
+  }
+  if (!confirm_ || is_popup_disabled(epgid) ) {
+    await action(epgid);
+    return;
+  }
+  if (typeof liveEnhanced !== 'undefined') {
+    const event_ = new DOMEvent(event);
+    const merged_options = Object.merge(liveEnhanced.options.infoWinOptions, { onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced) });
+    const infowin = new InfoWin_Ajax(epgid, "epginfo.html?epgid="+encodeURIComponent(epgid), merged_options);
+    infowin.options.offsets.y = -400;
+    infowin.show(event_);
+    event_.stop();
+  } else alert("ERROR createHtml.js, actionOnMarkedRecordings, liveEnhanced not defined");
+}
+/*
 async function execute_rec_command(text, recid, confirm_) {
   let epgid='rcd_recording_';
   epgid += text.length;
@@ -255,6 +301,7 @@ async function execute_rec_command(text, recid, confirm_) {
     event_.stop();
   } else alert("ERROR createHtml.js, execute_rec_command, liveEnhanced not defined");
 }
+*/
 async function execute(url) {
 /*
  * Input:
@@ -265,7 +312,8 @@ async function execute(url) {
  * Output:
  *   error object (struct) with fields
  *               - bool   success
- *               - string error  (only if success == false). Human readable text
+ *               - string error   (only if success == false). Human readable text
+ *               - string message (only if success == true && provided by the called api). Human readable text
 */
   const response = await fetch(url + '&async=1', {
     method: "GET",

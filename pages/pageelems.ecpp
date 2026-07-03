@@ -1040,11 +1040,13 @@ for (const cTvMedia &media: *media_v) {
   uintptr_t ireccomands_subtree = 0;
   std::string recid;   // if this is empty the command will be executed on all selected recordings
   int level = 0;
+  int folder_number = 0;
   std::string parentIdHash;
 </%args>
 <%cpp>
   cNestedItemList *reccomands_subtree = static_cast<cNestedItemList *>((void *)ireccomands_subtree);
   int line_number = 0;
+  int sub_folder_number = 0;
   for (cNestedItem *Command = reccomands_subtree->First(); Command; Command = reccomands_subtree->Next(Command)) {
     if (Command->SubItems()) {
       cToSvXxHash32 idHash(cToSvConcat(parentIdHash, Command->Text()));
@@ -1055,10 +1057,10 @@ for (const cTvMedia &media: *media_v) {
         <b> <$Command->Text()$> </b>
       </div>
       <div id="<$ idHash $>" class="reccomands_list" style="display: none;">
-        <&reccomands_tree ireccomands_subtree=((uintptr_t)Command->SubItems()) recid=(recid) level=(level+1) parentIdHash=(idHash) &>
+        <&reccomands_tree ireccomands_subtree=((uintptr_t)Command->SubItems()) recid=(recid) level=(level+1) folder_number=(++sub_folder_number) parentIdHash=(idHash) &>
       </div>
 %   } else {
-      <&one_reccomands_line text=(Command->Text()) recid=(recid) level=(level) line_number=(++line_number) &>
+      <&one_reccomands_line text=(Command->Text()) recid=(recid) level=(level) folder_number=(folder_number) line_number=(++line_number) &>
 %   }
 % }
 </%def>
@@ -1069,6 +1071,7 @@ for (const cTvMedia &media: *media_v) {
   std::string text;
   std::string recid;
   int level = 0;
+  int folder_number = 0;
   int line_number = 0;
 </%args>
 <%cpp>
@@ -1085,9 +1088,9 @@ for (const cTvMedia &media: *media_v) {
 </%cpp>
     <div class="reccomands" style="--reccomands-level: <$ level $>">
 %     if (recid.empty() ) {
-        <a onclick="execute_rec_command('<$text$>', '<$recid$>', <$confirm$>)" title="<$tr("Execute this recording command")$>">
+        <a onclick="actionOnMarkedRecordings('rcd', '<$text$>', <$confirm$>)" title="<$tr("Execute this recording command")$>">
 %     } else {
-%       cToSvConcat id("href_rec_command_", level, '_', line_number);
+%       cToSvConcat id("href_rec_command_", level, '_', folder_number, '_', line_number);
         <a id="<$id$>" title="<$tr("Execute this recording command")$>">
         <script>
           ael = document.getElementById("<$id$>");
