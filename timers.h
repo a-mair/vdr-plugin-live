@@ -45,7 +45,7 @@ template<std::size_t N>
       void CreateTimer(cStr remote, cStr builder);
   };
   std::string TimerManager_DeleteConfirmationQuestion(cSv id);
-  int TimerManager_DeleteTimer(cSv id, std::string &message);
+  std::string TimerManager_DeleteTimer(cSv id);
   int TimerManager_CreateTimer(cSv epgid);
 
 } // namespace vdrlive

@@ -5,6 +5,7 @@
 #include "exception.h"
 #include "livefeatures.h"
 #include "tools.h"
+#include "confirm.h"
 
 #include <iomanip>
 
@@ -428,22 +429,19 @@ std::string SearchTimers_DeleteConfirmationQuestion(cSv id) {
   return std::string(cToSvFormatted(tr("Delete search timer \"%s\"?"), search->Search().c_str()  ));
 }
 
-int SearchTimers_DeleteSearchTimer(cSv id, std::string &message) {
+std::string SearchTimers_DeleteSearchTimer(cSv id) {
 
   SearchTimers searchTimers;
   SearchTimer* search = searchTimers.GetByTimerId(id);
-  if (!search) {
-    message = concat("Error deleting search timer: Couldn't find search timer ID ", id);
-    return 1;
-  }
+  if (!search)
+    return simpleJsonReturn(false, cToSvConcat("Error deleting search timer: Couldn't find search timer ID ", id));
+
   std::string name = search->Search();
   bool res = searchTimers.Delete(id);
-  if (!res) {
-    message = concat("Error deleting search timer ID ", id, " name ", name);
-    return 2;
-  }
-  message = concat("Sucessfully deleted search timer ID ", id, " name ", name);
-  return 0;
+  if (!res)
+    return simpleJsonReturn(false, cToSvConcat("Error deleting search timer ID ", id, " name ", name));
+  else
+    return simpleJsonReturn(true, cToSvConcat("Sucessfully deleted search timer ID ", id, " name ", name));
 }
 
 void SearchTimers::TriggerUpdate()

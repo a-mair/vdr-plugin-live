@@ -498,10 +498,10 @@ bool appendEpgItem(cToSvConcat<0> &epg_item, RecordingsItemRec *&recItem, const 
 // [10] : channelname
     AppendHtmlEscapedAndCorrectNonUTF8(epg_item, Channel->Name() );
   } else epg_item.append("0,\"");
-  epg_item.append("\",\"");
+  epg_item.append("\",");
 // [11] : Name
-  AppendQuoteEscapedAndCorrectNonUTF8(epg_item, Event->Title() );
-  epg_item.append("\",\"");
+  epg_item.appendStringEscapedAndCorrectNonUTF8(Event->Title() );
+  epg_item.append(",\"");
 // [12] : Shorttext
   AppendHtmlEscapedAndCorrectNonUTF8(epg_item, Event->ShortText() );
   epg_item.append("\",\"");

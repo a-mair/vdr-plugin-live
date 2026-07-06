@@ -3,6 +3,7 @@
 
 #include "exception.h"
 #include "tools.h"
+#include "confirm.h"
 
 // STL headers need to be before VDR tools.h (included by <vdr/plugin.h>)
 #include <sstream>
@@ -398,7 +399,7 @@ namespace vdrlive {
     if (timer) return std::string(cToSvFormatted(tr("Delete timer \"%s\"?"), timer->File() ));
     return tr("Delete timer [timer name unavailable]?");
   }
-  int TimerManager_DeleteTimer(cSv id, std::string &message) {
+  std::string TimerManager_DeleteTimer(cSv id) {
     std::string tId = SortedTimers::DecodeDomId(id);
     int timer_id;
     const char *remote;
@@ -406,10 +407,9 @@ namespace vdrlive {
     {
       LOCK_TIMERS_READ;
       const cTimer* timer = SortedTimers::GetByTimerId(tId, Timers);
-      if (!timer) {
-        message = concat("Error deleting timer: Couldn't find timer ID ", id);
-        return 1;
-      }
+      if (!timer)
+        return simpleJsonReturn(false, cToSvConcat("Error deleting timer: Couldn't find timer ID ", id));
+
       timer_id = timer->Id();
       remote   = timer->Remote();
       name = timer->File();
@@ -418,8 +418,7 @@ namespace vdrlive {
     TimerConflictNotifier timerNotifier;
     timerNotifier.SetTimerModification();
 
-    message = concat("Sucessfully deleted timer ID ", id, " name ", name);
-    return 0;
+    return simpleJsonReturn(true, cToSvConcat("Sucessfully deleted timer ID ", id, " name ", name));
   }
 
 } // namespace vdrlive

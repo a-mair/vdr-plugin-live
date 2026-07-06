@@ -194,50 +194,6 @@ inline cToSvConcat<N>& AppendHtmlEscapedAndCorrectNonUTF8(cToSvConcat<N>& target
     return AppendHtmlEscapedAndCorrectNonUTF8(target, text, false, lf);
 }
 
-template <size_t N>
-inline cToSvConcat<N>& AppendQuoteEscapedAndCorrectNonUTF8(cToSvConcat<N>& target, cSv text) {
-  size_t i = 0;                 // number of not yet appended chars
-  const char* notAppended = text.data();  // position of the first character which is not yet appended
-  for (size_t pos = 0; pos < text.length(); ++pos) {
-    if ((unsigned char)text[pos] <= '\"') {
-      switch(text[pos]) {
-        case '\t': target.append(notAppended, i); target.append("\\t"); notAppended += i + 1; i = 0; break;
-        case '\n': target.append(notAppended, i); target.append("\\n"); notAppended += i + 1; i = 0; break;
-        case '\r': target.append(notAppended, i); target.append("\\r"); notAppended += i + 1; i = 0; break;
-        case '\"': target.append(notAppended, i); target.append("\\"); notAppended += i; i = 1; break;
-        case ' ':
-        case '!':
-          ++i; break;  // just append these characters, no encoding
-        default:  // replace control characters with ?
-          target.append(notAppended, i); target.append("?"); notAppended += i + 1; i = 0; break;
-        }
-      continue;
-    }
-    if ((unsigned char)text[pos] <= '~') {
-      if (text[pos]  == '\\') {
-        target.append(notAppended, i); target.append("\\"); notAppended += i; i = 1; // this results in appending two backslashs
-      } else {
-        ++i; // just append these characters, no encoding
-      }
-      continue;
-    }
-    if (text[pos] == 127) { // replace control characters with ?
-      target.append(notAppended, i); target.append("?"); notAppended += i + 1; i = 0;
-      continue;
-    }
-    int l = utf8CodepointIsValid(text, pos);
-    if (l == 0) {
-      // invalid UTF8, replace with ?
-      target.append(notAppended, i); target.append("?"); notAppended += i + 1; i = 0;
-    } else {
-      i += l;
-      pos += l-1;
-    }
-  }
-  target.append(notAppended, i);
-  return target;
-}
-
 cSv StringWordTruncate(cSv text, size_t maxLen, bool& truncated);
 inline cSv StringWordTruncate(cSv text, size_t maxLen) { bool dummy; return StringWordTruncate(text, maxLen, dummy); }
 

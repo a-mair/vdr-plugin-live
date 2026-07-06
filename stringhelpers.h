@@ -1531,6 +1531,59 @@ template<typename T, std::enable_if_t<sizeof(T) == 16, bool> = true>
       return appendDateTime(fmt, &tm_r);
     }
 // =======================
+// appendStringEscaped
+    cToSvConcat &appendStringEscapedAndCorrectNonUTF8(cSv text) {
+// Escapes strings as required for the shell, Json and JavaScript string literals in html pages
+// !!! the result is enclosed in unescaped " !!!!!!!!!!!!!
+
+// Escaped are \, ", tab, newline, linefeed
+// Other control characters and non-utf8 are replaced with ?
+// see also https://stackoverflow.com/questions/7724448/simple-json-string-escape-for-c
+
+      concat('"');
+      size_t i = 0;                 // number of not yet appended chars
+      const char* notAppended = text.data();  // position of the first character which is not yet appended
+      for (cSv::size_type pos = 0; pos < text.length(); ++pos) {
+        if ((unsigned char)text[pos] <= '\"') {
+          switch(text[pos]) {
+            case '\t': append(notAppended, i); append("\\t"); notAppended += i + 1; i = 0; break;
+            case '\n': append(notAppended, i); append("\\n"); notAppended += i + 1; i = 0; break;
+            case '\r': append(notAppended, i); append("\\r"); notAppended += i + 1; i = 0; break;
+            case '\"': append(notAppended, i); append("\\"); notAppended += i; i = 1; break;
+            case ' ':
+            case '!':
+              ++i; break;  // just append these characters, no encoding
+            default:  // replace control characters with ?
+              append(notAppended, i); append("?"); notAppended += i + 1; i = 0; break;
+            }
+          continue;
+        }
+        if ((unsigned char)text[pos] <= '~') {
+          if (text[pos]  == '\\') {
+            append(notAppended, i); append("\\"); notAppended += i; i = 1; // this results in appending two backslashs
+          } else {
+            ++i; // just append these characters, no encoding
+          }
+          continue;
+        }
+        if (text[pos] == 127) { // replace control characters with ?
+          append(notAppended, i); append("?"); notAppended += i + 1; i = 0;
+          continue;
+        }
+        int l = utf8CodepointIsValid(text, pos);
+        if (l == 0) {
+          // invalid UTF8, replace with ?
+          append(notAppended, i); append("?"); notAppended += i + 1; i = 0;
+        } else {
+          i += l;
+          pos += l-1;
+        }
+      }
+      append(notAppended, i);
+      concat('"');
+      return *this;
+    }
+// =======================
 // appendUrlEscaped
     cToSvConcat &appendUrlEscaped(cSv sv) {
       const char* reserved = " !#$&'()*+,/:;=?@[]\"<>\n\r\t\\%";
@@ -1676,6 +1729,13 @@ class cToSvReplace: public cToSvConcat<N> {
   public:
     cToSvReplace(cSv text, cSv substring, cSv replacement) {
       this->appendReplace(text, substring, replacement);
+    }
+};
+template<std::size_t N = 255>
+class cToSvStringEscapedAndCorrectNonUTF8: public cToSvConcat<N> {
+  public:
+    cToSvStringEscapedAndCorrectNonUTF8(cSv text) {
+      this->appendStringEscapedAndCorrectNonUTF8(text);
     }
 };
 

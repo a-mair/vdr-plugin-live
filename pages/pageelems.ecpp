@@ -1053,7 +1053,7 @@ for (const cTvMedia &media: *media_v) {
       <div id="fl_<$ this_id $>" class="rec-commands-folder <$className$>" style="--rec-commands-level: <$ level $>" onclick="click_reccommands_folder_line(event, '<$ this_id $>')">
         <img class="iconic button recording-expander" id="pm_<$ this_id $>" src="<$ GetThemedLinkPrefixImg()$>icon_overlay_plus.svg" />
         <img class="recordings_folder icon" id="fs_<$ this_id $>" src="<$ GetThemedLinkPrefixImg()$>folder_closed.svg" />
-        <b> <$Command->Text()$> </b>
+        <span class="name"> <$Command->Text()$> </span>
       </div>
       <div id="<$ this_id $>" class="rec-commands-list" style="display: none;">
         <&reccommands_tree ireccommands_subtree=((uintptr_t)Command->SubItems()) recid=(recid) id=(this_id) level=(level+1) className=(className) &>

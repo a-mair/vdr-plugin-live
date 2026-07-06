@@ -13,7 +13,6 @@ using namespace vdrlive;
 </%pre>
 <%args>
   std::string id;  // action ID, what needs to be done
-  std::string async;
 </%args>
 <%include>page.eh</%include>
 <& login.authentication &><%cpp>
@@ -32,31 +31,12 @@ using namespace vdrlive;
     throw HtmlError( tr("Sorry, no permission. Please contact your administrator!") );
   }
 
-  std::string message;
-  int result = confirm->perform_action(id, message);
-  if (result != 0)
-    esyslog2("in action.ecpp, id = \"", id, "\" error_message = ", message);
-  else
-    dsyslog2("in action.ecpp, id = \"", id, "\" message = ", message);
-
-  bool ajaxReq = !async.empty() && (parse_int<int>(async) != 0);
-  if (!ajaxReq) {
-    std::string referrer = request.getHeader("Referer:");
-    if (!referrer.empty() && referrer.find("login") == std::string::npos) {
-      return reply.redirect(referrer);
-    }
+  reply.setContentType("application/json");
 </%cpp>
-<b>Result of Request:</b>
-<hr/>
-ID:        <$ id $><br/>
-Result:    <$ result==0?"success":"error" $><br/>
-Message:   <$ message $>
-<hr/>
-<%cpp>
-  } else {
-reply.setContentType( "application/xml" );
-</%cpp>
-<& xmlresponse.ajax name=("action") pname=("id") value=(id) result=(result==0) error=(result==0?std::string():message) message=(result!=0?std::string():message) &>
-<%cpp>
-  }
-</%cpp>
+<$$ confirm->perform_action(id) $>
+<#
+{
+  "success": <$result == 0?"true":"false"$>,
+  "message": <$ cToSvStringEscapedAndCorrectNonUTF8(message) $>
+}
+#>

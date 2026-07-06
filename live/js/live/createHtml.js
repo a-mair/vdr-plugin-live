@@ -181,49 +181,7 @@ function clearCheckboxes(form) {
     }
   }
 }
-/*
-async function actionOnMarkedRecordings_old(form, act) {
-// act = 'del' or 'pur' or "res' or 'mov'
-  let epgid=act+'_recording_';
-  if (act == 'mov') {
-    let folder;
-    const newdir = form.getElementById("newdir");
-    if (newdir.disabled) {
-      const dir = form.getElementById("directory");
-      folder = dir.value;
-    } else {
-      folder = newdir.value;
-    }
-    epgid += folder.length;
-    epgid += '_';
-    epgid += folder;
-    epgid += '_';
-  }
 
-  const inputs = form.getElementsByTagName('input');
-  for (var i = 0; i<inputs.length; i++) {
-    if (inputs[i].type == 'checkbox' && inputs[i].checked &&
-        inputs[i].value && inputs[i].value.startsWith('recording_')) {
-      epgid += inputs[i].value.substring(10);
-      epgid += '_';
-    }
-  }
-  if (is_popup_disabled(epgid)) {
-    await action(epgid);
-    location.reload();
-    return;
-  }
-  if (typeof liveEnhanced !== 'undefined') {
-    const event_ = new DOMEvent(event);
-    const merged_options = Object.merge(liveEnhanced.options.infoWinOptions, { onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced) });
-    const infowin = new InfoWin_Ajax(epgid, "epginfo.html?epgid="+encodeURIComponent(epgid), merged_options);
-    infowin.options.offsets.y = -400;
-    infowin.show(event_);
-    event_.stop();
-  } else alert("ERROR createHtml.js, actionOnMarkedRecordings, liveEnhanced not defined");
-
-}
-*/
 async function actionOnMarkedRecordings(act, text, confirm_ = true) {
 // act = 'del' or 'pur' or "res' or 'mov' oe 'rcd'
 // if (act == 'mov'), teext is ignored / replaced with the folder
@@ -231,9 +189,9 @@ async function actionOnMarkedRecordings(act, text, confirm_ = true) {
 //
   let epgid=act+'_recording_';
   if (act == 'mov') {
-    const newdir = form.getElementById("newdir");
+    const newdir = document.getElementById("newdir");
     if (newdir.disabled) {
-      const dir = form.getElementById("directory");
+      const dir = document.getElementById("directory");
       text = dir.value;
     } else {
       text = newdir.value;
@@ -267,104 +225,32 @@ async function actionOnMarkedRecordings(act, text, confirm_ = true) {
     event_.stop();
   } else alert("ERROR createHtml.js, actionOnMarkedRecordings, liveEnhanced not defined");
 }
-/*
-async function execute_rec_command(text, recid, confirm_) {
-  let epgid='rcd_recording_';
-  epgid += text.length;
-  epgid += '_';
-  epgid += text;
-  epgid += '_';
 
-  if (recid == '') {
-    const inputs = document.getElementsByTagName('input');
-    for (var i = 0; i<inputs.length; i++) {
-      if (inputs[i].type == 'checkbox' && inputs[i].checked &&
-          inputs[i].value && inputs[i].value.startsWith('recording_')) {
-        epgid += inputs[i].value.substring(10);
-        epgid += '_';
-      }
-    }
-  } else {
-    epgid += recid.substring(10);
-    epgid += '_';
-  }
-  if (!confirm_ || is_popup_disabled(epgid) ) {
-    await action(epgid);
-    return;
-  }
-  if (typeof liveEnhanced !== 'undefined') {
-    const event_ = new DOMEvent(event);
-    const merged_options = Object.merge(liveEnhanced.options.infoWinOptions, { onDomExtend: liveEnhanced.domExtend.bind(liveEnhanced) });
-    const infowin = new InfoWin_Ajax(epgid, "epginfo.html?epgid="+encodeURIComponent(epgid), merged_options);
-    infowin.options.offsets.y = -400;
-    infowin.show(event_);
-    event_.stop();
-  } else alert("ERROR createHtml.js, execute_rec_command, liveEnhanced not defined");
-}
-*/
 async function execute(url) {
 /*
  * Input:
  *   url: URL to the page triggering the execution of the function
  *        this includes the parameters
- *        '&async=1' will be appended (which is required to get an XML response,
- *             actually we wait for the server response)
  * Output:
- *   error object (struct) with fields
- *               - bool   success
- *               - string error   (only if success == false). Human readable text
- *               - string message (only if success == true && provided by the called api). Human readable text
+ *   result as parsed from the Json returned by the calling url
+ *     - bool   success
+ *     - string message . Human readable text (optional if success == true)
+ *     - ... whatever is returned from url
 */
-  const response = await fetch(url + '&async=1', {
-    method: "GET",
-    headers: {
-     "Content-Type": "application/x-www-form-urlencoded",
-    },
-  });
-  const req_responseXML = new window.DOMParser().parseFromString(await response.text(), "text/xml");
-  const ret_object = new Object();
-  ret_object.success = false;
-  if (!req_responseXML) {
-    ret_object.error = "invalid XML, no responseXML";
-    return ret_object;
-  }
-  var response_array = req_responseXML.getElementsByTagName("response");
-  if (response_array.length != 1) {
-    ret_object.error = "invalid XML, no response tag or several response tags";
-    return ret_object;
-  }
-  var response_child_nodes = response_array[0].childNodes;
-  if (response_child_nodes.length != 1) {
-    ret_object.error = "invalid XML, no child of response tag or several children of response tag";
-    return ret_object;
-  }
-  if (response_child_nodes[0].nodeValue == "1") {
-    ret_object.success = true;
-    const message_array = req_responseXML.getElementsByTagName("message");
-    if (message_array.length != 1) return ret_object;
-    var message_child_nodes = message_array[0].childNodes;
-    if (message_child_nodes.length != 1) return ret_object;
+  const response = await fetch(url);
+  const text = await response.text();
 
-    ret_object.message = message_child_nodes[0].nodeValue;
-    return ret_object;
+  try {
+    return JSON.parse(text);
+  } catch(e) {
+    console.log("Error parsing Json result from url "+url);
+    console.log(text)
+    console.log("Error messge: "+e.message);
+    const ret = new Object();
+    ret.success = false;
+    ret.message = "Error parsing Json result from url "+url+" error messge: "+e.message;
+    return ret;
   }
-  if (response_child_nodes[0].nodeValue != "0") {
-    ret_object.error = "invalid XML, response node value " + response_child_nodes[0].nodeValue + " unknown";
-    return ret_object;
-  }
-
-  const error_array = req_responseXML.getElementsByTagName("error");
-  if (error_array.length != 1) {
-    ret_object.error = "invalid XML, no error tag or several error tags";
-    return ret_object;
-  }
-  const error_child_nodes = error_array[0].childNodes;
-  if (error_child_nodes.length != 1) {
-    ret_object.error = "invalid XML, no child of error tag or several children of error tag";
-    return ret_object;
-  }
-  ret_object.error = error_child_nodes[0].nodeValue;
-  return ret_object;
 }
 function disable_popup_if_user_checked(id, param) {
   // id is the hash
@@ -374,15 +260,40 @@ function disable_popup_if_user_checked(id, param) {
     disable_popup(param);
   }
 }
+function append_rec_command_result(parent_element, json_result) {
+
+  json_result.objects.forEach(object => {
+    const div_rec_command_result = parent_element.appendChild(document.createElement("div"));
+    div_rec_command_result.className = "rec-commands-results";
+    div_rec_command_result.appendChild(document.createElement("div")).className = "spacebar";
+
+    const div_name = div_rec_command_result.appendChild(document.createElement("div"));
+    div_name.className = "name";
+    div_name.textContent = object.name;
+
+    const pre_result = div_rec_command_result.appendChild(document.createElement("pre"));
+    pre_result.className = "console";
+    pre_result.textContent = object.message;
+
+    div_rec_command_result.appendChild(document.createElement("div")).className = "spacebar";
+  });
+}
+
 async function action(id)
 {
   const ret_object = await execute('action.html?id=' + encodeURIComponent(id));
   if (!ret_object.success) {
-    alert (ret_object.error);
+    alert (ret_object.message);
   } else {
-    if (id.substring(0, 4) == 'rcd_' && ret_object.message) {
-      const elem = document.getElementById('display_execute_rec_command_result');
-      if (elem) elem.innerHTML = ret_object.message;
+    if (id.substring(0, 4) == 'rcd_' && ret_object) {
+      const result = document.getElementById('rec_command_result');
+      if (result) {
+        while (result.firstChild) {
+          result.removeChild(result.lastChild);
+        }
+        append_rec_command_result(result, ret_object);
+        result.style.display = '';
+      }
       return ret_object;
     }
   }
@@ -391,14 +302,14 @@ async function action_back(id, param, history_num_back)
 {
   disable_popup_if_user_checked(id, param);
   const ret_object = await action(param);
-  if (ret_object && ret_object.message) {
-    sessionStorage.setItem("execute_rec_command_result", ret_object.message);
+  if (ret_object && ret_object.objects) {
+    sessionStorage.setItem("execute_rec_command_result", JSON.stringify(ret_object));
   }
   history.go(-history_num_back);
 }
 async function createTimer(epgid) {
   ret_object = await execute('create_timer.html?epgid=event_' + epgid);
-  if (!ret_object.success) alert (ret_object.error);
+  if (!ret_object.success) alert (ret_object.message);
   location.reload();
   return false;
 }

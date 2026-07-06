@@ -5,6 +5,7 @@
 #include "tools.h"
 #include "services.h"
 #include "epg_events.h"
+#include "confirm.h"
 
 
 // STL headers need to be before VDR tools.h (included by <vdr/videodir.h>)
@@ -427,6 +428,12 @@ int RecordingsManager::PurgeRecording(cSv hash, std::string *name) {
 #endif
 }
 
+template <size_t N>
+cToSvConcat<N>& AppendPart(cToSvConcat<N>& target, cSv text) {
+  target << text.length() << '_' << text << '_';
+  return target;
+}
+
 
 bool split_recordings_hash(cSv recordings_hash, cSv &folder, cSv &recordings) {
 // folder can also be a reccrding command
@@ -548,19 +555,19 @@ std::string RecordingsManager_PurgeConfirmationQuestion(cSv recordings_hash) {
   return std::string(cToSvFormatted(tr("Permanently delete the following %i recordings?"), num_recs));
 }
 
-int RecordingsManager_DeleteRecording(cSv recordings_hash, std::string &message) {
+std::string RecordingsManager_DeleteRecording(cSv recordings_hash) {
   int result = 0;
+  cToSvConcat message;
   std::string name;
   if (recordings_hash.length() == 42) {
     result = RecordingsManager::DeleteRecording(RecordingsManager::GetHash(recordings_hash), &name);
     switch (result) {
-      case 0: message = concat("Successfully deleted recording ID ", recordings_hash, " name ", name); break;
-      case 1: message = concat("Error deleting recording: Couldn't find recording ID ", recordings_hash); break;
-      case 2: message = concat("Error deleting recording: Couldn't set timer to inactive, recording ID ", recordings_hash); break;
-      default: message = concat("Error deleting recording: other error, recording ID ", recordings_hash); break;
+      case 0: message.concat("Successfully deleted recording ID ", recordings_hash, " name ", name); break;
+      case 1: message.concat("Error deleting recording: Couldn't find recording ID ", recordings_hash); break;
+      case 2: message.concat("Error deleting recording: Couldn't set timer to inactive, recording ID ", recordings_hash); break;
+      default: message.concat("Error deleting recording: other error, recording ID ", recordings_hash); break;
     }
   } else {
-    message.clear();
     for (cSv id: cSplit(recordings_hash.substr(10), '_')) if (id.length() == 32) {
       int res= RecordingsManager::DeleteRecording(id, &name);
       if (res!= 0) {
@@ -575,7 +582,7 @@ int RecordingsManager_DeleteRecording(cSv recordings_hash, std::string &message)
       }
     }
   }
-  return result;
+  return simpleJsonReturn(result == 0, message);
 }
 
 bool is_in_command_list(cList<cNestedItem> *commands, cSv text) {
@@ -588,80 +595,97 @@ bool is_in_command_list(cList<cNestedItem> *commands, cSv text) {
   return false;
 }
 
-int RecordingsManager_CommandRecording(cSv recordings_hash, std::string &message) {
+std::string RecordingsManager_CommandRecording(cSv recordings_hash) {
+//{
+//  "success": <$success?"true":"false"$>,
+//  "message": <$ cToSvStringEscapedAndCorrectNonUTF8(message) $>,
+//  "objects":
+//  [
+//    {
+//      "recid"  : "$<recid$>",
+//      "name"   : "$<rec_name$>",
+//      "success": <$success?"true":"false"$>,
+//      "message": <$ cToSvStringEscapedAndCorrectNonUTF8(message) $>
+//    },
+//    { ...}
+//  ]
+//}
   cSv text;
   cSv recordings;
   if (!split_recordings_hash(recordings_hash, text, recordings)) {
-    message = "Error in split_recordings_hash";
     esyslog3("Error in split_recordings_hash recordings_hash = \"", recordings_hash, "\"");
-    return 1000;
+    return simpleJsonReturn(false, "Error in split_recordings_hash");
   }
 // security check to prevent execution of arbitrary commands
   if (!is_in_command_list(&RecordingCommands, text)) {
-    message = "Illegal command";
     esyslog3("text \"", text, "\" not in reccommands list. Someone might try to attack your system");
-    return 1001;
+    return simpleJsonReturn(false, "Illegal command");
   }
-  dsyslog2("recordings command text '", text, "'");
+  dsyslog3("recordings command text '", text, "'");
   size_t command_pos = text.find(':');
   if (command_pos == std::string::npos) {
-    message = "Recording command text invalid: ':' missing";
     esyslog3("text \"", text, "\" invalid: ':' missing");
-    return 1002;
+    return simpleJsonReturn(false, "Recording command text invalid: ':' missing");
   }
-  message.clear();
-  cToSvConcat result;
-  int error_code = 0;
+  cToSvConcat result("{\n");
+  AppendTagB(result, "success", true) << ",\n";
+  AppendTag(result, "message", "see also the individual results") << ",\n";
+  result << "\"objects\":\n[";
+
+  bool first = true;
   for (cSv id: cSplit(recordings, '_')) if (id.length() == 32) {
+    if (first) first = false;
+    else result << ',';
+    result << "{\n  ";
+    AppendTag(result, "recid", id) << ",\n";
+
     cToSvConcat command(trim(cSv(text).substr(command_pos+1)));
     {
       LOCK_RECORDINGS_READ;
       const cRecording *recording = RecordingsManager::GetByHash(id, Recordings);
       if (!recording) {
-        message.append("Couldn't find recording ID ").append(id).append(".");
         esyslog3("recording with recid ", id, " not found");
-        ++error_code;
+        cToSvFormatted message("Recording with id %s not found", cToSvConcat(id).c_str() );
+        AppendTag(result, "name", message) << ",\n";
+        AppendTagB(result, "success", false) << ",\n";
+        AppendTag(result, "message", message) << "\n}";
         continue;
       }
-    // cString::sprintf("\"%s\"", *strescape(ri->Recording()->FileName(), "\\\"$"))));
-      cToSvConcat rec_filename(recording->FileName());
-      rec_filename.replaceAll('\\', "\\\\");
-      rec_filename.replaceAll('"', "\\\"");
-      rec_filename.replaceAll('$', "\\$");
-      command << " \"" << rec_filename << '"';
+// cString::sprintf("\"%s\"", *strescape(ri->Recording()->FileName(), "\\\"$"))));
+      command.append(" ").appendStringEscapedAndCorrectNonUTF8(recording->FileName() );
+      AppendTag(result, "name", recording->Name() ) << ",\n";
     }
     isyslog3("executing ", command);
 
     cPipe p;
     if (p.Open(command.c_str(), "r")) {
-      if (!result.empty()) result << '\n';
+      cToSvConcat result_this_command;
       int c;
-      while ((c = fgetc(p)) != EOF) result << (char)c;
+      while ((c = fgetc(p)) != EOF) result_this_command << (char)c;
       p.Close();
+      AppendTagB(result, "success", true) << ",\n";
+      AppendTag(result, "message", result_this_command) << "\n}";
     } else {
       esyslog3("opening pipe for command \"", command, "\" failed");
-      message.append("Opening pipe for command \"").append(command).append("\" failed.");
+      AppendTagB(result, "success", false) << ",\n";
+      AppendTag(result, "message", "Error: opening pipe failed") << "\n}";
     }
-    dsyslog3("result = \"", result, "\"");
   }
-  if (error_code == 0) {
-    cToSvConcat html_result;
-    AppendHtmlEscapedAndCorrectNonUTF8(html_result, result);
-    message = html_result;
-  }
-  return error_code;
+  result << "  ]}";
+  dsyslog3("result = \"", result, "\"");
+  return std::string(result);
 }
-int RecordingsManager_MoveRecording(cSv recordings_hash, std::string &message) {
+std::string RecordingsManager_MoveRecording(cSv recordings_hash) {
   cSv folder;
   cSv recordings;
   if (!split_recordings_hash(recordings_hash, folder, recordings)) {
     esyslog3("Error in split_recordings_hash");
-    return 1000;
+    return simpleJsonReturn(false, "Error in split_recordings_hash");
   }
   dsyslog2("move recordings to folder '", folder, "'");
   int result = 0;
   std::string name;
-  message.clear();
+  cToSvConcat message;
   for (cSv id: cSplit(recordings, '_')) if (id.length() == 32) {
     int res= RecordingsManager::MoveRecording(id, folder, &name);
     if (res!= 0) {
@@ -675,20 +699,20 @@ int RecordingsManager_MoveRecording(cSv recordings_hash, std::string &message) {
       result += 1;
     }
   }
-  return result;
+  return simpleJsonReturn(result == 0, message);
 }
-int RecordingsManager_RestoreRecording(cSv recordings_hash, std::string &message) {
+std::string RecordingsManager_RestoreRecording(cSv recordings_hash) {
   int result = 0;
   std::string name;
+  cToSvConcat message;
   if (recordings_hash.length() == 42) {
     result = RecordingsManager::RestoreRecording(RecordingsManager::GetHash(recordings_hash), &name);
     switch (result) {
-      case 0: message = concat("Sucessfully restored recording ID ", recordings_hash, " name ", name); break;
-      case 1: message = concat("Error restoring recording: Couldn't find recording ID ", recordings_hash); break;
-      default: message = concat("Error restoring recording: other errror, recording ID ", recordings_hash); break;
+      case 0: message.concat("Sucessfully restored recording ID ", recordings_hash, " name ", name); break;
+      case 1: message.concat("Error restoring recording: Couldn't find recording ID ", recordings_hash); break;
+      default: message.concat("Error restoring recording: other errror, recording ID ", recordings_hash); break;
     }
   } else {
-    message.clear();
     for (cSv id: cSplit(recordings_hash.substr(10), '_')) if (id.length() == 32) {
       int res= RecordingsManager::RestoreRecording(id, &name);
       if (res!= 0) {
@@ -702,20 +726,20 @@ int RecordingsManager_RestoreRecording(cSv recordings_hash, std::string &message
       }
     }
   }
-  return result;
+  return simpleJsonReturn(result == 0, message);
 }
-int RecordingsManager_PurgeRecording(cSv recordings_hash, std::string &message) {
+std::string RecordingsManager_PurgeRecording(cSv recordings_hash) {
   int result = 0;
   std::string name;
+  cToSvConcat message;
   if (recordings_hash.length() == 42) {
     result = RecordingsManager::PurgeRecording(RecordingsManager::GetHash(recordings_hash), &name);
     switch (result) {
-      case 0: message = concat("Sucessfully deleted permanently recording ID ", recordings_hash, " name ", name); break;
-      case 1: message = concat("Error deleting permanently recording: Couldn't find recording ID ", recordings_hash); break;
-      default: message = concat("Error deleting permanently recording: other errror, recording ID ", recordings_hash); break;
+      case 0: message.concat("Sucessfully deleted permanently recording ID ", recordings_hash, " name ", name); break;
+      case 1: message.concat("Error deleting permanently recording: Couldn't find recording ID ", recordings_hash); break;
+      default: message.concat("Error deleting permanently recording: other errror, recording ID ", recordings_hash); break;
     }
   } else {
-    message.clear();
     for (cSv id: cSplit(recordings_hash.substr(10), '_')) if (id.length() == 32) {
       int res= RecordingsManager::PurgeRecording(id, &name);
       if (res!= 0) {
@@ -729,7 +753,7 @@ int RecordingsManager_PurgeRecording(cSv recordings_hash, std::string &message) 
       }
     }
   }
-  return result;
+  return simpleJsonReturn(result == 0, message);
 }
 
 bool RecordingsManager::StillRecording(cSv RecordingFileName) {
@@ -1810,10 +1834,10 @@ void RecordingsItemRec::AppendAsJSArray(cToSvConcat<0> &target) const {
   target.append("\", \"");
 // [13] NewR()
   target.append(NewR() );
-  target.append("\", \"");
+  target.append("\", ");
 // [14] Name
-  AppendQuoteEscapedAndCorrectNonUTF8(target, Name() );
-  target.append("\", \"");
+  target.appendStringEscapedAndCorrectNonUTF8(Name() );
+  target.append(", \"");
 // [15] Short text
   cSv text = ShortText();
   if (!text.empty()) {

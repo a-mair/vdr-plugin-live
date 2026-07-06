@@ -195,11 +195,11 @@ namespace vdrlive {
   std::string RecordingsManager_CommandConfirmationQuestion(cSv recordings_hash);
   std::vector<std::string> RecordingsManager_object_names(cSv recordings_hash);
   std::vector<std::string> RecordingsManager_object_names_mov(cSv recordings_hash);
-  int RecordingsManager_DeleteRecording(cSv recordings_hash, std::string &message);
-  int RecordingsManager_RestoreRecording(cSv recordings_hash, std::string &message);
-  int RecordingsManager_PurgeRecording(cSv recordings_hash, std::string &message);
-  int RecordingsManager_MoveRecording(cSv recordings_hash, std::string &message);
-  int RecordingsManager_CommandRecording(cSv recordings_hash, std::string &message);
+  std::string RecordingsManager_DeleteRecording(cSv recordings_hash);
+  std::string RecordingsManager_RestoreRecording(cSv recordings_hash);
+  std::string RecordingsManager_PurgeRecording(cSv recordings_hash);
+  std::string RecordingsManager_MoveRecording(cSv recordings_hash);
+  std::string RecordingsManager_CommandRecording(cSv recordings_hash);
 
   /**
    * Class containing possible recordings compare functions

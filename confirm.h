@@ -30,7 +30,7 @@ namespace vdrlive {
 //
 typedef std::string (*tConfirmationQuestion)(cSv id);
 typedef std::vector<std::string> (*tObjectNames)(cSv id);
-typedef int (*tPerformAction)(cSv id, std::string &message); // return 0 on success;
+typedef std::string (*tPerformAction)(cSv id); // return Json, see also std::string simpleJsonReturn(bool success, cSv message)
 
 inline std::vector<std::string> one_object(cSv id) {
   std::vector<std::string> result;
@@ -61,8 +61,8 @@ class cConfirm {
     std::string get_prompt() const {
       return tr(m_prompt && *m_prompt ? m_prompt : m_headline);
     }
-    int perform_action(cSv id, std::string &message) const {
-      return m_perform_action(id.substr(4), message);
+    std::string perform_action(cSv id) const {
+      return m_perform_action(id.substr(4) );
     }
     bool currentUserHasRight() const {
       return cUser::CurrentUserHasRightTo(m_user_rights);
@@ -92,6 +92,30 @@ inline const cConfirm *get_confirm_popup(cSv id) {
   return nullptr;
 }
 
+template <size_t N>
+inline cToSvConcat<N>& AppendTag(cToSvConcat<N>& target, cSv tag, cSv value) {
+// "<$tag$>": "<$value$>"
+  target.appendStringEscapedAndCorrectNonUTF8(tag) << ": ";
+  target.appendStringEscapedAndCorrectNonUTF8(value);
+  return target;
+}
+template <size_t N>
+inline cToSvConcat<N>& AppendTagB(cToSvConcat<N>& target, cSv tag, bool value) {
+// "<$tag$>": "<$value$>"
+  target.appendStringEscapedAndCorrectNonUTF8(tag) << ": " << (value?"true":"false");
+  return target;
 }
 
+inline std::string simpleJsonReturn(bool success, cSv message) {
+//{
+//  "success": <$success?"true":"false"$>,
+//  "message": <$ cToSvStringEscapedAndCorrectNonUTF8(message) $>
+//}
+  cToSvConcat result("{\n  ");
+  AppendTagB(result, "success", success) << ",\n  ";
+  AppendTag(result, "message", message) << "\n}";
+  return std::string(result);
+}
+
+} // namespace live
 #endif

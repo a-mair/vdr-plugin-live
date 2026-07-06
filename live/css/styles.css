@@ -703,7 +703,8 @@ div#content:not(:has(table.multischedule)) {
   overflow-x: inherit;  /* could also be set to 'hidden' */
 }
 
-div#content > div.spacebar {
+div#content > div.spacebar,
+div.rec-commands-results > div.spacebar {
   bottom: 0px;
   position: sticky;
   height: var(--spacebar-height);
@@ -711,12 +712,25 @@ div#content > div.spacebar {
   background: transparent linear-gradient(to top, var(--body-background-color), transparent);
 }
 
-div#content > div.spacebar:first-of-type {
+div#content > div.spacebar:first-of-type,
+div.rec-commands-results > div.spacebar:first-of-type {
   top: 0px;
   position: sticky;
   height: var(--spacebar-height);
   width: calc(100vw - 2 * var(--body-margin));
   background: transparent linear-gradient(to bottom, var(--body-background-color), transparent);
+}
+
+div.rec-commands-results > div.spacebar,
+div.rec-commands-results > div.spacebar:first-of-type {
+  height: var(--margin-top-bottom);
+  width: 100%;
+}
+
+form#form_recordings div.rec-commands-results > div.spacebar:first-of-type {
+  margin-top: calc(var(--margin-top-bottom) * 2);
+  background: linear-gradient(to bottom,var(--listing-row-background-color-bottom), transparent var(--listing-row-background-gradient-height), var(--listing-row-background-color-top));
+  border-top: 1px solid var(--listing-row-border-color);
 }
 
 
@@ -1831,6 +1845,10 @@ form div.recordings_folder div.recording-selection {
   flex-flow: row nowrap;
 }
 
+form div.recordings_folder img.icon {
+  cursor: pointer;
+}
+
 form div.recordings_folder .recording_folder_name {
   cursor: pointer;
   font-weight: bold;
@@ -1956,6 +1974,12 @@ div.rec-commands {
   --rec-commands-folder-indent: calc(var(--listing-border-width) + 2 * var(--border-spacing, 1px));
 }
 
+table.form div.rec-commands:has(+ div.rec-commands-results:not(:is([style*="display: none"]))) {
+  padding-bottom: var(--margin-top-bottom);
+  background: linear-gradient(to top,var(--listing-row-background-color-bottom), var(--listing-row-background-color-top) var(--listing-row-background-gradient-height), var(--listing-row-background-color-top));
+  border-bottom: var(--listing-border-width) solid var(--listing-row-border-color);
+}
+
 div.rec-commands-folder {
   display: flex;
   flex-flow: row nowrap;
@@ -2006,18 +2030,37 @@ table.form div.rec-commands-list.item {
   padding-left: calc(calc(var(--icon-width, 16px) + var(--margin-left-right)) * var(--rec-commands-level, 0) + var(--margin-left-right) + var(--icon-width));
 }
 
+div.rec-commands-folder img.icon,
+div.rec-commands-folder span.name,
 div.rec-commands-list.item a {
   text-decoration: none;
   cursor: pointer;
 }
 
+div.rec-commands-folder.root span.name,
+div.rec-commands-folder span.name:hover,
 div.rec-commands-list.item a:hover {
   font-weight: bold;
 }
 
-div.rec-commands.results {
-  max-height: calc(var(--text-line-height) * 10);
+div.rec-commands-results {
+  margin: var(--margin-top-bottom) var(--margin-left-right) var(--text-line-gap) 0px;
+  min-height: calc(var(--text-line-height) * 5);
+  /*! max-height: calc(var(--text-line-height) * 40); */
+  resize: vertical;
   overflow-y: scroll;
+}
+
+div.rec-commands-results .name {
+  margin-bottom: var(--margin-top-bottom);
+  font-weight: bold;
+  font-size: larger;
+}
+
+div.rec-commands-results .console {
+  margin: 0px;
+  padding: 0px;
+  white-space:  break-spaces;
 }
 
 

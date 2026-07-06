@@ -7,13 +7,13 @@
 #include <users.h>
 #include "setup.h"
 #include "timers.h"
+#include "confirm.h"
 
 using namespace vdrlive;
 
 </%pre>
 <%args>
   std::string epgid;  // create timer for this epg event
-  std::string async;
 </%args>
 <%include>page.eh</%include>
 <& login.authentication &><%cpp>
@@ -23,33 +23,15 @@ using namespace vdrlive;
   if (!cUser::CurrentUserHasRightTo(UR_EDITTIMERS))
     throw HtmlError( tr("Sorry, no permission. Please contact your administrator!") );
 
-  std::string message;
+  cToSvConcat message;
   int result = TimerManager_CreateTimer(epgid);
   switch (result) {
-    case 1: message = cToSvConcat("event ", epgid, " not found"); break;
-    case 2: message = cToSvConcat("timer already exists for epgid ", epgid); break;
-    case 3: message = cToSvConcat("error handling timer on remote server, epgid ", epgid); break;
+    case 1: message.concat("event ", epgid, " not found"); break;
+    case 2: message.concat("timer already exists for epgid ", epgid); break;
+    case 3: message.concat("error handling timer on remote server, epgid ", epgid); break;
     default: break;
   }
 
-  bool ajaxReq = !async.empty() && (parse_int<int>(async) != 0);
-  if (!ajaxReq) {
-    std::string referrer = request.getHeader("Referer:");
-    if (!referrer.empty() && referrer.find("login") == std::string::npos) {
-      return reply.redirect(referrer);
-    }
+reply.setContentType("application/json");
 </%cpp>
-<b>Result of Request:</b>
-<hr/>
-ID:        <$ epgid $><br/>
-Result:    <$ result==0?"success":"error" $><br/>
-Message:   <$ message $>
-<hr/>
-<%cpp>
-  } else {
-reply.setContentType( "application/xml" );
-</%cpp>
-<& xmlresponse.ajax name=("create_timer") pname=("epgid") value=(epgid) result=(result==0) error=(result==0?std::string():message) &>
-<%cpp>
-  }
-</%cpp>
+<$$ simpleJsonReturn(result == 0, message) $>
