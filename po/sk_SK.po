@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 20:54+0200\n"
+"POT-Creation-Date: 2026-07-07 21:25+0200\n"
 "PO-Revision-Date: 2012-12-03 21:41+0100\n"
 "Last-Translator: Milan Hrala <hrala.milan@gmail.com>\n"
 "Language-Team: Slovak <hrala.milan@gmail.com>\n"
@@ -55,6 +55,10 @@ msgstr ""
 
 #, c-format
 msgid "Delete search timer \"%s\"?"
+msgstr ""
+
+#, c-format
+msgid "Searchtimer with id %s not found"
 msgstr ""
 
 msgid "Nothing selected!"
@@ -113,6 +117,16 @@ msgstr ""
 
 #, c-format
 msgid "Permanently delete the following %i recordings?"
+msgstr ""
+
+#, c-format
+msgid "Recording with id %s not found"
+msgstr ""
+
+msgid "Error: couldn't set timer to inactive"
+msgstr ""
+
+msgid "Error: recording still in use"
 msgstr ""
 
 #, c-format
@@ -203,6 +217,10 @@ msgid "Delete timer \"%s\"?"
 msgstr ""
 
 msgid "Delete timer [timer name unavailable]?"
+msgstr ""
+
+#, c-format
+msgid "Timer with id %s not found"
 msgstr ""
 
 msgid "Sorry, no permission. Please contact your administrator!"
@@ -1319,10 +1337,34 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+msgid "No recording was deleted"
+msgstr ""
+
+msgid "Deleted recording:"
+msgstr "Vymazaný nahrávka:"
+
+msgid "Deleted recordings:"
+msgstr ""
+
+msgid "Error deleting recording(s):"
+msgstr ""
+
 msgid "Restore recording"
 msgstr ""
 
 msgid "Restore"
+msgstr ""
+
+msgid "No recording was restored"
+msgstr ""
+
+msgid "Restored recording:"
+msgstr ""
+
+msgid "Restored recordings:"
+msgstr ""
+
+msgid "Error restoring recording(s):"
 msgstr ""
 
 msgid "Permanently delete recording"
@@ -1331,16 +1373,64 @@ msgstr ""
 msgid "Delete permanently"
 msgstr ""
 
+msgid "No recording was deleted permanently"
+msgstr ""
+
+msgid "Permanently deleted recording:"
+msgstr ""
+
+msgid "Permanently deleted recordings:"
+msgstr ""
+
+msgid "Error permanently deleting recording(s):"
+msgstr ""
+
 msgid "Move recordings"
 msgstr ""
 
 msgid "Move"
 msgstr ""
 
+msgid "No recording was moved"
+msgstr ""
+
+msgid "Moved recording:"
+msgstr ""
+
+msgid "Moved recordings:"
+msgstr ""
+
+msgid "Error moving recording(s):"
+msgstr ""
+
 msgid "Recording commands"
 msgstr ""
 
 msgid "Execute"
+msgstr ""
+
+msgid "Command was not executed on any recording"
+msgstr ""
+
+msgid "Error executing command on the following recording(s):"
+msgstr ""
+
+msgid "No timer was deleted"
+msgstr ""
+
+msgid "Deleted timer:"
+msgstr ""
+
+msgid "Error deleting timer:"
+msgstr ""
+
+msgid "No search timer was deleted"
+msgstr ""
+
+msgid "Deleted search timer:"
+msgstr ""
+
+msgid "Error deleting search timer:"
 msgstr ""
 
 #~ msgid "Copy only"
@@ -1360,9 +1450,6 @@ msgstr ""
 
 #~ msgid "Couldn't find recording. Maybe you mistyped your request?"
 #~ msgstr "Nenašla sa nahrávka. Možno ste zle napísali vašu požiadavku?"
-
-#~ msgid "Deleted recording:"
-#~ msgstr "Vymazaný nahrávka:"
 
 #~ msgid "Couldn't find recording or no recordings available."
 #~ msgstr "Nenašli sa žiadne záznamy alebo nahrávky nie sú k dispozícii."

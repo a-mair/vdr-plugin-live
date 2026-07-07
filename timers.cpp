@@ -400,25 +400,38 @@ namespace vdrlive {
     return tr("Delete timer [timer name unavailable]?");
   }
   std::string TimerManager_DeleteTimer(cSv id) {
+    cToSvConcat result("{\n");
+    AppendTagB(result, "success", true) << ",\n";
+    AppendTag(result, "message", "see also the individual results") << ",\n\"objects\": [\n";
+    AppendId(result, "timer_id", id);
+
+    int timer_id = -1;
+    cToSvConcat name;
+    cToSvConcat remote;
     std::string tId = SortedTimers::DecodeDomId(id);
-    int timer_id;
-    const char *remote;
-    std::string name;
     {
       LOCK_TIMERS_READ;
       const cTimer* timer = SortedTimers::GetByTimerId(tId, Timers);
-      if (!timer)
-        return simpleJsonReturn(false, cToSvConcat("Error deleting timer: Couldn't find timer ID ", id));
-
-      timer_id = timer->Id();
-      remote   = timer->Remote();
-      name = timer->File();
+      if (timer) {
+        timer_id = timer->Id();
+        remote << timer->Remote();
+        name   << timer->File();
+      }
     }
-    TimerManager().DeleteTimer(timer_id, cStr(remote) );
-    TimerConflictNotifier timerNotifier;
-    timerNotifier.SetTimerModification();
+    if (timer_id == -1) {
+      AppendObjectNotFound(result, id, tr("Timer with id %s not found")) << "],\n";
+      AppendTag(result, "num_changed_objects", 0) << "\n}";
+    } else {
+      AppendNameSuccessMessage(result, name, true) << "],\n";
+      AppendTag(result, "num_changed_objects", 1) << "\n}";
 
-    return simpleJsonReturn(true, cToSvConcat("Sucessfully deleted timer ID ", id, " name ", name));
+      TimerManager().DeleteTimer(timer_id, cStr(remote) );
+      TimerConflictNotifier timerNotifier;
+      timerNotifier.SetTimerModification();
+    }
+
+  dsyslog3("result = \"", result, "\"");
+  return std::string(result);
   }
 
 } // namespace vdrlive

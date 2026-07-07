@@ -197,8 +197,8 @@ async function actionOnMarkedRecordings(act, text, confirm_ = true) {
       text = newdir.value;
     }
   }
-  if (text) {
-    epgid += text.length;
+  if (text != undefined) {
+    epgid += new TextEncoder().encode(text).length;   // convert to utf8 and count bytes
     epgid += '_';
     epgid += text;
     epgid += '_';
@@ -213,7 +213,7 @@ async function actionOnMarkedRecordings(act, text, confirm_ = true) {
     }
   }
   if (!confirm_ || is_popup_disabled(epgid) ) {
-    await action(epgid);
+    action(epgid);
     return;
   }
   if (typeof liveEnhanced !== 'undefined') {
@@ -260,7 +260,30 @@ function disable_popup_if_user_checked(id, param) {
     disable_popup(param);
   }
 }
+function action_number_successful(json_result) {
+  if (!json_result.objects) return 0;
+  let i = 0;
+  json_result.objects.forEach(object => {
+    if (object.success) ++i;
+  });
+  return i;
+}
+function action_number_unsuccessful(json_result) {
+  if (!json_result.objects) return 0;
+  let i = 0;
+  json_result.objects.forEach(object => {
+    if (!object.success) ++i;
+  });
+  return i;
+}
 function append_rec_command_result(parent_element, json_result) {
+  const n_successful = action_number_successful(json_result);
+  if (n_successful == 0) {
+    const div_action_result_headline = parent_element.appendChild(document.createElement("div"));
+    div_action_result_headline.className = "headline";
+    div_action_result_headline.textContent = get_texts(json_result.action).headline0;
+    return;
+  }
 
   json_result.objects.forEach(object => {
     const div_rec_command_result = parent_element.appendChild(document.createElement("div"));
@@ -278,34 +301,104 @@ function append_rec_command_result(parent_element, json_result) {
     div_rec_command_result.appendChild(document.createElement("div")).className = "spacebar";
   });
 }
+function append_action_result(parent_element, json_result) {
 
-async function action(id)
-{
-  const ret_object = await execute('action.html?id=' + encodeURIComponent(id));
-  if (!ret_object.success) {
-    alert (ret_object.message);
-  } else {
-    if (id.substring(0, 4) == 'rcd_' && ret_object) {
-      const result = document.getElementById('rec_command_result');
-      if (result) {
-        while (result.firstChild) {
-          result.removeChild(result.lastChild);
-        }
-        append_rec_command_result(result, ret_object);
-        result.style.display = '';
+  const div_action_result_headline = parent_element.appendChild(document.createElement("div"));
+  div_action_result_headline.className = "headline";
+  const n_successful = action_number_successful(json_result);
+  if (n_successful == 0)
+    div_action_result_headline.textContent = get_texts(json_result.action).headline0;
+  else if (n_successful == 1)
+    div_action_result_headline.textContent = get_texts(json_result.action).headline1;
+  else
+    div_action_result_headline.textContent = get_texts(json_result.action).headlinen;
+
+  if (json_result.objects) {
+    json_result.objects.forEach(object => {
+      if (object.success) {
+        const div_name = parent_element.appendChild(document.createElement("div"));
+        div_name.className = "name";
+        div_name.textContent = object.name;
       }
-      return ret_object;
-    }
+    });
   }
 }
-async function action_back(id, param, history_num_back)
+
+function replace_action_result(json_result) {
+  const parent_element = document.getElementById('action_command_result');
+  if (parent_element) {
+    // delete old content / old results
+    while (parent_element.firstChild) parent_element.removeChild(parent_element.lastChild);
+
+    // check for generic error
+    if (!json_result.success) {
+      const div_error_message = parent_element.appendChild(document.createElement("div"));
+      div_error_message.className = "error-message";
+      div_error_message.textContent = json_result.message;
+    } else {
+      // overall processing OK, display individual results
+      if (json_result.action == "rcd") {
+        append_rec_command_result(parent_element, json_result);
+      } else {
+        append_action_result(parent_element, json_result);
+      }
+      // display individual errors, if any
+      const n_errors = action_number_unsuccessful(json_result);
+      if (n_errors > 0) {
+        // we have individual errors
+        const div_action_error_headline = parent_element.appendChild(document.createElement("div"));
+        div_action_error_headline.className = "headline";
+        div_action_error_headline.textContent = get_texts(json_result.action).headline_error;
+        json_result.objects.forEach(object => {
+          if (!object.success) {
+            const div_action_error = parent_element.appendChild(document.createElement("div"));
+            div_action_error.className = "action-error";
+
+            const span_name = div_action_error.appendChild(document.createElement("span"));
+            span_name.className = "name";
+            span_name.textContent = object.name;
+            if (object.message) {
+              const span_message = div_action_error.appendChild(document.createElement("span"));
+              span_message.className = "error-message";
+              span_message.textContent = ": "+object.message;
+            }
+          }
+        });
+      }
+    }
+    parent_element.style.display = '';
+  } else {
+    console.log("Info: action results are not displayed on this page. You can add the element with id 'action_command_result' if the system should display the action results on this page");
+  }
+}
+async function action(id, history_num_back=0)
+{
+  const response = await fetch('action.html?id=' + encodeURIComponent(id));
+  const text = await response.text();
+
+  try {
+    const ret_object = JSON.parse(text);
+    const reload = ret_object.num_changed_objects > 0 || history_num_back > 0;
+    if (reload) {
+      // save result in sessionStorage, the page will display it during reload
+      sessionStorage.setItem("action_result", text);
+      if (history_num_back > 0) history.go(-history_num_back);
+      else location.reload();
+    } else {
+      // directly change dom to display result
+      replace_action_result(ret_object);
+    }
+  } catch(e) {
+    console.log("Error parsing Json result from url action.html?id=" + encodeURIComponent(id));
+    console.log(text)
+    console.log("Error messge: "+e.message);
+    alert ("Error parsing Json result");
+  }
+}
+function action_back(id, param, history_num_back)
 {
   disable_popup_if_user_checked(id, param);
-  const ret_object = await action(param);
-  if (ret_object && ret_object.objects) {
-    sessionStorage.setItem("execute_rec_command_result", JSON.stringify(ret_object));
-  }
-  history.go(-history_num_back);
+  action(param, history_num_back);
 }
 async function createTimer(epgid) {
   ret_object = await execute('create_timer.html?epgid=event_' + epgid);

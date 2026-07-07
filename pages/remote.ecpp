@@ -300,7 +300,7 @@ last_page="remote";
   }
 
   async function KeyPress_load_osd(keycode, repeat) {
-    await fetch('keypress.xml?keycode=' + keycode + '&async=1&repeat='+repeat);
+    await fetch('keypress.xml?keycode=' + keycode + '&repeat='+repeat);
     OSDLoad();
   }
   function KeyPress(keycode, DoNotLoadOSD = false, repeat = 1)
@@ -308,7 +308,7 @@ last_page="remote";
     if (!DoNotLoadOSD && OSD_fetch_enable) {
       KeyPress_load_osd(keycode, repeat);
     } else {
-      fetch('keypress.xml?keycode=' + keycode + '&async=1&repeat='+repeat);
+      fetch('keypress.xml?keycode=' + keycode + '&repeat='+repeat);
     }
     return false;
   }

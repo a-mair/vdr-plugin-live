@@ -323,20 +323,7 @@ else active_r = "recordings";
             </div>
           </div>
 %         }
-% if (RecordingCommands.First()) {
-<# Should we provide a sequence of results sections, one per recording?
-## Everything is prepared in CSS, but we should consider uncommenting the
-## 'max-height' property in 'div.rec-commands-results' to avoid unlimited
-## length per recording-commands log. #>
-          <div class="rec-commands">
-            <div id="rec_command_result" class="rec-commands-results" style="display: none">
-              <div class="spacebar"><# spacer with fade-out effect #></div>
-              <div id="display_execute_rec_command_filename" class="name"><# if iterating, enter the recording's filename #></div>
-              <pre id="display_execute_rec_command_result" class="console"></pre>
-              <div class="spacebar"><# spacer with fade-out effect #></div>
-            </div>
-          </div>
-% }
+          <& pageelems.action_results &>
         </div>
 %       }
       </form>

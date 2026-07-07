@@ -31,12 +31,20 @@ using namespace vdrlive;
     throw HtmlError( tr("Sorry, no permission. Please contact your administrator!") );
   }
 
+  cToSvConcat json_result(confirm->perform_action(id));
+  cSv::size_type found = cSv(json_result).rfind('}');
+  if (found != cSv::npos) {
+    json_result.erase(found);
+    json_result.append(",\n");
+    AppendTag(json_result, "action", cSv(id).substr(0,3)) << "\n}";
+  }
   reply.setContentType("application/json");
 </%cpp>
-<$$ confirm->perform_action(id) $>
+<$$ json_result $>
 <#
 {
-  "success": <$result == 0?"true":"false"$>,
+  "success": true or false,
   "message": <$ cToSvStringEscapedAndCorrectNonUTF8(message) $>
+  "action" : <$ id.substr(0,3) $>  // del or res or rcd ...
 }
 #>

@@ -128,6 +128,7 @@ reply.setHeader (tnt::httpheader::cacheControl, "no-store, no-cache, max-age=0, 
         </tr>
       </table>
       <div class="spacebar"><# spacer with fade-out effect #></div>
+      <& pageelems.action_results &>
     </div>
   </body>
 </html>

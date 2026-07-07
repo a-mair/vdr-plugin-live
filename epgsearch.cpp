@@ -430,18 +430,29 @@ std::string SearchTimers_DeleteConfirmationQuestion(cSv id) {
 }
 
 std::string SearchTimers_DeleteSearchTimer(cSv id) {
+  cToSvConcat result("{\n");
+  AppendTagB(result, "success", true) << ",\n";
+  AppendTag(result, "message", "see also the individual results") << ",\n\"objects\": [\n";
+  AppendId(result, "searchtimer_id", id);
 
   SearchTimers searchTimers;
   SearchTimer* search = searchTimers.GetByTimerId(id);
-  if (!search)
-    return simpleJsonReturn(false, cToSvConcat("Error deleting search timer: Couldn't find search timer ID ", id));
-
-  std::string name = search->Search();
-  bool res = searchTimers.Delete(id);
-  if (!res)
-    return simpleJsonReturn(false, cToSvConcat("Error deleting search timer ID ", id, " name ", name));
-  else
-    return simpleJsonReturn(true, cToSvConcat("Sucessfully deleted search timer ID ", id, " name ", name));
+  if (!search) {
+    AppendObjectNotFound(result, id, tr("Searchtimer with id %s not found")) << "],\n";
+    AppendTag(result, "num_changed_objects", 0) << "\n}";
+  } else {
+    cToSvConcat name(search->Search());
+    bool res = searchTimers.Delete(id);
+    if (!res) {
+      AppendNameSuccessMessage(result, name, false) << "],\n";
+      AppendTag(result, "num_changed_objects", 0) << "\n}";
+    } else {
+      AppendNameSuccessMessage(result, name, true) << "],\n";
+      AppendTag(result, "num_changed_objects", 1) << "\n}";
+    }
+  }
+  dsyslog3("result = \"", result, "\"");
+  return std::string(result);
 }
 
 void SearchTimers::TriggerUpdate()

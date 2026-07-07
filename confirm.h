@@ -45,6 +45,10 @@ class cConfirm {
     const char *m_headline;  // text, headline of popup
     const char *m_warning;   // text, warning in popup (can be nullptr)
     const char *m_prompt;    // text for confirmation button, headline if nullptr)
+    const char *m_headline0;  // text, headline of result if 0 actions where successful
+    const char *m_headline1;  // text, headline of result if 1 actions where successful
+    const char *m_headlinen;  // text, headline of result if >1 actions where successful
+    const char *m_headline_error;  // text, headline for "not done" list, because of errors
     tConfirmationQuestion m_confirmation_question;
     tObjectNames m_objectNames;
     tPerformAction m_perform_action;
@@ -76,14 +80,13 @@ inline bool operator==(const cConfirm &c1, const cConfirm &c2) { return cSv(c1.m
 
 inline static const cSortedVector<cConfirm, std::less<>> g_confirm_popups =
 {
-  { "del_", UR_DELRECS, trNOOP("Delete recording"), nullptr, trNOOP("Delete"), &RecordingsManager_DeleteConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_DeleteRecording},
-  { "res_", UR_DELRECS, trNOOP("Restore recording"), nullptr, trNOOP("Restore"), &RecordingsManager_RestoreConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_RestoreRecording},
-  { "pur_", UR_DELRECS, trNOOP("Permanently delete recording"), trNOOP("Warning: This cannot be undone!"), trNOOP("Delete permanently"), &RecordingsManager_PurgeConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_PurgeRecording},
-  { "mov_", UR_EDITRECS, trNOOP("Move recordings"), nullptr, trNOOP("Move"), &RecordingsManager_MoveConfirmationQuestion, &RecordingsManager_object_names_mov, &RecordingsManager_MoveRecording},
-  { "rcd_", UR_EDITRECS, trNOOP("Recording commands"), nullptr, trNOOP("Execute"), &RecordingsManager_CommandConfirmationQuestion, &RecordingsManager_object_names_mov, &RecordingsManager_CommandRecording},
-  { "det_", UR_DELTIMERS, trNOOP("Delete timer"), nullptr, trNOOP("Delete"), &TimerManager_DeleteConfirmationQuestion, &one_object, &TimerManager_DeleteTimer},
-  { "des_", UR_DELSTIMERS, trNOOP("Delete search timer"), nullptr, trNOOP("Delete"), &SearchTimers_DeleteConfirmationQuestion, &one_object, &SearchTimers_DeleteSearchTimer}
-
+  { "del_", UR_DELRECS, trNOOP("Delete recording"), nullptr, trNOOP("Delete"), trNOOP("No recording was deleted"), trNOOP("Deleted recording:"), trNOOP("Deleted recordings:"), trNOOP("Error deleting recording(s):"), &RecordingsManager_DeleteConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_DeleteRecording},
+  { "res_", UR_DELRECS, trNOOP("Restore recording"), nullptr, trNOOP("Restore"), trNOOP("No recording was restored"), trNOOP("Restored recording:"), trNOOP("Restored recordings:"), trNOOP("Error restoring recording(s):"), &RecordingsManager_RestoreConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_RestoreRecording},
+  { "pur_", UR_DELRECS, trNOOP("Permanently delete recording"), trNOOP("Warning: This cannot be undone!"), trNOOP("Delete permanently"), trNOOP("No recording was deleted permanently"), trNOOP("Permanently deleted recording:"), trNOOP("Permanently deleted recordings:"), trNOOP("Error permanently deleting recording(s):"), &RecordingsManager_PurgeConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_PurgeRecording},
+  { "mov_", UR_EDITRECS, trNOOP("Move recordings"), nullptr, trNOOP("Move"), trNOOP("No recording was moved"), trNOOP("Moved recording:"), trNOOP("Moved recordings:"), trNOOP("Error moving recording(s):"), &RecordingsManager_MoveConfirmationQuestion, &RecordingsManager_object_names_mov, &RecordingsManager_MoveRecording},
+  { "rcd_", UR_EDITRECS, trNOOP("Recording commands"), nullptr, trNOOP("Execute"), trNOOP("Command was not executed on any recording"), "", "", trNOOP("Error executing command on the following recording(s):"), &RecordingsManager_CommandConfirmationQuestion, &RecordingsManager_object_names_mov, &RecordingsManager_CommandRecording},
+  { "det_", UR_DELTIMERS, trNOOP("Delete timer"), nullptr, trNOOP("Delete"), trNOOP("No timer was deleted"), trNOOP("Deleted timer:"), "", trNOOP("Error deleting timer:"), &TimerManager_DeleteConfirmationQuestion, &one_object, &TimerManager_DeleteTimer},
+  { "des_", UR_DELSTIMERS, trNOOP("Delete search timer"), nullptr, trNOOP("Delete"), trNOOP("No search timer was deleted"), trNOOP("Deleted search timer:"), "", trNOOP("Error deleting search timer:"), &SearchTimers_DeleteConfirmationQuestion, &one_object, &SearchTimers_DeleteSearchTimer}
 };
 
 inline const cConfirm *get_confirm_popup(cSv id) {
@@ -100,12 +103,47 @@ inline cToSvConcat<N>& AppendTag(cToSvConcat<N>& target, cSv tag, cSv value) {
   return target;
 }
 template <size_t N>
+inline cToSvConcat<N>& AppendTag(cToSvConcat<N>& target, cSv tag, int value) {
+// "<$tag$>": <$value$>
+  target.appendStringEscapedAndCorrectNonUTF8(tag) << ": " << value;
+  return target;
+}
+template <size_t N>
 inline cToSvConcat<N>& AppendTagB(cToSvConcat<N>& target, cSv tag, bool value) {
 // "<$tag$>": "<$value$>"
   target.appendStringEscapedAndCorrectNonUTF8(tag) << ": " << (value?"true":"false");
   return target;
 }
 
+template <size_t N>
+inline cToSvConcat<N>& AppendId(cToSvConcat<N>& result, cSv name_id, cSv id) {
+  result << "{\n";
+  AppendTag(result, name_id, id) << ",\n";
+  return result;
+}
+template <size_t N>
+inline cToSvConcat<N>& AppendSuccessMessage(cToSvConcat<N>& result, bool success, cSv message) {
+  AppendTagB(result, "success", success);
+  if (!message.empty() ) {
+    result << ",\n";
+    AppendTag(result, "message", message);
+  }
+  result << "\n}";
+  return result;
+}
+template <size_t N>
+inline cToSvConcat<N>& AppendNameSuccessMessage(cToSvConcat<N>& result, cSv name, bool success, cSv message = cSv() ) {
+  AppendTag(result, "name", name) << ",\n";
+  AppendSuccessMessage(result, success, message);
+  return result;
+}
+
+template <size_t N>
+inline cToSvConcat<N>& AppendObjectNotFound(cToSvConcat<N>& result, cSv id, const char* message) {
+  cToSvFormatted message_f(message, cToSvConcat(id).c_str() );
+  AppendNameSuccessMessage(result, message_f, false);
+  return result;
+}
 inline std::string simpleJsonReturn(bool success, cSv message) {
 //{
 //  "success": <$success?"true":"false"$>,
@@ -113,7 +151,8 @@ inline std::string simpleJsonReturn(bool success, cSv message) {
 //}
   cToSvConcat result("{\n  ");
   AppendTagB(result, "success", success) << ",\n  ";
-  AppendTag(result, "message", message) << "\n}";
+  AppendTag(result, "message", message) << ",\n  ";
+  AppendTag(result, "num_changed_objects", success?1:0) << "\n}";
   return std::string(result);
 }
 

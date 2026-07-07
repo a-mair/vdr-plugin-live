@@ -234,14 +234,10 @@ var InfoWin = new Class({
         if (confirm_) {
           confirm_.onclick = null;
           confirm_.addEvent('click', async function(event) {
-              disable_popup_if_user_checked(id_select_html_elements, epgid);
-              await action(epgid);
-              if (epgid.substring(0, 4) != 'rcd_') {
-                if (history_num_back > 0) { history.go(-history_num_back); }
-                else { location.reload(); }
-              }
               const event_ = new DOMEvent(event);
               event_.stop();
+              disable_popup_if_user_checked(id_select_html_elements, epgid);
+              await action(epgid, history_num_back);
               return this.hide();
             }.bind(this));
         }

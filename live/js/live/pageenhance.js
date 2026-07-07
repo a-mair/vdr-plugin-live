@@ -72,7 +72,7 @@ var PageEnhance = new Class({
             el.addEvent('click', async function(event){
               const event_ = new DOMEvent(event);
               event_.stop();
-              await action(epgid);
+              action(epgid);
               return false;
             }.bind(this));
           } else {
@@ -80,8 +80,7 @@ var PageEnhance = new Class({
               const event_ = new DOMEvent(event);
               if (epgid.length > 4 && is_popup_disabled(epgid)) {
                 event_.stop();
-                await action(epgid);
-                location.reload();
+                action(epgid);
                 return false;
               }
               if (window.matchMedia("(max-width: 600px)").matches) {

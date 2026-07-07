@@ -5,6 +5,7 @@
  *  -> static page, no input parameters
 */
 #include <setup.h>
+#include <confirm.h>
 #include <livefeatures.h>
 using namespace vdrlive;
 #if TNTVERSION >= 30000
@@ -17,7 +18,20 @@ const char *TNT_ARRAY = "";
 <%cpp>
 reply.setHeader (tnt::httpheader::contentType, "text/javascript; charset=utf-8", true);
 </%cpp>
+const action_texts = [
+<%cpp>
+for (const cConfirm &confirm: g_confirm_popups) {
+</%cpp>
+{ id: "<$ cSv(confirm.m_id).substr(0,3) $>", headline0: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline0)) $>, headline1: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline1)) $>, headlinen: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headlinen)) $>, headline_error: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_error)) $> },
+% }
+];
 
+function get_texts(action) {
+  for (const texts of action_texts) {
+    if(action == texts.id) return texts;
+  }
+  console.log("action '"+action+"' not found");
+}
 function set_icons_closed(img_plus_minus, img_folder_symbol) {
 // input: images nodes
 // -> set the images to the closed state, indicating the folder is currently closed

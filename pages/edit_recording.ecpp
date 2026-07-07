@@ -243,24 +243,7 @@ std::string active_r;
               <div class="rec-commands">
                 <&pageelems.reccommands_tree ireccommands_subtree=((uintptr_t)&RecordingCommands) recid=(recid) id=("reccommands") level=(0) &>
               </div>
-              <div id="rec_command_result" class="rec-commands-results" style="display: none">
-              <script>
-                let ret_object_json = sessionStorage.getItem("execute_rec_command_result");
-                if (ret_object_json && ret_object_json != "") {
-                  try {
-                    ret_object = JSON.parse(ret_object_json);
-                    div_rec_command_result = document.getElementById('rec_command_result');
-                    append_rec_command_result(div_rec_command_result, ret_object);
-                    div_rec_command_result.style.display = '';
-                  } catch(e) {
-                    console.log("Error parsing Json result :");
-                    console.log(ret_object_json);
-                    console.log("Error message: "+e.message);
-                  }
-                  sessionStorage.setItem("execute_rec_command_result", '');
-                }
-              </script>
-              </div>
+              <& pageelems.action_results &>
             </td>
           </tr>
 % }

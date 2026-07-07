@@ -17,7 +17,7 @@ using namespace vdrlive;
 // there must be no newline after <& login.authentication &> (before <%cpp>),
 // otherwise there will be a newline in the output, which will break the resulting XML file
 
-  reply.setContentType("application/xml");
+  reply.setContentType("application/json");
   struct timespec ts_req;
   ts_req.tv_sec = 0;
   ts_req.tv_nsec = 1000000;
@@ -26,12 +26,5 @@ using namespace vdrlive;
     else nanosleep(&ts_req, nullptr);  // to switch to the thread processing the keys
   }
   for (int i = 0; i < 100 && cRemote::HasKeys() ;++i) nanosleep(&ts_req, nullptr);  // to allow processing the keys before we return
+// there is no output ...
 </%cpp>
-<?xml version="1.0"?>
-<service>
-<request name="keypress">
-<param name="keycode"><$ keycode $></param>
-<param name="repeat"><$ repeat $></param>
-</request>
-<response><$ "1" $></response>
-</service>
