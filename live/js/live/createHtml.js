@@ -184,7 +184,7 @@ function clearCheckboxes(form) {
 
 async function actionOnMarkedRecordings(act, text, confirm_ = true) {
 // act = 'del' or 'pur' or "res' or 'mov' oe 'rcd'
-// if (act == 'mov'), teext is ignored / replaced with the folder
+// if (act == 'mov'), text is ignored / replaced with the folder
 // if text is available, it will be encoded in recid
 //
   let epgid=act+'_recording_';
@@ -233,32 +233,6 @@ async function actionOnMarkedRecordings(act, text, confirm_ = true) {
   } else alert("ERROR createHtml.js, actionOnMarkedRecordings, liveEnhanced not defined");
 }
 
-async function execute(url) {
-/*
- * Input:
- *   url: URL to the page triggering the execution of the function
- *        this includes the parameters
- * Output:
- *   result as parsed from the Json returned by the calling url
- *     - bool   success
- *     - string message . Human readable text (optional if success == true)
- *     - ... whatever is returned from url
-*/
-  const response = await fetch(url);
-  const text = await response.text();
-
-  try {
-    return JSON.parse(text);
-  } catch(e) {
-    console.log("Error parsing Json result from url "+url);
-    console.log(text)
-    console.log("Error messge: "+e.message);
-    const ret = new Object();
-    ret.success = false;
-    ret.message = "Error parsing Json result from url "+url+" error messge: "+e.message;
-    return ret;
-  }
-}
 function disable_popup_if_user_checked(id, param) {
   // id is the hash
   // param is the epgid
@@ -484,7 +458,7 @@ async function action(id, history_num_back=0)
 
   try {
     const ret_object = JSON.parse(text);
-    const reload = ret_object.num_changed_objects > 0 || history_num_back > 0;
+    const reload = ret_object.reload_required || history_num_back > 0;
     if (reload) {
       // save result in sessionStorage, the page will display it during reload
       sessionStorage.setItem("action_result", text);
@@ -506,12 +480,11 @@ function action_back(id, param, history_num_back)
   disable_popup_if_user_checked(id, param);
   action(param, history_num_back);
 }
+/*
 async function createTimer(epgid) {
-  ret_object = await execute('create_timer.html?epgid=event_' + epgid);
-  if (!ret_object.success) alert (ret_object.message);
-  location.reload();
-  return false;
+  action("crt_event_"+epgid);
 }
+*/
 function back_depending_referrer(back_epginfo, back_others) {
   if (document.referrer.indexOf("epginfo.html?") != -1) {
     history.go(-back_epginfo);

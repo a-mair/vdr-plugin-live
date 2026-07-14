@@ -439,16 +439,16 @@ std::string SearchTimers_DeleteSearchTimer(cSv id) {
   SearchTimer* search = searchTimers.GetByTimerId(id);
   if (!search) {
     AppendObjectNotFound(result, id, tr("Search timer with id %s not found")) << "],\n";
-    AppendTag(result, "num_changed_objects", 0) << "\n}";
+    AppendTagB(result, "reload_required", true) << "\n}";
   } else {
     cToSvConcat name(search->Search());
     bool res = searchTimers.Delete(id);
     if (!res) {
       AppendNameSuccessMessage(result, name, false) << "],\n";
-      AppendTag(result, "num_changed_objects", 0) << "\n}";
+      AppendTagB(result, "reload_required", false) << "\n}";
     } else {
       AppendNameSuccessMessage(result, name, true) << "],\n";
-      AppendTag(result, "num_changed_objects", 1) << "\n}";
+      AppendTagB(result, "reload_required", true) << "\n}";
     }
   }
   dsyslog3("result = \"", result, "\"");

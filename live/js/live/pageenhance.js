@@ -63,12 +63,12 @@ var PageEnhance = new Class({
       if (typeof(href) === 'object') {
         href = href.baseVal ?? "";
       }
-      if (href && href != "") {
+      if (href) {
         const found = /epgid=([^&]+)/.exec(href);
         if (found && found.length > 1) {
           const epgid = decodeURIComponent(found[1]);
-          const found_confirm = /confirm=0/.exec(href);
-          if (found_confirm && epgid.length > 4){
+          const epgid_is_action = is_action(epgid);
+          if (epgid_is_action && ((/confirm=0/.exec(href)) || !get_texts(epgid.substring(0,3)).confirmationSupported)) {
             el.addEvent('click', async function(event){
               const event_ = new DOMEvent(event);
               event_.stop();
@@ -78,7 +78,7 @@ var PageEnhance = new Class({
           } else {
             el.addEvent('click', async function(event){
               const event_ = new DOMEvent(event);
-              if (epgid.length > 4 && is_popup_disabled(epgid)) {
+              if (epgid_is_action && is_popup_disabled(epgid)) {
                 event_.stop();
                 action(epgid);
                 return false;

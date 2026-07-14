@@ -328,7 +328,6 @@ if (!rfid.empty() ) {
   std::string className;
   uintptr_t iCounter = 0;
 </%args>
-<& create_html_js &>
 <%cpp>
   constexpr auto fileNameBreaks = "~";
   tChannelID channelid;
@@ -363,7 +362,7 @@ if (!rfid.empty() ) {
 <#
     <a href="edit_timer.html?epgid=<$ epgid $>"><img class="<$ className $>" src="<$ GetThemedLink("img", "record.svg") $>" alt="" <& tooltip.hint text=(tr("Record this")) label=(label) className=("click-action") &> /></a>
 #>
-    <a onclick="return createTimer('<$ cSv(epgid).substr(6) $>')"><img class="<$ className $>" src="<$ GetThemedLink("img", "record.svg") $>" alt="" <& tooltip.hint text=(tr("Record this")) label=(label) className=("click-action") &> /></a>
+    <a onclick="return action('crt_<$ epgid $>')"><img class="<$ className $>" src="<$ GetThemedLink("img", "record.svg") $>" alt="" <& tooltip.hint text=(tr("Record this")) label=(label) className=("click-action") &> /></a>
 <%cpp>
   }
 </%cpp>

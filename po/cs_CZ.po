@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 14:15+0200\n"
+"POT-Creation-Date: 2026-07-14 20:37+0200\n"
 "PO-Revision-Date: 2010-05-10 22:15+0200\n"
 "Last-Translator: Vladimír Bárta <vladimir.barta@k2atmitec.cz>,Radek Stastny <dedkus@gmail.com> \n"
 "Language-Team: see developers in README\n"
@@ -127,9 +127,6 @@ msgstr ""
 msgid "Error: couldn't set timer to inactive"
 msgstr ""
 
-msgid "Error: couldn't set timer to (in)active"
-msgstr ""
-
 msgid "Error: recording still in use"
 msgstr ""
 
@@ -217,6 +214,13 @@ msgstr "Nahrávaní není nastaveno"
 
 msgid "Timer already defined"
 msgstr "Nahrávaní již nastaveno"
+
+#, c-format
+msgid "Event with id %s not found"
+msgstr ""
+
+msgid "Timer already exists"
+msgstr ""
 
 #, c-format
 msgid "Delete timer \"%s\"?"
@@ -1440,6 +1444,15 @@ msgid "Deleted search timers:"
 msgstr ""
 
 msgid "Error deleting search timers:"
+msgstr ""
+
+msgid "No timers created"
+msgstr ""
+
+msgid "Created timers:"
+msgstr ""
+
+msgid "Error creating timers:"
 msgstr ""
 
 #~ msgid "Deleted recording:"

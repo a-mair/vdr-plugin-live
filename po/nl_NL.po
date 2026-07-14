@@ -4,13 +4,14 @@
 # Arnold Niessen <niessen@iae.nl> <arnold.niessen@philips.com>, 2001
 # Hans Dingemans <hans.dingemans@tacticalops.nl>, 2003
 # Maarten Wisse <Maarten.Wisse@urz.uni-hd.de>, 2005
+# Carel Willemse <carel@nekanali.nl>, 2026
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 14:15+0200\n"
-"PO-Revision-Date: 2025-10-03 20:15+0200\n"
+"POT-Creation-Date: 2026-07-07 21:25+0200\n"
+"PO-Revision-Date: 2026-07-14 16:25+0200\n"
 "Last-Translator: Carel Willemse <carel@nekanali.nl>\n"
 "Language-Team: see developers in README\n"
 "Language: nl_NL\n"
@@ -19,166 +20,163 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "Epg error"
-msgstr "EPG fout"
+msgstr "EPG-fout"
 
 msgid "Wrong channel id"
-msgstr "Verkeerde channel id"
+msgstr "Verkeerd kanaal-ID"
 
 msgid "Wrong event id"
-msgstr "Verkeerde event id"
+msgstr "Verkeerd event-ID"
 
 msgid "%A, %b %d %Y"
-msgstr ""
+msgstr "%A %d %b %Y"
 
 msgid "%I:%M %p"
-msgstr ""
+msgstr "%H:%M"
 
 msgid " - "
 msgstr " - "
 
 #, c-format
 msgid "(%d:%02d)"
-msgstr ""
+msgstr "(%d:%02d)"
 
 msgid "Required minimum version of epgsearch: "
-msgstr "Minimum vereiste versie van epgsearch plugin"
+msgstr "Minimaal vereiste versie van epgsearch: "
 
 msgid "All"
-msgstr "Allemaal"
+msgstr "Alle"
 
 msgid "FTA"
 msgstr "FTA"
 
 msgid "EPGSearch version outdated! Please update."
-msgstr "EPGSearch plugin verouderd, Vernieuw deze a.u.b."
+msgstr "EPGSearch-versie verouderd! Werk deze a.u.b. bij."
 
 msgid "Delete search timer [search timer name unavailable]?"
-msgstr ""
+msgstr "Zoektimer verwijderen [naam van zoektimer niet beschikbaar]?"
 
 #, c-format
 msgid "Delete search timer \"%s\"?"
-msgstr ""
+msgstr "Zoektimer \"%s\" verwijderen?"
 
 #, c-format
-msgid "Search timer with id %s not found"
-msgstr ""
+msgid "Searchtimer with id %s not found"
+msgstr "Zoektimer met ID %s niet gevonden"
 
 msgid "Nothing selected!"
-msgstr ""
+msgstr "Niets geselecteerd!"
 
 #, c-format
 msgid "Delete recording \"%s\"?"
-msgstr "Verwijder opname \"%s\"?"
+msgstr "Opname \"%s\" verwijderen?"
 
 msgid "Delete recording [recording name unavailable]?"
-msgstr ""
+msgstr "Opname verwijderen [naam van opname niet beschikbaar]?"
 
 #, c-format
 msgid "Delete the following %i recordings?"
-msgstr ""
+msgstr "De volgende %i opnames verwijderen?"
 
 #, c-format
 msgid "Move recording \"%s\" to folder \"%.*s\"?"
-msgstr ""
+msgstr "Opname \"%s\" verplaatsen naar map \"%.*s\"?"
 
 msgid "Move recording [recording name unavailable]?"
-msgstr ""
+msgstr "Opname verplaatsen [naam van opname niet beschikbaar]?"
 
 #, c-format
 msgid "Move the following %i recordings to folder \"%.*s\"?"
-msgstr ""
+msgstr "De volgende %i opnames verplaatsen naar map \"%.*s\"?"
 
 #, c-format
 msgid "Execute command \"%.*s\" on recording \"%s\"?"
-msgstr ""
+msgstr "Opdracht \"%.*s\" uitvoeren op opname \"%s\"?"
 
 msgid "Execute command on recording [recording name unavailable]?"
-msgstr ""
+msgstr "Opdracht uitvoeren op opname [naam van opname niet beschikbaar]?"
 
 #, c-format
 msgid "Execute command \"%.*s\" on the following %i recordings?"
-msgstr ""
+msgstr "Opdracht \"%.*s\" uitvoeren op de volgende %i opnames?"
 
 #, c-format
 msgid "Restore recording \"%s\"?"
-msgstr ""
+msgstr "Opname \"%s\" herstellen?"
 
 msgid "Restore recording [recording name unavailable]?"
-msgstr ""
+msgstr "Opname herstellen [naam van opname niet beschikbaar]?"
 
 #, c-format
 msgid "Restore the following %i recordings?"
-msgstr ""
+msgstr "De volgende %i opnames herstellen?"
 
 #, c-format
 msgid "Permanently delete recording \"%s\"?"
-msgstr ""
+msgstr "Opname \"%s\" definitief verwijderen?"
 
 msgid "Permanently delete recording [recording name unavailable]?"
-msgstr ""
+msgstr "Opname definitief verwijderen [naam van opname niet beschikbaar]?"
 
 #, c-format
 msgid "Permanently delete the following %i recordings?"
-msgstr ""
+msgstr "De volgende %i opnames definitief verwijderen?"
 
 #, c-format
 msgid "Recording with id %s not found"
-msgstr ""
+msgstr "Opname met ID %s niet gevonden"
 
 msgid "Error: couldn't set timer to inactive"
-msgstr ""
-
-msgid "Error: couldn't set timer to (in)active"
-msgstr ""
+msgstr "Fout: kon timer niet op inactief zetten"
 
 msgid "Error: recording still in use"
-msgstr ""
+msgstr "Fout: opname is nog in gebruik"
 
 #, c-format
 msgid "%a,"
-msgstr ""
+msgstr "%a,"
 
 msgid "%b %d %y"
-msgstr ""
+msgstr "%d %b %y"
 
 #, c-format
 msgid "%d:%02d"
-msgstr ""
+msgstr "%d:%02d"
 
 #, c-format
 msgid "%.1f GB"
-msgstr ""
+msgstr "%.1f GB"
 
 #, c-format
 msgid "%'d MB"
-msgstr ""
+msgstr "%'d MB"
 
 msgid "TV shows"
-msgstr "TV shows"
+msgstr "Tv-programma's"
 
 msgid "Movie collections"
 msgstr "Filmcollecties"
 
 msgid "File system view"
-msgstr "Bestandssysteem overzicht"
+msgstr "Bestandssysteemweergave"
 
 msgid "Duplicates not identified by tvscraper"
-msgstr "Duplicaten niet gevonden door tvscraper"
+msgstr "Duplicaten niet geïdentificeerd door tvscraper"
 
 msgid "Duplicates identified by tvscraper"
-msgstr "Duplicaten gevonden door tvscraper"
+msgstr "Duplicaten geïdentificeerd door tvscraper"
 
 msgid "Duplicates, with different languages"
 msgstr "Duplicaten met verschillende talen"
 
 msgid "Last channel to display"
-msgstr "Laatst te tonen kanaal"
+msgstr "Laatst weer te geven kanaal"
 
 msgid "No limit"
 msgstr "Geen limiet"
 
 msgid "Use authentication"
-msgstr "Gebruik authenticatie"
+msgstr "Authenticatie gebruiken"
 
 msgid "No"
 msgstr "Nee"
@@ -187,13 +185,13 @@ msgid "Yes"
 msgstr "Ja"
 
 msgid "Admin login"
-msgstr "Admin login"
+msgstr "Admin-login"
 
 msgid "Admin password"
-msgstr "Admin wachtwoord"
+msgstr "Admin-wachtwoord"
 
 msgid "Timer conflict check detected "
-msgstr "Timerconflict gedetecteed "
+msgstr "Timerconflictcontrole gedetecteerd "
 
 msgid "conflict"
 msgstr "conflict"
@@ -206,7 +204,7 @@ msgstr "Fout in timerinstellingen"
 
 #, c-format
 msgid "%A, %x"
-msgstr ""
+msgstr "%A %d-%m-%Y"
 
 msgid "Search timer"
 msgstr "Zoektimer"
@@ -219,26 +217,26 @@ msgstr "Timer al gedefinieerd"
 
 #, c-format
 msgid "Delete timer \"%s\"?"
-msgstr ""
+msgstr "Timer \"%s\" verwijderen?"
 
 msgid "Delete timer [timer name unavailable]?"
-msgstr ""
+msgstr "Timer verwijderen [timernaam niet beschikbaar]?"
 
 #, c-format
 msgid "Timer with id %s not found"
-msgstr ""
+msgstr "Timer met ID %s niet gevonden"
 
 msgid "Sorry, no permission. Please contact your administrator!"
-msgstr "Sorry, geen rechten. Raadpleeg uw administrator!"
+msgstr "Sorry, geen toestemming. Neem contact op met uw systeembeheerder!"
 
 msgid "Please set a name for the recording!"
-msgstr "Geef de opname een naam, a.u.b.!"
+msgstr "Geef de opname a.u.b. een naam!"
 
 msgid "Cannot copy, rename or move the recording."
 msgstr "Kan de opname niet kopiëren, hernoemen of verplaatsen."
 
 msgid "Edit recording"
-msgstr "Bewerk de opname"
+msgstr "Opname bewerken"
 
 msgid "Name"
 msgstr "Naam"
@@ -247,16 +245,16 @@ msgid "Directory"
 msgstr "Map"
 
 msgid "Create new directory"
-msgstr "Maak nieuwe map"
+msgstr "Nieuwe map aanmaken"
 
 msgid "Separate directories with a tilde '~'; directory names must not start with a tilde, dot, or whitespace"
-msgstr ""
+msgstr "Scheid mappen met een tilde '~'; mapnamen mogen niet beginnen met een tilde, punt of spatie"
 
 msgid "Delete resume information"
-msgstr "Wis hervattingsinformatie"
+msgstr "Hervattingsinformatie wissen"
 
 msgid "Delete marks information"
-msgstr "Wis markeringsinformatie"
+msgstr "Markeringsinformatie wissen"
 
 msgid "Title"
 msgstr "Titel"
@@ -268,52 +266,52 @@ msgid "Description"
 msgstr "Omschrijving"
 
 msgid "Parental rating"
-msgstr "Leeftijdswijzer"
+msgstr "Kijkwijzer"
 
 msgid "Auxiliary info"
-msgstr "Meer informatie"
+msgstr "Extra informatie"
 
 msgid "Save"
-msgstr "Bewaar"
+msgstr "Opslaan"
 
 msgid "Cancel"
 msgstr "Annuleren"
 
 msgid "Couldn't find search timer. Maybe you mistyped your request?"
-msgstr "Kon geen zoektimer vinden, misschien een typefout in het verzoek?"
+msgstr "Kon geen zoektimer vinden. Mogelijk bevat het verzoek een typefout?"
 
 msgid "Edit search timer"
-msgstr "Bewerk zoektimer"
+msgstr "Zoektimer bewerken"
 
 msgid "New search timer"
 msgstr "Nieuwe zoektimer"
 
 msgid "Search text too short - use anyway?"
-msgstr "Zoek tekst tekort - toch gebruiken?"
+msgstr "Zoektekst te kort - toch gebruiken?"
 
 msgid "Search term"
 msgstr "Zoekterm"
 
 msgid "Search mode"
-msgstr "Zoekinstelling"
+msgstr "Zoekmodus"
 
 msgid "phrase"
-msgstr "uitdrukking"
+msgstr "exacte woordcombinatie"
 
 msgid "all words"
 msgstr "alle woorden"
 
 msgid "at least one word"
-msgstr "ten minste een woord"
+msgstr "ten minste één woord"
 
 msgid "match exactly"
-msgstr "precies passend"
+msgstr "exacte overeenkomst"
 
 msgid "regular expression"
-msgstr "reguliere uitdrukking"
+msgstr "reguliere expressie"
 
 msgid "fuzzy"
-msgstr "vaag"
+msgstr "fuzzy (wazig)"
 
 msgid "Tolerance"
 msgstr "Tolerantie"
@@ -322,61 +320,61 @@ msgid "Match case"
 msgstr "Hoofdlettergevoelig"
 
 msgid "Search in"
-msgstr "Zoek in"
+msgstr "Zoeken in"
 
 msgid "Episode"
 msgstr "Aflevering"
 
 msgid "Use parental rating"
-msgstr ""
+msgstr "Kijkwijzer gebruiken"
 
 msgid "Minimum rating"
-msgstr ""
+msgstr "Minimale leeftijd"
 
 msgid "Maximum rating"
-msgstr ""
+msgstr "Maximale leeftijd"
 
 msgid "Use content categories"
-msgstr "Gebruik inhoud categorieën"
+msgstr "Inhoudscategorieën gebruiken"
 
 msgid "Category matching mode"
-msgstr ""
+msgstr "Vergelijkingsmodus voor categorieën"
 
 msgid "all selected descriptors"
-msgstr ""
+msgstr "alle geselecteerde kenmerken"
 
 msgid "any selected descriptor"
-msgstr ""
+msgstr "minstens één geselecteerd kenmerk"
 
 msgid "one selected descriptor per group"
-msgstr ""
+msgstr "één geselecteerd kenmerk per groep"
 
 msgid "When \"one selected descriptor per group\" is chosen, at least one of a group's selcted descriptors must be present (OR) for every included group (AND); groups without selected descriptors are ignored. Not including sufficient descriptors can cause a lot of timers. So please always test this search before using it as search timer!"
-msgstr ""
+msgstr "Wanneer \"één geselecteerd kenmerk per groep\" is gekozen, moet ten minste één kenmerk van een groep aanwezig zijn (OF) voor elke opgenomen groep (EN); groepen zonder geselecteerde kenmerken worden genegeerd. Het weglaten van voldoende kenmerken kan leiden tot een zeer groot aantal timers. Test deze zoekopdracht daarom altijd eerst voordat u deze als zoektimer gebruikt!"
 
 msgid "Special Characteristics"
-msgstr "Speciale Karakteristieken"
+msgstr "Speciale kenmerken"
 
 msgid "Special characteristics use their own matching mode. Both the other categories and the special characteristics must match jointly."
-msgstr ""
+msgstr "Speciale kenmerken gebruiken hun eigen vergelijkingsmodus. Zowel de overige categorieën als de speciale kenmerken moeten gezamenlijk overeenkomen."
 
 msgid "Use extended EPG info"
-msgstr "Gebruik uitgebreide EPG info"
+msgstr "Uitgebreide EPG-info gebruiken"
 
 msgid "all categories"
-msgstr ""
+msgstr "alle categorieën"
 
 msgid "all except missing categories"
-msgstr ""
+msgstr "alleen aanwezige categorieën"
 
 msgid "at least one category"
-msgstr ""
+msgstr "ten minste één categorie"
 
 msgid "Not including all categories can cause very many timers. So please always first test this search before using it as search timer!"
-msgstr ""
+msgstr "Het niet opnemen van alle categorieën kan leiden tot zeer veel timers. Test deze zoekopdracht daarom altijd eerst voordat u deze als zoektimer gebruikt!"
 
 msgid "Use channel"
-msgstr "Gebruik kanaal"
+msgstr "Kanaal gebruiken"
 
 msgid "interval"
 msgstr "interval"
@@ -394,22 +392,22 @@ msgid "to channel"
 msgstr "tot kanaal"
 
 msgid "Use time"
-msgstr "Gebruik tijd"
+msgstr "Tijd gebruiken"
 
 msgid "Start after"
-msgstr "Start na"
+msgstr "Starten na"
 
 msgid "The time the show may start at the earliest"
-msgstr "Tijd dat het proogramma op z'n vroegst mag starten"
+msgstr "Het tijdstip waarop het programma op zijn vroegst mag beginnen"
 
 msgid "Start before"
-msgstr "Start voor"
+msgstr "Starten voor"
 
 msgid "The time the show may start at the latest"
-msgstr "Tijd dat het proogramma op z'n laatst mag starten"
+msgstr "Het tijdstip waarop het programma op zijn laatst mag beginnen"
 
 msgid "Use duration"
-msgstr "Gebruik programmaduur"
+msgstr "Programmaduur gebruiken"
 
 msgid "Min. duration"
 msgstr "Min. programmaduur"
@@ -418,7 +416,7 @@ msgid "Max. duration"
 msgstr "Max. programmaduur"
 
 msgid "Use day of week"
-msgstr "Gebruik dag van de week"
+msgstr "Dag van de week gebruiken"
 
 msgid "Monday"
 msgstr "Maandag"
@@ -442,7 +440,7 @@ msgid "Sunday"
 msgstr "Zondag"
 
 msgid "Use blacklists"
-msgstr "Gebruik blacklists"
+msgstr "Blacklists gebruiken"
 
 msgid "only global"
 msgstr "alleen globaal"
@@ -451,16 +449,16 @@ msgid "Selection"
 msgstr "Selectie"
 
 msgid "all"
-msgstr "allemaal"
+msgstr "alle"
 
 msgid "Use in favorites menu"
-msgstr "Gebruik in favorietenmenu"
+msgstr "In favorietenmenu gebruiken"
 
 msgid "Use as search timer"
-msgstr "Gebruik als zoektimer"
+msgstr "Als zoektimer gebruiken"
 
 msgid "user defined"
-msgstr "gebruiker gedefinieerd"
+msgstr "door gebruiker gedefinieerd"
 
 msgid "from date"
 msgstr "van datum"
@@ -475,55 +473,55 @@ msgid "Announce only"
 msgstr "Alleen aankondigen (geen timer)"
 
 msgid "Switch only"
-msgstr "Aleen omschakelen"
+msgstr "Alleen omschakelen"
 
 msgid "Announce and Switch"
-msgstr "Kondig aan en Schakel om"
+msgstr "Aankondigen en omschakelen"
 
 msgid "Announce via email"
-msgstr "Kondig aan via e-mail"
+msgstr "Aankondigen via e-mail"
 
 msgid "Inactive Record"
 msgstr "Inactieve opname"
 
 msgid "Series recording"
-msgstr "Series opnemen"
+msgstr "Serie-opname"
 
 msgid "Delete recordings after ... days"
-msgstr "Wis opnamen na ... dagen"
+msgstr "Opnames verwijderen na ... dagen"
 
 msgid "Keep ... recordings"
-msgstr "Behoud ... opnamen"
+msgstr "Behoud ... opnames"
 
 msgid "Pause when ... recordings exist"
-msgstr "Pauzeer indien er ... opnamen zijn"
+msgstr "Pauzeren als er ... opnames zijn"
 
 msgid "Avoid repeats"
-msgstr "Vermijd herhalingen"
+msgstr "Herhalingen vermijden"
 
 msgid "Allowed repeats"
-msgstr "Aantal toegestane herhalingen"
+msgstr "Toegestane herhalingen"
 
 msgid "Only repeats within ... days"
 msgstr "Alleen herhalingen binnen ... dagen"
 
 msgid "Compare title"
-msgstr "Vergelijk titel"
+msgstr "Titel vergelijken"
 
 msgid "Compare subtitle"
-msgstr "Vergelijk ondertitel"
+msgstr "Subtitel vergelijken"
 
 msgid "if present"
 msgstr "indien aanwezig"
 
 msgid "Compare summary"
-msgstr "Vergelijk samenvatting"
+msgstr "Samenvatting vergelijken"
 
 msgid "Match in percent"
-msgstr "Overeenkomende percentage"
+msgstr "Overeenkomst in procenten"
 
 msgid "Compare date"
-msgstr "Vergelijk datums"
+msgstr "Datum vergelijken"
 
 msgid "same day"
 msgstr "dezelfde dag"
@@ -535,55 +533,55 @@ msgid "same month"
 msgstr "dezelfde maand"
 
 msgid "Compare extended EPG info"
-msgstr ""
+msgstr "Uitgebreide EPG-info vergelijken"
 
 msgid "Use VPS"
-msgstr "Gebruik VPS"
+msgstr "VPS gebruiken"
 
 msgid "Auto-delete search timer"
-msgstr "Wis de zoetimer automtisch"
+msgstr "Zoektimer automatisch verwijderen"
 
 msgid "based on recordings"
-msgstr "gebaseerd op opnamen"
+msgstr "op basis van opnames"
 
 msgid "based on days"
-msgstr "gebaseerd op datums"
+msgstr "op basis van dagen"
 
 msgid "after ... recordings"
-msgstr "na ... opnamen"
+msgstr "na ... opnames"
 
 msgid "after ... days after first rec."
-msgstr "na ... dagen na eerste opname."
+msgstr "na ... dagen na eerste opname"
 
 msgid "Switch ... minutes before start"
-msgstr "Schakel om ... minuten voor start"
+msgstr "Omschakelen ... minuten voor start"
 
 msgid "Unmute sound on switch"
-msgstr "Activeer geluid na omschakelen"
+msgstr "Geluid inschakelen bij omschakelen"
 
-msgid "The search timer lacks some form fields, so that their values cannot be saved. Please upgrade to the most recent version of EPGsearch."
-msgstr "Er ontbreken velden in de zoektimer waardoor hun waarden niet kunnen worden opgeslagen. Vernieuw a.u.b. de EPGsearch plugin"
+msgid "The searchtimer lacks some form fields, so that their values cannot be saved. Please upgrade to the most recent version of EPGsearch."
+msgstr "Er ontbreken velden in de zoektimer waardoor de waarden niet kunnen worden opgeslagen. Werk de EPGsearch-plugin a.u.b. bij naar de meest recente versie."
 
-msgid "The search timer includes extra fields. These will be saved with their original values."
-msgstr "The zoektimer bevat extra velden. Deze zullen worden opgeslagen met hun standaard waarden"
+msgid "The searchtimer includes extra fields. These will be saved with their original values."
+msgstr "De zoektimer bevat extra velden. Deze worden opgeslagen met hun oorspronkelijke waarden."
 
 msgid "Test"
-msgstr "Test"
+msgstr "Testen"
 
 msgid "Save as new"
-msgstr ""
+msgstr "Opslaan als nieuw"
 
 msgid "Couldn't find timer. Maybe you mistyped your request?"
-msgstr "Kon timer niet vinden. Misschien een typefout in het verzoek?"
+msgstr "Kon de timer niet vinden. Mogelijk bevat het verzoek een typefout?"
 
 msgid "Please set a title for the timer!"
-msgstr "Geef de timer een titel, a.u.b.!"
+msgstr "Geef de timer a.u.b. een titel!"
 
 msgid "New timer"
 msgstr "Nieuwe timer"
 
 msgid "Edit timer"
-msgstr "Bewerk timer"
+msgstr "Timer bewerken"
 
 msgid "Server"
 msgstr "Server"
@@ -598,19 +596,19 @@ msgid "none"
 msgstr "geen"
 
 msgid "event ID"
-msgstr "event ID"
+msgstr "event-ID"
 
 msgid "event time"
-msgstr "event tijd"
+msgstr "event-tijd"
 
 msgid "Couldn't find user. Maybe you mistyped your request?"
-msgstr "Kon gebruiker niet vinden, misschien een typefout in het verzoek?"
+msgstr "Kon de gebruiker niet vinden. Mogelijk bevat het verzoek een typefout?"
 
 msgid "This user name is already in use!"
 msgstr "Deze gebruikersnaam is al in gebruik!"
 
 msgid "Edit user"
-msgstr "Bewerk gebruiker"
+msgstr "Gebruiker bewerken"
 
 msgid "New user"
 msgstr "Nieuwe gebruiker"
@@ -622,70 +620,70 @@ msgid "User rights"
 msgstr "Gebruikersrechten"
 
 msgid "Edit setup"
-msgstr "Bewerk instellingen"
+msgstr "Instellingen bewerken"
 
 msgid "Add or edit timers"
-msgstr "Voeg to of bewerk timers"
+msgstr "Timers toevoegen of bewerken"
 
 msgid "Delete timers"
-msgstr "Verwijder timers"
+msgstr "Timers verwijderen"
 
 msgid "Delete recordings"
-msgstr "Wis opnamen"
+msgstr "Opnames verwijderen"
 
 msgid "Use remote menu"
-msgstr "Gebruik menu op afstand"
+msgstr "Menu op afstand gebruiken"
 
 msgid "Start replay"
-msgstr "Start weergave"
+msgstr "Afspelen starten"
 
 msgid "Switch channel"
-msgstr "Schakel naar kanaal"
+msgstr "Van kanaal wisselen"
 
 msgid "Add or edit search timers"
-msgstr "Voeg to of bewerk zoektimers"
+msgstr "Zoektimers toevoegen of bewerken"
 
 msgid "Delete search timers"
-msgstr "Verwijder zoektimers"
+msgstr "Zoektimers verwijderen"
 
 msgid "Edit recordings"
-msgstr "Bewerk opname"
+msgstr "Opnames bewerken"
 
 msgid "Electronic program guide information"
-msgstr "Elektronische programmagids informatie"
+msgstr "Informatie elektronische programmagids"
 
 msgid "Couldn't find recording or no recordings available"
-msgstr "Kon opname niet vinden of opname is niet aanwezig"
+msgstr "Kon de opname niet vinden of er zijn geen opnames beschikbaar"
 
 msgid "Do not ask again during this session"
-msgstr ""
+msgstr "Niet opnieuw vragen tijdens deze sessie"
 
 msgid "Page error"
-msgstr "Fout in pagina"
+msgstr "Paginafout"
 
 msgid "Not playing a recording"
 msgstr "Er wordt geen opname afgespeeld."
 
 msgid "Not playing the same recording as from request"
-msgstr "Op verzoek wordt dezelfde opname niet nogmaals afgespeeld."
+msgstr "Er wordt niet dezelfde opname afgespeeld als gevraagd."
 
 msgid "Cannot control playback!"
-msgstr "Kan afspelen niet beheren!"
+msgstr "Kan het afspelen niet bedienen!"
 
 msgid "Playing recording"
 msgstr "Opname afspelen"
 
 msgid "No EPG info for current event!"
-msgstr "Geen EPG informatie voor het huidige programma!"
+msgstr "Geen EPG-informatie voor het huidige programma!"
 
 msgid "No EPG info for current channel!"
-msgstr "Geen EPG informatie voor het huidige kanaal!"
+msgstr "Geen EPG-informatie voor het huidige kanaal!"
 
 msgid "no current channel!"
 msgstr "geen huidig kanaal!"
 
 msgid "%I:%M:%S %p"
-msgstr ""
+msgstr "%H:%M:%S"
 
 msgid "No recording errors"
 msgstr "Geen opnamefouten"
@@ -697,7 +695,7 @@ msgid "Recording errors unknown"
 msgstr "Opnamefouten onbekend"
 
 msgid "Duration deviation from event length"
-msgstr "Speeltijd wijkt af van de programmaduur"
+msgstr "Afwijking van de programmaduur"
 
 msgid "min"
 msgstr "min"
@@ -706,103 +704,94 @@ msgid "Recording length"
 msgstr "Opnameduur"
 
 msgid "h"
-msgstr "h"
+msgstr "uur"
 
 msgid "Number of PES files"
-msgstr ""
+msgstr "Aantal PES-bestanden"
 
 msgid "Number of TS files"
-msgstr "Aantal ts file"
+msgstr "Aantal TS-bestanden"
 
 msgid "Find more in the IMDb (Internet Movie Database)"
-msgstr "Zoek op de IMDb (Internet Movie Database)"
+msgstr "Meer zoeken op IMDb (Internet Movie Database)"
 
 msgid "Record this"
-msgstr "Neem dit nu op"
+msgstr "Dit opnemen"
 
 msgid "Search for repeats"
-msgstr "Zoek naar herhalingen"
+msgstr "Zoeken naar herhalingen"
 
 msgid "Existing Recording:"
-msgstr "Bestaande Opnamen:"
+msgstr "Bestaande opname:"
 
 msgid "Play this recording in the browser"
-msgstr "Speel deze opname af in de browser"
+msgstr "Deze opname afspelen in de browser"
 
 msgid "Click to view details"
-msgstr "Klik voor details"
+msgstr "Klik om details te bekijken"
 
 msgid "Play this recording"
-msgstr "Speel deze opname af"
+msgstr "Deze opname afspelen"
 
 msgid "Delete this recording"
 msgstr "Deze opname verwijderen"
 
 msgid "Restore this recording"
-msgstr ""
+msgstr "Deze opname herstellen"
 
 msgid "Permanently delete this recording"
-msgstr ""
+msgstr "Deze opname definitief verwijderen"
 
 msgid "Warning: This cannot be undone!"
-msgstr ""
+msgstr "Waarschuwing: Dit kan niet ongedaan worden gemaakt!"
 
 msgid "Select all recordings in this folder"
-msgstr ""
-
-msgid "Deselect all recordings in this folder"
-msgstr ""
-
-msgid "Collapse the log"
-msgstr ""
-
-msgid "Expand the log"
-msgstr ""
+msgstr "Alle opnames in deze map selecteren"
 
 msgid "Wrong username or password"
-msgstr "Verkeerde gebruikersnaam of wachtwoord"
+msgstr "Onjuiste gebruikersnaam of wachtwoord"
 
 msgid "Login"
-msgstr "Login"
+msgstr "Inloggen"
 
 msgid "VDR Live Login"
 msgstr "VDR Live Login"
 
 msgid "User"
-msgstr "Begruiker"
+msgstr "Gebruiker"
 
 msgid "What's on?"
-msgstr "Wat speelt er nu?"
+msgstr "Wat is er nu op tv?"
 
 msgid "MultiSchedule"
 msgstr "Totaaloverzicht"
 
 msgid "Search"
-msgstr "Zoek"
+msgstr "Zoeken"
 
 msgid "Search timers"
 msgstr "Zoektimers"
 
 msgid "Recordings (flat)"
-msgstr "Opnamen (vlak)"
+msgstr "Opnames (lijstweergave)"
 
 msgid "Remote Control"
-msgstr "Adstandsbediening"
+msgstr "Afstandsbediening"
 
 msgid "Web-Streaming"
-msgstr "Web-Streaming"
+msgstr "Webstreaming"
 
 msgid "Logout"
-msgstr "Log uit"
+msgstr "Uitloggen"
 
 msgid "Your attention is required"
 msgstr "Uw aandacht is vereist"
 
 msgid "React"
-msgstr "Reageer"
+msgstr "Reageren"
 
 msgid "Dismiss"
-msgstr "Afwijzen"
+msgstr "Negeren"
 
 msgid "All channels"
 msgstr "Alle kanalen"
@@ -817,7 +806,7 @@ msgid "Time"
 msgstr "Tijd"
 
 msgid "Switch to this channel"
-msgstr "Schakel naar dit kanaal"
+msgstr "Naar dit kanaal wisselen"
 
 msgid "more"
 msgstr "meer"
@@ -826,25 +815,25 @@ msgid "Channel"
 msgstr "Kanaal"
 
 msgid "Prev. entry"
-msgstr "Vorige veld"
+msgstr "Vorige vermelding"
 
 msgid "Next entry"
-msgstr "Volgende veld"
+msgstr "Volgende vermelding"
 
 msgid "Play this channel in the browser"
-msgstr "Speel dit kanaal af in de browser"
+msgstr "Dit kanaal afspelen in de browser"
 
 msgid "Play this channel in the media player"
-msgstr "Speel dit kanaal af in de mediaspeler"
+msgstr "Dit kanaal afspelen in de mediaspeler"
 
 msgid "Play this recording in the media player"
-msgstr "Speel deze opname in de mediaspeler"
+msgstr "Deze opname afspelen in de mediaspeler"
 
 msgid "Stream this recording"
-msgstr "Stream deze opname"
+msgstr "Deze opname streamen"
 
 msgid "Loading data ..."
-msgstr "Laad data ..."
+msgstr "Gegevens laden ..."
 
 msgid "An error occurred!"
 msgstr "Er is een fout opgetreden!"
@@ -856,22 +845,22 @@ msgid "Request failed!"
 msgstr "Verzoek mislukt!"
 
 msgid "Infobox update is on. Click to turn it off"
-msgstr ""
+msgstr "Infobox-update staat aan. Klik om uit te schakelen"
 
 msgid "Infobox update is off. Click to turn it on"
-msgstr ""
+msgstr "Infobox-update staat uit. Klik om in te schakelen"
 
 msgid "Retrieving status ..."
-msgstr "Ophalen status ..."
+msgstr "Status ophalen ..."
 
 msgid "Stop playback"
-msgstr "Stop weergave"
+msgstr "Afspelen stoppen"
 
 msgid "Resume playback"
-msgstr "Hervat weergave"
+msgstr "Afspelen hervatten"
 
 msgid "Pause playback"
-msgstr "Pauzeer weergave"
+msgstr "Afspelen pauzeren"
 
 msgid "Fast rewind"
 msgstr "Terugspoelen"
@@ -880,25 +869,25 @@ msgid "Fast forward"
 msgstr "Doorspoelen"
 
 msgid "Previous channel"
-msgstr "Vorige kanaal"
+msgstr "Vorig kanaal"
 
 msgid "Next channel"
-msgstr "Volgende kanaal"
+msgstr "Volgend kanaal"
 
 msgid "No server response!"
-msgstr "Server reageert niet!"
+msgstr "Geen serverreactie!"
 
 msgid "Failed to update infobox!"
-msgstr "Verversen infobox mislukt!"
+msgstr "Bijwerken van infobox mislukt!"
 
 msgid "Scraper"
-msgstr "Scrapper"
+msgstr "Scraper"
 
 msgid "Actors"
 msgstr "Acteurs"
 
 msgid "Artwork"
-msgstr "Illustratie"
+msgstr "Artwork"
 
 msgid "Event duration"
 msgstr "Programmaduur"
@@ -916,16 +905,16 @@ msgid "Episode overview:"
 msgstr "Afleveringsoverzicht:"
 
 msgid "Episode vote average/count:"
-msgstr "Waardering gemiddeld/aantal:"
+msgstr "Gemiddelde waardering/aantal stemmen aflevering:"
 
 msgid "Episode first aired:"
-msgstr "Allereerste aflevering:"
+msgstr "Eerste uitzenddatum aflevering:"
 
 msgid "Episode runtime:"
-msgstr "Aflevering speelduur:"
+msgstr "Speelduur aflevering:"
 
 msgid "IMDb episode"
-msgstr "IMDb episode"
+msgstr "IMDb-aflevering"
 
 msgid "Guest stars and crew"
 msgstr "Gastacteurs en crew"
@@ -934,10 +923,10 @@ msgid "Writer"
 msgstr "Schrijver"
 
 msgid "Director"
-msgstr "Director"
+msgstr "Regisseur"
 
 msgid "Tagline:"
-msgstr "Slogan:"
+msgstr "Tagline:"
 
 msgid "Overview:"
 msgstr "Overzicht:"
@@ -946,10 +935,10 @@ msgid "Genres:"
 msgstr "Genres:"
 
 msgid "Homepage"
-msgstr "Homepagina"
+msgstr "Homepage"
 
 msgid "Release date:"
-msgstr "Uitgiftedatum:"
+msgstr "Releasedatum:"
 
 msgid "Runtime:"
 msgstr "Speelduur:"
@@ -958,7 +947,7 @@ msgid "Popularity:"
 msgstr "Populariteit:"
 
 msgid "Vote average/count:"
-msgstr "Waardering gemiddeld/aantal:"
+msgstr "Gemiddelde waardering/aantal stemmen:"
 
 msgid "IMDb"
 msgstr "IMDb"
@@ -976,19 +965,19 @@ msgid "Status:"
 msgstr "Status:"
 
 msgid "Cast and crew"
-msgstr "Cast and crew"
+msgstr "Cast en crew"
 
 msgid "Content"
 msgstr "Inhoud"
 
 msgid "Execute this command for the selected recordings"
-msgstr ""
+msgstr "Deze opdracht uitvoeren voor de geselecteerde opnames"
 
 msgid "Execute this command for the recording"
-msgstr ""
+msgstr "Deze opdracht uitvoeren voor de opname"
 
 msgid "Authors"
-msgstr "Acteurs"
+msgstr "Auteurs"
 
 msgid "Project Idea"
 msgstr "Projectidee"
@@ -1012,19 +1001,19 @@ msgid "Information"
 msgstr "Informatie"
 
 msgid "LIVE version"
-msgstr "Live versie"
+msgstr "LIVE-versie"
 
 msgid "VDR version"
-msgstr "VDR Versie"
+msgstr "VDR-versie"
 
 msgid "Features"
-msgstr "Features"
+msgstr "Functies"
 
 msgid "active"
 msgstr "actief"
 
 msgid "required"
-msgstr "benodigd"
+msgstr "vereist"
 
 msgid "Information providers"
 msgstr "Informatieverstrekkers"
@@ -1033,43 +1022,46 @@ msgid "Bugs and suggestions"
 msgstr "Bugs en suggesties"
 
 msgid "If you encounter any bugs or would like to suggest new features, please use our bugtracker"
-msgstr "Als u een bug vindt of nieuwe mogelijkheden wenst, bezoek dan onze bugtracker"
+msgstr "Als u een bug vindt of nieuwe functies wilt voorstellen, maak dan gebruik van onze bugtracker"
 
 msgid "Couldn't find channel or no channels available. Maybe you mistyped your request?"
-msgstr "Kon geen kanaal vinden of kanaal is niet beschikbaar, misschien een typefout in het verzoek?"
+msgstr "Kon geen kanaal vinden of er zijn geen kanalen beschikbaar. Mogelijk bevat het verzoek een typefout?"
 
 msgid "List of recordings"
-msgstr "Lijst van opnamen"
+msgstr "Lijst van opnames"
 
 msgid "List of deleted recordings"
-msgstr ""
+msgstr "Lijst van verwijderde opnames"
 
 msgid "No recordings found"
-msgstr "geen opnamen gevonden"
+msgstr "Geen opnames gevonden"
 
 msgid "No deleted recordings found"
-msgstr ""
+msgstr "Geen verwijderde opnames gevonden"
 
 msgid "Move selected recordings"
-msgstr ""
+msgstr "Geselecteerde opnames verplaatsen"
 
 msgid "Delete selected recordings"
-msgstr "Wis de selectie"
+msgstr "Geselecteerde opnames verwijderen"
 
 msgid "Warning: Permanently deleted recordings cannot be recovered!"
-msgstr ""
+msgstr "Waarschuwing: Definitief verwijderde opnames kunnen niet worden hersteld!"
 
 msgid "Restore selected recordings"
-msgstr ""
+msgstr "Geselecteerde opnames herstellen"
 
 msgid "Permanently delete selected recordings"
-msgstr ""
+msgstr "Geselecteerde opnames definitief verwijderen"
+
+msgid "Deselect all recordings in this folder"
+msgstr "Alle opnames in deze map deselecteren"
 
 msgid "No matching recordings found"
-msgstr "Geen bijbehorende opnamen gevonden"
+msgstr "Geen overeenkomstige opnames gevonden"
 
 msgid "Sort:"
-msgstr "Sorteer:"
+msgstr "Sorteren:"
 
 msgid "Date"
 msgstr "Datum"
@@ -1081,34 +1073,34 @@ msgid "Errors"
 msgstr "Fouten"
 
 msgid "Look in recordings titles and subtitles for the given string and display only the matching ones. You may also use perl compatible regular expressions (PCRE)."
-msgstr "Zoek de opgegeven zoektekst in de opname- titel en ondertitels en toon alleen de bijpassende opnamen. U mag ook perl compatible regular expressions (PCRE) gebruiken."
+msgstr "Zoek de opgegeven tekst in de titels en subtitels van opnames en toon alleen de overeenkomstige resultaten. U kunt ook Perl-compatibele reguliere expressies (PCRE) gebruiken."
 
 msgid "Filter"
-msgstr "Filter"
+msgstr "Filteren"
 
 msgid "Clear filter"
-msgstr "Wis filter"
+msgstr "Filter wissen"
 
 msgid "Expand all folders"
-msgstr "Klap alle mappen uit"
+msgstr "Alle mappen uitklappen"
 
 msgid "Collapse all folders"
-msgstr "Klap alle mappen dicht"
+msgstr "Alle mappen inklappen"
 
 msgid "Keyboard help"
-msgstr ""
+msgstr "Sneltoetshulp"
 
 msgid "Snapshot interval"
-msgstr "Snapshot interval"
+msgstr "Snapshot-interval"
 
 msgid "Stop"
-msgstr "Stop"
+msgstr "Stoppen"
 
 msgid "No schedules available for this channel"
-msgstr "Geen programmagegevens aanwezig voor dit kanaal"
+msgstr "Geen programmagegevens beschikbaar voor dit kanaal"
 
 msgid "No events available for this channel"
-msgstr "Geen uitzendingen aanwezig voor dit kanaal"
+msgstr "Geen uitzendingen beschikbaar voor dit kanaal"
 
 msgid "Search settings"
 msgstr "Zoekinstellingen"
@@ -1117,19 +1109,16 @@ msgid "Extended search"
 msgstr "Uitgebreid zoeken"
 
 msgid "The search lacks some form fields, so that their values cannot be used for searching the EPG. Please upgrade to the most recent version of EPGsearch."
-msgstr "Er ontbreken velden in de zoekactie waardoor hun waarden niet kunnen worden gebruikt om te zoeken. Vernieuw a.u.b. de EPGsearch plugin"
+msgstr "Er ontbreken velden in de zoekopdracht waardoor de waarden niet kunnen worden gebruikt om in de EPG te zoeken. Werk de EPGsearch-plugin a.u.b. bij naar de meest recente versie."
 
 msgid "The search supports extra fields. These will be not be taken into account."
-msgstr "De zoekactie ondersteunt extra velden. Deze zullen worden niet gebruikt"
+msgstr "De zoekopdracht ondersteunt extra velden. Deze worden buiten beschouwing gelaten."
 
 msgid "Search results"
 msgstr "Zoekresultaten"
 
 msgid "No search results"
 msgstr "Geen zoekresultaten"
-
-msgid "No search timers found"
-msgstr "Geen zoektimers gevonden"
 
 msgid "Expression"
 msgstr "Expressie"
@@ -1138,28 +1127,31 @@ msgid "Starts between"
 msgstr "Start tussen"
 
 msgid "Toggle search timer actions (in)active"
-msgstr "Schakel zoektimer acties (in)actief"
+msgstr "Zoektimeracties (in)actief schakelen"
 
 msgid "Browse search timer results"
-msgstr "Doorzoek zoektimer resultaten"
+msgstr "Bladeren door zoektimerresultaten"
 
 msgid "Delete search timer"
-msgstr "Verwijder zoektimer"
+msgstr "Zoektimer verwijderen"
+
+msgid "No searchtimers found"
+msgstr "Geen zoektimers gevonden"
 
 msgid "Trigger search timer update"
-msgstr "Start verversen zoektimers"
+msgstr "Update van zoektimers starten"
 
 msgid "Please set login and password!"
-msgstr "Vul gebruikersnaam en wachtwoord in!"
+msgstr "Vul de gebruikersnaam en het wachtwoord in!"
 
 msgid "Setup saved."
 msgstr "Instellingen opgeslagen."
 
 msgid "Local theme set to"
-msgstr ""
+msgstr "Lokaal thema ingesteld op"
 
 msgid "Local theme cleared"
-msgstr ""
+msgstr "Lokaal thema gewist"
 
 msgid "Setup"
 msgstr "Instellingen"
@@ -1168,49 +1160,49 @@ msgid "User management"
 msgstr "Gebruikersbeheer"
 
 msgid "Local net (no login required)"
-msgstr "Lokaal net (geen login vereist)"
+msgstr "Lokaal netwerk (geen login vereist)"
 
 msgid "IPv4 prefix"
-msgstr "IPv4 prefix"
+msgstr "IPv4-prefix"
 
 msgid "Example: 192.168.178.0/24"
 msgstr "Bijvoorbeeld: 192.168.178.0/24"
 
 msgid "IPv6 prefix"
-msgstr "IPv6 prefix"
+msgstr "IPv6-prefix"
 
 msgid "Example: 2003:ec:6f23:ee00:&#x200B;:/64"
 msgstr "Bijvoorbeeld: 2003:ec:6f23:ee00:&#x200B;:/64"
 
 msgid "Allow localhost"
-msgstr "Sta localhost toe"
+msgstr "Localhost toestaan"
 
 msgid "Show live logo image"
-msgstr "Toon live logo afbeelding"
+msgstr "Live-logo-afbeelding tonen"
 
 msgid "Show dynamic VDR information box"
-msgstr "Toon dynamische VDR informatie"
+msgstr "Dynamische VDR-informatiebox tonen"
 
 msgid "Allow video streaming"
-msgstr "Sta videostreaming toe"
+msgstr "Videostreaming toestaan"
 
 msgid "Streamdev server port"
-msgstr "Streamdev server poort"
+msgstr "Streamdev-serverpoort"
 
 msgid "Streamdev stream type"
-msgstr "Streamdev streamtype"
+msgstr "Streamdev-streamtype"
 
 msgid "Mark new recordings"
-msgstr "Markeer nieuwe opnamen"
+msgstr "Nieuwe opnames markeren"
 
 msgid "Show link to IMDb in list views"
-msgstr "Toon link naar IMDb in overzichtslijsten"
+msgstr "Link naar IMDb tonen in lijstweergaven"
 
 msgid "Additional fixed times in 'What's on?'"
-msgstr "Extra vaste tijden in 'Wat is er nu?'"
+msgstr "Extra vaste tijden in 'Wat is er nu op tv?'"
 
 msgid "Format is HH:MM. Separate multiple times with a semicolon"
-msgstr "Formaat is HH:MM. Onderscheidt meerdere tijden met een punt-comma"
+msgstr "Formaat is HH:MM. Scheid meerdere tijden met een puntkomma"
 
 msgid "Channel groups for MultiSchedule"
 msgstr "Kanaalgroepen voor het totaaloverzicht"
@@ -1219,10 +1211,10 @@ msgid "5 channels per group"
 msgstr "5 kanalen per groep"
 
 msgid "Channel groups as defined in VDR"
-msgstr "Kanaalgroepen zoals worden gebruikt in VDR"
+msgstr "Kanaalgroepen zoals gedefinieerd in VDR"
 
 msgid "All channels in one group"
-msgstr "Alle kanalen in een groep"
+msgstr "Alle kanalen in één groep"
 
 msgid "Individual channel groups"
 msgstr "Individuele kanaalgroepen"
@@ -1234,10 +1226,10 @@ msgid "Separate channels with a comma ',', separate groups with a semi-colon ';'
 msgstr "Scheid kanalen met een komma ',', scheid groepen met een puntkomma ';'"
 
 msgid "Duration of MultiSchedule in hours"
-msgstr "Programmaduur in het totaaloverzicht in uren"
+msgstr "Duur van het totaaloverzicht in uren"
 
 msgid "Show channels without EPG"
-msgstr "Toon ook kanalen zonder EPG"
+msgstr "Kanalen zonder EPG tonen"
 
 msgid "Start page"
 msgstr "Startpagina"
@@ -1246,29 +1238,29 @@ msgid "Theme"
 msgstr "Thema"
 
 msgid "Use browser-specific theme"
-msgstr ""
+msgstr "Browserspecifiek thema gebruiken"
 
 msgid "Couldn't find recording or no recordings available. Maybe you mistyped your request?"
-msgstr "Kon geen opname vinden of er zijn geen opnamen beschikbaar, misschien een typefout in het verzoek?"
+msgstr "Kon de opname niet vinden of er zijn geen opnames beschikbaar. Mogelijk bevat het verzoek een typefout?"
 
 msgid "Couldn't find channel for recording."
-msgstr "Kon geen kanaal vinden voor de opname"
+msgstr "Kon geen kanaal vinden voor de opname."
 
 #, c-format
 msgid "%a, %x"
-msgstr ""
+msgstr "%a %d-%m-%Y"
 
 msgid "View the schedule of this channel"
-msgstr "Bekijk de programmagids van dit kanaal"
+msgstr "De programmagids van dit kanaal bekijken"
 
 msgid "Recording"
-msgstr "Opnemen"
+msgstr "Opname"
 
 msgid "Couldn't find channel or no channels available."
-msgstr "Kon kanaal niet vinden of er zijn geen kanalen beschikbaar"
+msgstr "Kon het kanaal niet vinden of er zijn geen kanalen beschikbaar."
 
 msgid "Couldn't switch to channel."
-msgstr "Kan niet naar kanaal schakelen"
+msgstr "Kan niet naar kanaal schakelen."
 
 msgid "Timer conflicts"
 msgstr "Timerconflicten"
@@ -1280,7 +1272,7 @@ msgid "local"
 msgstr "lokaal"
 
 msgid "Timer has a conflict"
-msgstr "Conflict met timer"
+msgstr "Timer heeft een conflict"
 
 msgid "Timer is active"
 msgstr "Timer is actief"
@@ -1289,13 +1281,13 @@ msgid "Transponder"
 msgstr "Transponder"
 
 msgid "Toggle timer (in)active"
-msgstr "Schakel timer (in)actief"
+msgstr "Timer (in)actief schakelen"
 
 msgid "Delete timer"
-msgstr "Verwijder timer"
+msgstr "Timer verwijderen"
 
 msgid "No timer defined"
-msgstr "Geen timer aanwezig"
+msgstr "Geen timer gedefinieerd"
 
 msgid "Duration"
 msgstr "Duur"
@@ -1307,13 +1299,13 @@ msgid "Users"
 msgstr "Gebruikers"
 
 msgid "Delete user"
-msgstr "Verwijder gebruiker"
+msgstr "Gebruiker verwijderen"
 
 msgid "No users configured"
 msgstr "Geen gebruikers geconfigureerd"
 
 msgid "What's running on"
-msgstr "Wat speelt er om"
+msgstr "Wat is er op tv om"
 
 msgid "at"
 msgstr "om"
@@ -1322,7 +1314,7 @@ msgid "What's on next?"
 msgstr "Wat komt er hierna?"
 
 msgid "Favorites"
-msgstr "Favoriten"
+msgstr "Favorieten"
 
 msgid "No events found"
 msgstr "Geen uitzendingen gevonden"
@@ -1331,145 +1323,154 @@ msgid "Next"
 msgstr "Volgende"
 
 msgid "What's on"
-msgstr "Wat is er nu"
+msgstr "Wat is er nu op tv"
 
 msgid "Details view"
-msgstr "Detailoverzicht"
+msgstr "Detailweergave"
 
 msgid "List view"
-msgstr "Overzichtslijst"
+msgstr "Lijstweergave"
 
 msgid "Live Interactive VDR Environment"
-msgstr "Live Interactieve VDR Omgeving"
+msgstr "Live Interactive VDR Environment"
 
 msgid "Delete recording"
-msgstr ""
+msgstr "Opname verwijderen"
 
 msgid "Delete"
-msgstr "Verwijder"
+msgstr "Verwijderen"
 
-msgid "No recordings deleted"
-msgstr ""
+msgid "No recording was deleted"
+msgstr "Er is geen opname verwijderen"
+
+msgid "Deleted recording:"
+msgstr "Verwijderde opname:"
 
 msgid "Deleted recordings:"
-msgstr ""
+msgstr "Verwijderde opnames:"
 
-msgid "Error deleting recordings:"
-msgstr ""
+msgid "Error deleting recording(s):"
+msgstr "Fout bij het verwijderen van opname(s):"
 
 msgid "Restore recording"
-msgstr ""
+msgstr "Opname herstellen"
 
 msgid "Restore"
-msgstr ""
+msgstr "Herstellen"
 
-msgid "No recordings restored"
-msgstr ""
+msgid "No recording was restored"
+msgstr "Er is geen opname hersteld"
+
+msgid "Restored recording:"
+msgstr "Herstelde opname:"
 
 msgid "Restored recordings:"
-msgstr ""
+msgstr "Herstelde opnames:"
 
-msgid "Error restoring recordings:"
-msgstr ""
+msgid "Error restoring recording(s):"
+msgstr "Fout bij het herstellen van opname(s):"
 
 msgid "Permanently delete recording"
-msgstr ""
+msgstr "Opname definitief verwijderen"
 
 msgid "Delete permanently"
-msgstr ""
+msgstr "Definitief verwijderen"
 
-msgid "No recordings deleted permanently"
-msgstr ""
+msgid "No recording was deleted permanently"
+msgstr "Er is geen opname definitief verwijderen"
+
+msgid "Permanently deleted recording:"
+msgstr "Definitief verwijderde opname:"
 
 msgid "Permanently deleted recordings:"
-msgstr ""
+msgstr "Definitief verwijderde opnames:"
 
-msgid "Error permanently deleting recordings:"
-msgstr ""
+msgid "Error permanently deleting recording(s):"
+msgstr "Fout bij het definitief verwijderen van opname(s):"
 
 msgid "Move recordings"
-msgstr ""
+msgstr "Opnames verplaatsen"
 
 msgid "Move"
-msgstr ""
+msgstr "Verplaatsen"
 
-msgid "No recordings moved"
-msgstr ""
+msgid "No recording was moved"
+msgstr "Er is geen opname verplaatst"
+
+msgid "Moved recording:"
+msgstr "Verplaatste opname:"
 
 msgid "Moved recordings:"
-msgstr ""
+msgstr "Verplaatste opnames:"
 
-msgid "Error moving recordings:"
-msgstr ""
+msgid "Error moving recording(s):"
+msgstr "Fout bij het verplaatsen van opname(s):"
 
 msgid "Recording commands"
-msgstr ""
+msgstr "Opname-opdrachten"
 
 msgid "Execute"
-msgstr ""
+msgstr "Uitvoeren"
 
-msgid "Command not executed on any recording"
-msgstr ""
+msgid "Command was not executed on any recording"
+msgstr "Opdracht is op geen enkele opname uitgevoerd"
 
-msgid "Error executing command on the following recordings:"
-msgstr ""
+msgid "Error executing command on the following recording(s):"
+msgstr "Fout bij het uitvoeren van opdracht op de volgende opname(s):"
 
-msgid "No timers deleted"
-msgstr ""
+msgid "No timer was deleted"
+msgstr "Er is geen timer verwijderd"
 
-msgid "Deleted timers:"
-msgstr ""
+msgid "Deleted timer:"
+msgstr "Verwijderde timer:"
 
-msgid "Error deleting timers:"
-msgstr ""
+msgid "Error deleting timer:"
+msgstr "Fout bij het verwijderen van timer:"
 
-msgid "No search timers deleted"
-msgstr ""
+msgid "No search timer was deleted"
+msgstr "Er is geen zoektimer verwijderd"
 
-msgid "Deleted search timers:"
-msgstr ""
+msgid "Deleted search timer:"
+msgstr "Verwijderde zoektimer:"
 
-msgid "Error deleting search timers:"
-msgstr ""
-
-#~ msgid "Deleted recording:"
-#~ msgstr "Gewiste opnamen:"
+msgid "Error deleting search timer:"
+msgstr "Fout bij het verwijderen van zoektimer:"
 
 #~ msgid "Copy only"
 #~ msgstr "Alleen kopiëren"
 
 #~ msgid "Recordings"
-#~ msgstr "Opnamen"
+#~ msgstr "Opnames"
 
 #~ msgid "Toggle updates on/off"
-#~ msgstr "Schakel updates aan/uit"
+#~ msgstr "Updates aan-/uitschakelen"
 
 #~ msgid "On archive DVD No."
-#~ msgstr "Op archief DVD nr."
+#~ msgstr "Op archief-dvd-nr."
 
 #~ msgid "On archive HDD No."
-#~ msgstr "Op archief HDD nr."
+#~ msgstr "Op archief-hdd-nr."
 
 #~ msgid "Couldn't find recording. Maybe you mistyped your request?"
-#~ msgstr "Kon opname niet vinden, misschien een typefout in het verzoek?"
+#~ msgstr "Kon de opname niet vinden. Mogelijk bevat het verzoek een typefout?"
 
 #~ msgid "Couldn't find recording or no recordings available."
-#~ msgstr "Kon geen opnamen vinden, of geen opnamen beschikbaar."
+#~ msgstr "Kon de opname niet vinden of er zijn geen opnames beschikbaar."
 
 #~ msgid "Attempt to delete recording currently in playback."
-#~ msgstr "Poging opname te wissen die op dit moment worst afgespeeld.1"
+#~ msgstr "Poging om een opname te verwijderen die momenteel wordt afgespeeld."
 
 #~ msgid "Delete this search timer?"
-#~ msgstr "Deze timer verwijderen?"
+#~ msgstr "Deze zoektimer verwijderen?"
 
 #~ msgid "Delete this timer?"
 #~ msgstr "Deze timer verwijderen?"
 
 #~ msgid "Ignore missing EPG info"
-#~ msgstr "Negeer ontbrekende EPG info"
+#~ msgstr "Ontbrekende EPG-info negeren"
 
 #~ msgid "When active this can cause very many timers. So please always first test this search before using it as search timer!"
-#~ msgstr "Indien deze zoekactie wordt geactiveerd, kunnen er heel veel timers worden aangemaak! Test de zoekterm eerst alvorens op te nemen in een zoektimer!"
+#~ msgstr "Indien actief kan dit leiden tot zeer veel timers. Test deze zoekopdracht daarom altijd eerst voordat u deze als zoektimer gebruikt!"
 
 #~ msgid "Compare"
-#~ msgstr "Vergelijk"
+#~ msgstr "Vergelijken"

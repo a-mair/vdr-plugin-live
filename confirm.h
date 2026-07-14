@@ -27,10 +27,13 @@ namespace vdrlive {
 //  "mov_" move recordings
 //  "det_" delete timer
 //  "des_" delete search timer
+//  "crt_" create timer
+//  "act_" activate timer
+//  "dat_" deactivate timer
 //
 typedef std::string (*tConfirmationQuestion)(cSv id);
 typedef std::vector<std::string> (*tObjectNames)(cSv id);
-typedef std::string (*tPerformAction)(cSv id); // return Json, see also std::string simpleJsonReturn(bool success, cSv message)
+typedef std::string (*tPerformAction)(cSv id); // return Json, see below for required Json format
 
 inline std::vector<std::string> one_object(cSv id) {
   std::vector<std::string> result;
@@ -69,6 +72,9 @@ class cConfirm {
     }
     bool currentUserHasRight() const {
       return cUser::CurrentUserHasRightTo(m_user_rights);
+    }
+    bool confirmationSupported() const {
+      return m_question != nullptr;
     }
 };
 
@@ -155,6 +161,17 @@ inline static const cSortedVector<cConfirm, std::less<>> g_confirm_popups =
             m_question:       &SearchTimers_DeleteConfirmationQuestion,
             m_objectNames:    &one_object,
             m_perform_action: &SearchTimers_DeleteSearchTimer
+  },
+  { "crt_", m_user_rights:    UR_EDITTIMERS,
+            m_headline:       nullptr,
+            m_warning:        nullptr,
+            m_prompt:         nullptr,
+            m_headline_0:     trNOOP("No timers created"),
+            m_headline_n:     trNOOP("Created timers:"),
+            m_headline_error: trNOOP("Error creating timers:"),
+            m_question:       nullptr,
+            m_objectNames:    &one_object,
+            m_perform_action: &TimerManager_CreateTimer
   }
 };
 
@@ -164,6 +181,41 @@ inline const cConfirm *get_confirm_popup(cSv id) {
   return nullptr;
 }
 
+/*
+  Json structure which must be returned by function "tPerformAction m_perform_action"
+  Note: additional tags may be added for specific actions
+{
+  "action" : 3 chars action id. Required. See top of this file for action ids.
+             Note: This is added by pages/action.ecpp,
+             implementations of "tPerformAction m_perform_action" must not add this tag
+  "success": boolean,    // required
+     false In case of errors preventing the system to process any object.
+           Such errors include missing permission, bug, connection issues, ...
+           In this case, "message" is required. The other tags are ignored.
+     true  Otherwise. In this case, "message" is ignored but "objects" is required.
+           There might still be errors while processing the objects.
+           These errors are reported in the "objects" array.
+  "message": required if "success" == false, otherwise ignored
+  "reload_required": bool. Required.
+             true if the page must be reloaded because of outdated data
+             or because an object was changed
+  "objects": array. Required if "success" == true, otherwise ignored
+             even if the "objects" array is required, the array may be empty
+             if no objets are selected for processing
+             -> there must be one array element for each object selected for processing
+  [
+    {
+      "<tag for object id>"  : object id,   // required
+      "name"   : Name of object, as known by the user
+      "success": boolean,   // required
+      "message": ignored if "success" == true for this object, otherwise optional
+    },
+    { ...}
+  ]
+}
+
+The following functions can help to create this Json structure
+*/
 template <size_t N>
 inline cToSvConcat<N>& AppendTag(cToSvConcat<N>& target, cSv tag, cSv value) {
 // "<$tag$>": "<$value$>"
@@ -213,15 +265,16 @@ inline cToSvConcat<N>& AppendObjectNotFound(cToSvConcat<N>& result, cSv id, cons
   AppendNameSuccessMessage(result, message_f, false);
   return result;
 }
-inline std::string simpleJsonReturn(bool success, cSv message) {
+inline std::string simpleJsonReturn(cSv message) {
 //{
-//  "success": <$success?"true":"false"$>,
-//  "message": <$ cToSvStringEscapedAndCorrectNonUTF8(message) $>
+//  "success": false,
+//  "message": <$ cToSvStringEscapedAndCorrectNonUTF8(message) $>,
+//  "reload_required": false
 //}
   cToSvConcat result("{\n  ");
-  AppendTagB(result, "success", success) << ",\n  ";
+  AppendTagB(result, "success", false) << ",\n  ";
   AppendTag(result, "message", message) << ",\n  ";
-  AppendTag(result, "num_changed_objects", success?1:0) << "\n}";
+  AppendTagB(result, "reload_required", false) << "\n}";
   return std::string(result);
 }
 

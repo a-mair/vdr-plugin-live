@@ -22,7 +22,7 @@ const action_texts = [
 <%cpp>
 for (const cConfirm &confirm: g_confirm_popups) {
 </%cpp>
-{ id: "<$ cSv(confirm.m_id).substr(0,3) $>", headline_0: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_0)) $>, headline_n: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_n)) $>, headline_error: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_error)) $> },
+{ id: "<$ cSv(confirm.m_id).substr(0,3) $>", confirmationSupported: <$confirm.confirmationSupported()?"true":"false" $>, headline_0: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_0)) $>, headline_n: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_n)) $>, headline_error: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_error)) $> },
 % }
 ];
 
@@ -31,6 +31,14 @@ function get_texts(action) {
     if(action == texts.id) return texts;
   }
   console.log("action '"+action+"' not found");
+}
+function is_action(epgid) {
+  if (epgid.length < 4) return false;
+  const action = epgid.substring(0, 3);
+  for (const texts of action_texts) {
+    if(action == texts.id) return true;
+  }
+  return false;
 }
 function set_icons_closed(img_plus_minus, img_folder_symbol) {
 // input: images nodes
@@ -149,9 +157,9 @@ function addEvent(s, bottomrow_i, obj) {
 <#
     s.a += '<a href=\"edit_timer.html?epgid=event_'
     s.a += obj[0]
-    s.a += '\" onclick="return createTimer(\\''
+    s.a += '\" onclick="return action(\\'crt_event_'
 #>
-    s.a += '<a onclick="return createTimer(\\''
+    s.a += '<a onclick="return action(\\'crt_event_'
     s.a += obj[0]
     s.a += '\\')"><img class=\"icon\" src=\"<$ GetThemedLink("img", "record.svg") $>'
     s.a += '\" title=\"&lt;p&gt;'

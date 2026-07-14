@@ -330,6 +330,7 @@ if (type == "now") {
 %   }
       </table>
 % }
+      <& pageelems.action_results &>
       <div class="spacebar"><# spacer with fade-out effect #></div>
     </div>
   </body>

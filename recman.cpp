@@ -579,10 +579,10 @@ std::string RecordingsManager_DeleteRecording(cSv recordings_hash) {
 //    },
 //    { ...}
 //  ]
-//  "num_changed_objects": <$ deleted_recordings $>
+//  "reload_required": true/false
 //}
+  bool reload_required = false;
   std::string name;
-  int deleted_recordings = 0;
   cToSvConcat result("{\n");
   AppendTagB(result, "success", true) << ",\n";
   AppendTag(result, "message", "see also the individual results") << ",\n";
@@ -592,8 +592,8 @@ std::string RecordingsManager_DeleteRecording(cSv recordings_hash) {
     AppendId(result, "recid", RecordingsManager::GetHash(recordings_hash));
 
     switch (RecordingsManager::DeleteRecording(RecordingsManager::GetHash(recordings_hash), &name)) {
-      case 0: AppendNameSuccessMessage(result, name, true); ++deleted_recordings; break;
-      case 1: AppendObjectNotFound(result, RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found")); break;
+      case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
+      case 1: AppendObjectNotFound(result, RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found")); reload_required = true; break;
       case 2: AppendNameSuccessMessage(result, name, false, tr("Error: couldn't set timer to inactive")); break;
       default: AppendNameSuccessMessage(result, name, false); break;
     }
@@ -605,15 +605,15 @@ std::string RecordingsManager_DeleteRecording(cSv recordings_hash) {
       AppendId(result, "recid", id);
 
       switch (RecordingsManager::DeleteRecording(id, &name)) {
-        case 0: AppendNameSuccessMessage(result, name, true); ++deleted_recordings; break;
-        case 1: AppendObjectNotFound(result, id, tr("Recording with id %s not found")); break;
-        case 2: AppendNameSuccessMessage(result, name, false, tr("Error: couldn't set timer to (in)active")); break;
+        case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
+        case 1: AppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
+        case 2: AppendNameSuccessMessage(result, name, false, tr("Error: couldn't set timer to inactive")); break;
         default: AppendNameSuccessMessage(result, name, false); break;
       }
     }
   }
   result << "  ],";
-  AppendTag(result, "num_changed_objects", deleted_recordings) << "\n}";
+  AppendTagB(result, "reload_required", reload_required) << "\n}";
   dsyslog3("result = \"", result, "\"");
   return std::string(result);
 }
@@ -648,19 +648,20 @@ std::string RecordingsManager_CommandRecording(cSv recordings_hash) {
   cSv recordings;
   if (!split_recordings_hash(recordings_hash, text, recordings)) {
     esyslog3("Error in split_recordings_hash recordings_hash = \"", recordings_hash, "\"");
-    return simpleJsonReturn(false, "Error in split_recordings_hash");
+    return simpleJsonReturn("Error in split_recordings_hash");
   }
 // security check to prevent execution of arbitrary commands
   if (!is_in_command_list(&RecordingCommands, text)) {
     esyslog3("text \"", text, "\" not in reccommands list. Someone might try to attack your system");
-    return simpleJsonReturn(false, "Illegal command");
+    return simpleJsonReturn("Illegal command");
   }
   dsyslog3("recordings command text '", text, "'");
   size_t command_pos = text.find(':');
   if (command_pos == std::string::npos) {
     esyslog3("text \"", text, "\" invalid: ':' missing");
-    return simpleJsonReturn(false, "Recording command text invalid: ':' missing");
+    return simpleJsonReturn("Recording command text invalid: ':' missing");
   }
+  bool reload_required = false;
   cToSvConcat result("{\n");
   AppendTagB(result, "success", true) << ",\n";
   AppendTag(result, "command", trim(cSv(text).substr(0, command_pos))) << ",\n";
@@ -680,6 +681,7 @@ std::string RecordingsManager_CommandRecording(cSv recordings_hash) {
       if (!recording) {
         esyslog3("recording with recid ", id, " not found");
         AppendObjectNotFound(result, id, tr("Recording with id %s not found"));
+        reload_required = true;
         continue;
       }
 // cString::sprintf("\"%s\"", *strescape(ri->Recording()->FileName(), "\\\"$"))));
@@ -701,7 +703,7 @@ std::string RecordingsManager_CommandRecording(cSv recordings_hash) {
     }
   }
   result << "  ],";
-  AppendTag(result, "num_changed_objects", 0) << "\n}";
+  AppendTagB(result, "reload_required", reload_required) << "\n}";
   dsyslog3("result = \"", result, "\"");
   return std::string(result);
 }
@@ -710,12 +712,12 @@ std::string RecordingsManager_MoveRecording(cSv recordings_hash) {
   cSv recordings;
   if (!split_recordings_hash(recordings_hash, folder, recordings)) {
     esyslog3("Error in split_recordings_hash");
-    return simpleJsonReturn(false, "Error in split_recordings_hash");
+    return simpleJsonReturn("Error in split_recordings_hash");
   }
   dsyslog2("move recordings to folder '", folder, "'");
 
   std::string name;
-  int moved_recordings = 0;
+  bool reload_required = false;
   cToSvConcat result("{\n");
   AppendTagB(result, "success", true) << ",\n";
   AppendTag(result, "message", "see also the individual results") << ",\n";
@@ -728,20 +730,20 @@ std::string RecordingsManager_MoveRecording(cSv recordings_hash) {
     AppendId(result, "recid", id);
 
     switch (RecordingsManager::MoveRecording(id, folder, &name)) {
-      case 0: AppendNameSuccessMessage(result, name, true); ++moved_recordings; break;
-      case 1: AppendObjectNotFound(result, id, tr("Recording with id %s not found")); break;
+      case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
+      case 1: AppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
       case 2: AppendNameSuccessMessage(result, name, false, tr("Error: recording still in use")); break;
       default: AppendNameSuccessMessage(result, name, false); break;
     }
   }
   result << "  ],";
-  AppendTag(result, "num_changed_objects", moved_recordings) << "\n}";
+  AppendTagB(result, "reload_required", reload_required) << "\n}";
   dsyslog3("result = \"", result, "\"");
   return std::string(result);
 }
 std::string RecordingsManager_RestoreRecording(cSv recordings_hash) {
   std::string name;
-  int restored_recordings = 0;
+  bool reload_required = false;
   cToSvConcat result("{\n");
   AppendTagB(result, "success", true) << ",\n";
   AppendTag(result, "message", "see also the individual results") << ",\n";
@@ -751,8 +753,8 @@ std::string RecordingsManager_RestoreRecording(cSv recordings_hash) {
     AppendId(result, "recid", RecordingsManager::GetHash(recordings_hash));
 
     switch (RecordingsManager::RestoreRecording(RecordingsManager::GetHash(recordings_hash), &name)) {
-      case 0: AppendNameSuccessMessage(result, name, true); ++restored_recordings; break;
-      case 1: AppendObjectNotFound(result, RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found")); break;
+      case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
+      case 1: AppendObjectNotFound(result, RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found")); reload_required = true; break;
       default: AppendNameSuccessMessage(result, name, false); break;
     }
   } else {
@@ -763,20 +765,20 @@ std::string RecordingsManager_RestoreRecording(cSv recordings_hash) {
       AppendId(result, "recid", id);
 
       switch (RecordingsManager::RestoreRecording(id, &name)) {
-        case 0: AppendNameSuccessMessage(result, name, true); ++restored_recordings; break;
-        case 1: AppendObjectNotFound(result, id, tr("Recording with id %s not found")); break;
+        case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
+        case 1: AppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
         default: AppendNameSuccessMessage(result, name, false); break;
       }
     }
   }
   result << "  ],";
-  AppendTag(result, "num_changed_objects", restored_recordings) << "\n}";
+  AppendTagB(result, "reload_required", reload_required) << "\n}";
   dsyslog3("result = \"", result, "\"");
   return std::string(result);
 }
 std::string RecordingsManager_PurgeRecording(cSv recordings_hash) {
   std::string name;
-  int purged_recordings = 0;
+  bool reload_required = false;
   cToSvConcat result("{\n");
   AppendTagB(result, "success", true) << ",\n";
   AppendTag(result, "message", "see also the individual results") << ",\n";
@@ -786,8 +788,8 @@ std::string RecordingsManager_PurgeRecording(cSv recordings_hash) {
     AppendId(result, "recid", RecordingsManager::GetHash(recordings_hash));
 
     switch (RecordingsManager::PurgeRecording(RecordingsManager::GetHash(recordings_hash), &name)) {
-      case 0: AppendNameSuccessMessage(result, name, true); ++purged_recordings; break;
-      case 1: AppendObjectNotFound(result, RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found")); break;
+      case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
+      case 1: AppendObjectNotFound(result, RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found")); reload_required = true; break;
       default: AppendNameSuccessMessage(result, name, false); break;
     }
   } else {
@@ -798,14 +800,14 @@ std::string RecordingsManager_PurgeRecording(cSv recordings_hash) {
       AppendId(result, "recid", id);
 
       switch (RecordingsManager::PurgeRecording(id, &name)) {
-        case 0: AppendNameSuccessMessage(result, name, true); ++purged_recordings; break;
-        case 1: AppendObjectNotFound(result, id, tr("Recording with id %s not found")); break;
+        case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
+        case 1: AppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
         default: AppendNameSuccessMessage(result, name, false); break;
       }
     }
   }
   result << "],\n";
-  AppendTag(result, "num_changed_objects", purged_recordings) << "\n}";
+  AppendTagB(result, "reload_required", reload_required) << "\n}";
   dsyslog3("result = \"", result, "\"");
   return std::string(result);
 }

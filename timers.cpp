@@ -347,13 +347,13 @@ namespace vdrlive {
 #endif
     return GetTimer(event, channel, Timers);
   }
-  int TimerManager_CreateTimer(cSv epgid)
-// return codes:
-// 0: success
-// 1: event with epgid not found
-// 2: timer already exists
-// 3: error creating timer on remote server
+  std::string TimerManager_CreateTimer(cSv epgid)
+// See confirm.h for documentation if required Json return structure
   {
+    cToSvConcat result("{\n");
+    AppendTagB(result, "success", true) << ",\n";
+    AppendTag(result, "message", "see also the individual results") << ",\n\"objects\": [\n";
+
     dsyslog3("create default timer");
 #ifdef DEBUG_LOCK
     dsyslog3("LOCK_TIMERS_WRITE");
@@ -365,31 +365,42 @@ namespace vdrlive {
     const cEvent *event = EpgEvents::GetEventByEpgId(epgid, Schedules);
     if (!event) {
       esyslog3("event ", epgid, " not found");
-      return 1;
+      AppendId(result, "event_id", epgid);
+      AppendObjectNotFound(result, epgid, tr("Event with id %s not found")) << "],\n";
+      AppendTagB(result, "reload_required", true) << "\n}";
+      return std::string(result);
     }
     cTimer *Timer = new cTimer(event);
     if (::Setup.SVDRPPeering && *::Setup.SVDRPDefaultHost)
       Timer->SetRemote(::Setup.SVDRPDefaultHost);
+    AppendId(result, "timer_id", SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*Timer)) );
     if (Timers->GetTimer(Timer)) {
+      AppendNameSuccessMessage(result, *Timer->ToDescr(), false, tr("Timer already exists") ) << "],\n";
+      AppendTagB(result, "reload_required", true) << "\n}";
       delete Timer;
-      return 2;
+      return std::string(result);
     }
     Timers->Add(Timer);
-    Timers->SetModified();
     cString ErrorMessage;
     if (!HandleRemoteTimerModifications(Timer, nullptr, &ErrorMessage) ) {
 // must add the timer before HandleRemoteModifications to get proper log messages with timer ids
       esyslog3("creating timer ", *Timer->ToDescr(), " ErrorMessage: ", *ErrorMessage);
+      AppendNameSuccessMessage(result, *Timer->ToDescr(), false, *ErrorMessage) << "],\n";
+      AppendTagB(result, "reload_required", false) << "\n}";
       Timers->Del(Timer);
-      return 3;
+      return std::string(result);
     }
+    Timers->SetModified();
     if (Timer->Remote())
       Timers->SetSyncStateKey(StateKeySVDRPRemoteTimersPoll);
 
     TimerConflictNotifier timerNotifier;
     timerNotifier.SetTimerModification();
+
     isyslog("live: timer %s added", *Timer->ToDescr() );
-    return 0;
+    AppendNameSuccessMessage(result, *Timer->ToDescr(), true) << "],\n";
+    AppendTagB(result, "reload_required", true) << "\n}";
+    return std::string(result);
   }
 
   std::string TimerManager_DeleteConfirmationQuestion(cSv id) {
@@ -420,10 +431,10 @@ namespace vdrlive {
     }
     if (timer_id == -1) {
       AppendObjectNotFound(result, id.substr(6), tr("Timer with id %s not found")) << "],\n";
-      AppendTag(result, "num_changed_objects", 0) << "\n}";
+      AppendTagB(result, "reload_required", true) << "\n}";
     } else {
       AppendNameSuccessMessage(result, name, true) << "],\n";
-      AppendTag(result, "num_changed_objects", 1) << "\n}";
+      AppendTagB(result, "reload_required", true) << "\n}";
 
       TimerManager().DeleteTimer(timer_id, cStr(remote) );
       TimerConflictNotifier timerNotifier;

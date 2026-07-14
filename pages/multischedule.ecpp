@@ -533,6 +533,7 @@ std::vector<std::string> channel_groups_names;
     </tr>
 % }
       </table>
+      <& pageelems.action_results &>
       <div class="spacebar"><# spacer with fade-out effect #></div>
     </div>
   </body>
