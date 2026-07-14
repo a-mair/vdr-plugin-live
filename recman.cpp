@@ -607,7 +607,7 @@ std::string RecordingsManager_DeleteRecording(cSv recordings_hash) {
       switch (RecordingsManager::DeleteRecording(id, &name)) {
         case 0: AppendNameSuccessMessage(result, name, true); ++deleted_recordings; break;
         case 1: AppendObjectNotFound(result, id, tr("Recording with id %s not found")); break;
-        case 2: AppendNameSuccessMessage(result, name, false, tr("Error: couldn't set timer to inactive")); break;
+        case 2: AppendNameSuccessMessage(result, name, false, tr("Error: couldn't set timer to (in)active")); break;
         default: AppendNameSuccessMessage(result, name, false); break;
       }
     }
@@ -630,7 +630,8 @@ bool is_in_command_list(cList<cNestedItem> *commands, cSv text) {
 
 std::string RecordingsManager_CommandRecording(cSv recordings_hash) {
 //{
-//  "success": <$success?"true":"false"$>,
+//  "success": <$ success ? "true" : "false" $>,
+//  "command": <$ cToSvStringEscapedAndCorrectNonUTF8(command) $>,
 //  "message": <$ cToSvStringEscapedAndCorrectNonUTF8(message) $>,
 //  "objects":
 //  [
@@ -662,6 +663,7 @@ std::string RecordingsManager_CommandRecording(cSv recordings_hash) {
   }
   cToSvConcat result("{\n");
   AppendTagB(result, "success", true) << ",\n";
+  AppendTag(result, "command", trim(cSv(text).substr(0, command_pos))) << ",\n";
   AppendTag(result, "message", "see also the individual results") << ",\n";
   result << "\"objects\":\n[";
 

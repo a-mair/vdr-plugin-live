@@ -65,6 +65,28 @@ reply.setHeader (tnt::httpheader::cacheControl, "no-store, no-cache, max-age=0, 
     <& menu active=("searchtimers") component=("searchtimers.searchevent_actions")>
     <div id="content">
       <div class="spacebar"><# spacer with fade-out effect #></div>
+<%cpp>
+      if (timers.size() == 0) {
+</%cpp>
+      <# add the message in a table row beneath the header, because the message alone looks weird #>
+      <table class="listing searchtimers" cellspacing="0" cellpadding="0">
+        <tbody>
+          <tr class="head">
+            <td colspan="2">
+              <div class="boxheader"><div class="caption"><$ pageTitle $></div></div>
+            </td>
+          </tr>
+          <tr>
+            <td class="action leftcol bottomrow">&nbsp;</td>
+            <td class="message rightcol bottomrow">
+              <div class="message withmargin"><$ tr("No search timers found") $></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+<%cpp>
+      } else {
+</%cpp>
       <table class="listing searchtimers" cellspacing="0" cellpadding="0">
         <tr class="head">
           <td colspan="8">
@@ -112,23 +134,11 @@ reply.setHeader (tnt::httpheader::cacheControl, "no-store, no-cache, max-age=0, 
         </tr>
 <%cpp>
         }
-        if (timers.size() == 0) {
+      }
 </%cpp>
-          <# add the message in a table row beneath the header, because the message alone looks weird #>
-          <tr>
-            <td class="message leftcol rightcol bottomrow" colspan="8">
-              <div><$ tr("No searchtimers found") $></div>
-            </td>
-          </tr>
-<%cpp>
-        }
-</%cpp>
-        <tr class="spacer">
-          <td colspan="8"/>
-        </tr>
       </table>
-      <div class="spacebar"><# spacer with fade-out effect #></div>
       <& pageelems.action_results &>
+      <div class="spacebar"><# spacer with fade-out effect #></div>
     </div>
   </body>
 </html>

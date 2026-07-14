@@ -438,7 +438,7 @@ std::string SearchTimers_DeleteSearchTimer(cSv id) {
   SearchTimers searchTimers;
   SearchTimer* search = searchTimers.GetByTimerId(id);
   if (!search) {
-    AppendObjectNotFound(result, id, tr("Searchtimer with id %s not found")) << "],\n";
+    AppendObjectNotFound(result, id, tr("Search timer with id %s not found")) << "],\n";
     AppendTag(result, "num_changed_objects", 0) << "\n}";
   } else {
     cToSvConcat name(search->Search());

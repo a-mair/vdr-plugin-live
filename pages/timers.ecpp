@@ -88,7 +88,22 @@ using namespace vdrlive;
       cSortedTimers sortedTimers(Timers);
       if (sortedTimers.Size() == 0) {
 </%cpp>
-        <$ tr("No timer defined") $>
+      <# add the message in a table row beneath the header, because the message alone looks weird #>
+      <table class="listing timers" cellspacing="0" cellpadding="0">
+        <tbody>
+          <tr class="head">
+            <td colspan="2">
+              <div class="boxheader"><div class="caption"><$ trVDR("Timers") $></div></div>
+            </td>
+          </tr>
+          <tr>
+            <td class="action leftcol bottomrow">&nbsp;</td>
+            <td class="message rightcol bottomrow">
+              <div class="message withmargin"><$ tr("No timer defined") $></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 %      } else {
       <table class="listing timers" cellspacing="0" cellpadding="0">
 <%cpp>
@@ -288,8 +303,8 @@ using namespace vdrlive;
       </table>
 %     }
 %     }
-      <div class="spacebar"><# spacer with fade-out effect #></div>
       <& pageelems.action_results &>
+      <div class="spacebar"><# spacer with fade-out effect #></div>
     </div>
   </body>
 </html>

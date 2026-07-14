@@ -203,6 +203,13 @@
   inherits: false;
 }
 
+@property --list-item-indent {
+  /*  unnumbered list-item margin for left-aligned marker, 0ch for no marker */
+  syntax: "*";
+  initial-value: 3ch;
+  inherits: false;
+}
+
 /* page-layout settings */
 
 @property --body-margin {

@@ -22,7 +22,7 @@ const action_texts = [
 <%cpp>
 for (const cConfirm &confirm: g_confirm_popups) {
 </%cpp>
-{ id: "<$ cSv(confirm.m_id).substr(0,3) $>", headline0: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline0)) $>, headline1: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline1)) $>, headlinen: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headlinen)) $>, headline_error: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_error)) $> },
+{ id: "<$ cSv(confirm.m_id).substr(0,3) $>", headline_0: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_0)) $>, headline_n: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_n)) $>, headline_error: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_error)) $> },
 % }
 ];
 
@@ -480,4 +480,18 @@ function RecordingsSt_int(s, level, displayFolder, data, folderId) {
 
 function get_text_Select_all_recordings_in_this_folder() {
   return '<$ tr("Select all recordings in this folder") $>';
+}
+function get_text_Deselect_all_recordings_in_this_folder() {
+  return '<$ tr("Deselect all recordings in this folder") $>';
+}
+
+function get_text_Nothing_selected() {
+  return '<$ tr("Nothing selected!") $>';
+}
+
+function get_text_Collapse_the_log() {
+  return '<$ tr("Collapse the log") $>';
+}
+function get_text_Expand_the_log() {
+  return '<$ tr("Expand the log") $>';
 }

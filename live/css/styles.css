@@ -511,6 +511,7 @@ div.info-win.info-res:not(:has(.label)) {
 }
 
 img.iconic.button.recording-expander, /* for the tree view */
+img.iconic.button.log-expander, /* for the command log */
 .info-win .info-win-top img.iconic.button {
   cursor: default;
   background: transparent url(../img/icon_small.svg) no-repeat top right;
@@ -542,6 +543,7 @@ img.iconic.button.recording-deselect-all.operational {
 }
 
 img.iconic.button.recording-expander:hover, /* for the tree view */
+img.iconic.button.log-expander:hover, /* for the command log */
 .info-win .info-win-top img.iconic.button:hover {
   background: transparent url(../img/icon_small_hovered.svg) no-repeat top right;
   background-size: var(--iconic-button-width, 16px) var(--iconic-button-height, 16px);
@@ -704,7 +706,7 @@ div#content:not(:has(table.multischedule)) {
 }
 
 div#content > div.spacebar,
-div.rec-commands-results > div.spacebar {
+div.result-log > div.spacebar {
   bottom: 0px;
   position: sticky;
   height: var(--spacebar-height);
@@ -713,24 +715,25 @@ div.rec-commands-results > div.spacebar {
 }
 
 div#content > div.spacebar:first-of-type,
-div.rec-commands-results > div.spacebar:first-of-type {
+div.result-header div.spacebar:last-of-type,
+div.result-log > div.spacebar:first-of-type {
   top: 0px;
   position: sticky;
   height: var(--spacebar-height);
-  width: calc(100vw - 2 * var(--body-margin));
   background: transparent linear-gradient(to bottom, var(--body-background-color), transparent);
 }
 
-div.rec-commands-results > div.spacebar,
-div.rec-commands-results > div.spacebar:first-of-type {
-  height: var(--margin-top-bottom);
-  width: 100%;
+div#content > div.spacebar:first-of-type,
+#form_recordings div.result-header div.spacebar:last-of-type,
+div.result-log > div.spacebar:first-of-type {
+  width: calc(100vw - 2 * var(--body-margin));
 }
 
-form#form_recordings div.rec-commands-results > div.spacebar:first-of-type {
-  margin-top: calc(var(--margin-top-bottom) * 2);
-  background: linear-gradient(to bottom,var(--listing-row-background-color-bottom), transparent var(--listing-row-background-gradient-height), var(--listing-row-background-color-top));
-  border-top: 1px solid var(--listing-row-border-color);
+div.result-header > div.spacebar:last-of-type,
+div.result-log > div.spacebar,
+div.result-log > div.spacebar:first-of-type {
+  height: var(--margin-top-bottom);
+  width: 100%;
 }
 
 
@@ -1974,7 +1977,7 @@ div.rec-commands {
   --rec-commands-folder-indent: calc(var(--listing-border-width) + 2 * var(--border-spacing, 1px));
 }
 
-table.form div.rec-commands:has(+ div.rec-commands-results:not(:is([style*="display: none"]))) {
+table.form div.rec-commands:has(+ div.action-command-results:not(:is([style*="display: none"]))) {
   padding-bottom: var(--margin-top-bottom);
   background: linear-gradient(to top,var(--listing-row-background-color-bottom), var(--listing-row-background-color-top) var(--listing-row-background-gradient-height), var(--listing-row-background-color-top));
   border-bottom: var(--listing-border-width) solid var(--listing-row-border-color);
@@ -2043,24 +2046,87 @@ div.rec-commands-list.item a:hover {
   font-weight: bold;
 }
 
-div.rec-commands-results {
+div.action-command-results {
+  --action-command-results-offset: var(--table-header-height);;
   margin: var(--margin-top-bottom) var(--margin-left-right) var(--text-line-gap) 0px;
-  min-height: calc(var(--text-line-height) * 5);
-  /*! max-height: calc(var(--text-line-height) * 40); */
-  resize: vertical;
-  overflow-y: scroll;
 }
 
-div.rec-commands-results .name {
-  margin-bottom: var(--margin-top-bottom);
+div.action-command-results div.result-header {
+  position: sticky;
+  top: var(--action-command-results-offset);
+  z-index: var(--listing-z-index);
+}
+
+div.action-command-results div.header-data {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: var(--body-background-color);
+}
+
+div.action-command-results div.header-data .recording-name,
+div.action-command-results div.header-data div.header-command,
+div.action-command-results div.header-data div.message {
+  margin-top: 0px;
   font-weight: bold;
   font-size: larger;
 }
 
-div.rec-commands-results .console {
+div.action-command-results div.header-data div.header-command {
+  font-style: italic;
+}
+
+div.action-command-results div.result-log {
+  resize: vertical;
+  overflow-y: scroll;
+}
+
+div.action-command-results {
+  margin-right: 0px;
+}
+
+div.action-command-results div.result-header div.header-data {
+  padding-top: var(--text-line-gap);
+}
+
+div.result-header:has(+ div.result-log:is([style*="display: none;"])) div.spacebar:last-of-type {
+  display: none;
+}
+
+#content > div.action-command-results div.result-header div.header-data,
+#form_recordings div.action-command-results div.result-header div.header-data,
+table.form div.action-command-results div.result-header:has(+ div.result-log) div.header-data {
+  margin-top: calc(var(--margin-top-bottom) * 4);
+  padding-top: var(--margin-top-bottom);
+  background: linear-gradient(to bottom,var(--listing-row-background-color-bottom), var(--body-background-color) var(--listing-row-background-gradient-height), var(--listing-row-background-color-top));
+  border-top: 1px solid var(--listing-row-border-color);
+}
+
+table.form div.action-command-results div.result-header:first-of-type div.header-data {
+  margin-top: 0px !important;
+  background: var(--listing-row-background-color-top) !important;
+  border-top: none !important;
+}
+
+#content > div.action-command-results div.result-log,
+#form_recordings div.action-command-results div.result-log {
+  /*! max-height: calc(var(--text-line-height) * 20); */
+  overflow-y: scroll;
+}
+
+div.action-command-results div.result-log .console {
   margin: 0px;
-  padding: 0px;
   white-space:  break-spaces;
+}
+
+div.action-command-results ul.action-log {
+  margin: 0px;
+  padding-left: var(--list-item-indent);  /* set to 0ch for no marker */
+}
+
+div.action-command-results ul.action-log > li {
+  margin: var(--text-line-gap) 0px;
 }
 
 
@@ -2450,7 +2516,9 @@ div.message.warning {
   color: var(--warning-color);
 }
 
-div.message.error {
+div.message.error,
+div.action-command-results .error,
+div.recording-command-results .error {
   color: var(--error-color);
 }
 
@@ -2817,7 +2885,7 @@ div.epg_content.confirmation div.about_head div.object-list {
 div.epg_content.confirmation div.object-list ol,
 div.epg_content.confirmation div.object-list ul {
   margin: 0px;
-  padding-left: 3ch;  /* set to 0ch for no marker */
+  padding-left: var(--list-item-indent);  /* set to 0ch for no marker */
 }
 
 div.epg_content.confirmation div.object-list ul > li,

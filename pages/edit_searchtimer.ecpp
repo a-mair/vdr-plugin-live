@@ -1230,9 +1230,9 @@ const char *TNT_ARRAY = "";
           <div class="message warning" id="compatibility">
 %         if (searchtimers.begin() != searchtimers.end()) {
 %           if (searchtimers.begin()->HasInsufficientFields()) {
-                <$ tr("The searchtimer lacks some form fields, so that their values cannot be saved. Please upgrade to the most recent version of EPGsearch.") $>
+                <$ tr("The search timer lacks some form fields, so that their values cannot be saved. Please upgrade to the most recent version of EPGsearch.") $>
 %           } else if (searchtimers.begin()->HasUnknownFields()) {
-                <$ tr("The searchtimer includes extra fields. These will be saved with their original values.") $>
+                <$ tr("The search timer includes extra fields. These will be saved with their original values.") $>
 %           }
 %         }
           </div>

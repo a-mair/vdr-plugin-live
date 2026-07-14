@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-07 21:25+0200\n"
+"POT-Creation-Date: 2026-07-14 14:15+0200\n"
 "PO-Revision-Date: 2007-08-19 20:15+0200\n"
 "Last-Translator: Nicolas Huillard <nhuillard@e-dition.fr>\n"
 "Language-Team: see developers in README\n"
@@ -61,7 +61,7 @@ msgid "Delete search timer \"%s\"?"
 msgstr ""
 
 #, c-format
-msgid "Searchtimer with id %s not found"
+msgid "Search timer with id %s not found"
 msgstr ""
 
 msgid "Nothing selected!"
@@ -127,6 +127,9 @@ msgid "Recording with id %s not found"
 msgstr ""
 
 msgid "Error: couldn't set timer to inactive"
+msgstr ""
+
+msgid "Error: couldn't set timer to (in)active"
 msgstr ""
 
 msgid "Error: recording still in use"
@@ -563,10 +566,10 @@ msgstr "Changer ... minutes avant le début"
 msgid "Unmute sound on switch"
 msgstr ""
 
-msgid "The searchtimer lacks some form fields, so that their values cannot be saved. Please upgrade to the most recent version of EPGsearch."
+msgid "The search timer lacks some form fields, so that their values cannot be saved. Please upgrade to the most recent version of EPGsearch."
 msgstr ""
 
-msgid "The searchtimer includes extra fields. These will be saved with their original values."
+msgid "The search timer includes extra fields. These will be saved with their original values."
 msgstr ""
 
 msgid "Test"
@@ -763,6 +766,15 @@ msgid "Warning: This cannot be undone!"
 msgstr ""
 
 msgid "Select all recordings in this folder"
+msgstr ""
+
+msgid "Deselect all recordings in this folder"
+msgstr ""
+
+msgid "Collapse the log"
+msgstr ""
+
+msgid "Expand the log"
 msgstr ""
 
 msgid "Wrong username or password"
@@ -1072,9 +1084,6 @@ msgstr ""
 msgid "Permanently delete selected recordings"
 msgstr ""
 
-msgid "Deselect all recordings in this folder"
-msgstr ""
-
 msgid "No matching recordings found"
 msgstr ""
 
@@ -1139,6 +1148,9 @@ msgstr "Résultats"
 msgid "No search results"
 msgstr "pas de résultat de recherche"
 
+msgid "No search timers found"
+msgstr ""
+
 msgid "Expression"
 msgstr "Expression de recherche"
 
@@ -1153,9 +1165,6 @@ msgstr "Passer en revue les résultats de programmation de recherche"
 
 msgid "Delete search timer"
 msgstr "Effacer la programmation de recherche"
-
-msgid "No searchtimers found"
-msgstr ""
 
 msgid "Trigger search timer update"
 msgstr "Mise à jour des recherches de programmation maintenant"
@@ -1366,16 +1375,13 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-msgid "No recording was deleted"
-msgstr ""
-
-msgid "Deleted recording:"
+msgid "No recordings deleted"
 msgstr ""
 
 msgid "Deleted recordings:"
 msgstr ""
 
-msgid "Error deleting recording(s):"
+msgid "Error deleting recordings:"
 msgstr ""
 
 msgid "Restore recording"
@@ -1384,16 +1390,13 @@ msgstr ""
 msgid "Restore"
 msgstr ""
 
-msgid "No recording was restored"
-msgstr ""
-
-msgid "Restored recording:"
+msgid "No recordings restored"
 msgstr ""
 
 msgid "Restored recordings:"
 msgstr ""
 
-msgid "Error restoring recording(s):"
+msgid "Error restoring recordings:"
 msgstr ""
 
 msgid "Permanently delete recording"
@@ -1402,16 +1405,13 @@ msgstr ""
 msgid "Delete permanently"
 msgstr ""
 
-msgid "No recording was deleted permanently"
-msgstr ""
-
-msgid "Permanently deleted recording:"
+msgid "No recordings deleted permanently"
 msgstr ""
 
 msgid "Permanently deleted recordings:"
 msgstr ""
 
-msgid "Error permanently deleting recording(s):"
+msgid "Error permanently deleting recordings:"
 msgstr ""
 
 msgid "Move recordings"
@@ -1420,16 +1420,13 @@ msgstr ""
 msgid "Move"
 msgstr ""
 
-msgid "No recording was moved"
-msgstr ""
-
-msgid "Moved recording:"
+msgid "No recordings moved"
 msgstr ""
 
 msgid "Moved recordings:"
 msgstr ""
 
-msgid "Error moving recording(s):"
+msgid "Error moving recordings:"
 msgstr ""
 
 msgid "Recording commands"
@@ -1438,28 +1435,28 @@ msgstr ""
 msgid "Execute"
 msgstr ""
 
-msgid "Command was not executed on any recording"
+msgid "Command not executed on any recording"
 msgstr ""
 
-msgid "Error executing command on the following recording(s):"
+msgid "Error executing command on the following recordings:"
 msgstr ""
 
-msgid "No timer was deleted"
+msgid "No timers deleted"
 msgstr ""
 
-msgid "Deleted timer:"
+msgid "Deleted timers:"
 msgstr ""
 
-msgid "Error deleting timer:"
+msgid "Error deleting timers:"
 msgstr ""
 
-msgid "No search timer was deleted"
+msgid "No search timers deleted"
 msgstr ""
 
-msgid "Deleted search timer:"
+msgid "Deleted search timers:"
 msgstr ""
 
-msgid "Error deleting search timer:"
+msgid "Error deleting search timers:"
 msgstr ""
 
 #~ msgid "Recordings"

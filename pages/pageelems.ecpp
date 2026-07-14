@@ -1101,62 +1101,100 @@ for (const cTvMedia &media: *media_v) {
 <# <div><img class="icon" src="<$ GetThemedLink("img", "icon_regular_active.svg") $>"/></div> #>
 </%def>
 
+
 <%def action_results>
-<div id="action_command_result" style="display: none">
+  <div id="action_command_results" class="action-command-results" style="display: none">
 
 <# ======== structure in case of an error not related to a specific =====
    ======== recording/object ============================================
 
-  note: In case of such an error, no indifidual object is proccessed
-        and only this error is reported here
+  Note 1: All use cases share the same HTML outline for unifying and
+          simplyfing the CSS rules to achive a common look-and-feel.
+
+  Note 2: In case of such an error, no individual object is proccessed
+          and only this error is reported here.
 #>
-  <div class="error-message"><# specific error message #></div>
+    <div class="result-header"><# stickyness #>
+      <div class="header-data"><# header formatting #>
+        <div class="message error"><# specific error message #></div>
+      </div>
+    </div>
 
 
 <# ============ structure of result except for recording commands =======
    ======================================================================
 #>
-  <div class="headline"><# like "Deleted the following recordings:" #></div>
-<# for each successfull object #>
-  <div class="name"><# name of object #></div>
-<# end for each successfull object #>
+    <div class="result-header"><# stickyness #>
+      <div class="header-data"><# header formatting #>
+        <div class="header-message"><# like "Deleted the following recordings:" #></div>
+<#  if at least one ojbect #>
+        <img class="iconic button log-expander" src="<# link to small-minus icon #>">
+<#  end at least one ojbect #>
+      </div>
+    </div>
+<# only if there are successful objects #>
+    <div class="result-log"><# scolling and fade-out effect #>
+      <div class="spacebar"><# sticky fade-out area #></div>
+<# for  each successful object #>
+      <div class="name"><# name of object #></div>
+<# end for each successful object #>
+      <div class="spacebar"><# sticky fade-out area #></div>
+    </div>
 
-<# only if there are unsuccessfull objects #>
-  <div class="headline"><# like "Error deleting the following recordings:" #></div>
-<# for each unsuccessfull object #>
-  <div class="action-error>
-    <span class="name"><# name of recording #></span>
-    <span class="error-message"><# this is optional! Error related to this object#></span>
-  </div>
-<# end for each unsuccessfull object #>
+<# only if there are unsuccessful objects #>
+    <div class="result-header"><# stickyness #>
+      <div class="header-data"><# header formatting #>
+        <div class="message error"><# like "Error deleting the following recordings:" #></div>
+<#  if at least one ojbect #>
+        <img class="iconic button log-expander" src="<# link to small-minus icon #>">
+<#  end at least one ojbect #>
+      </div>
+    </div>
+    <div class="result-log"><# scolling and fade-out effect #>
+      <div class="spacebar"><# sticky fade-out area #></div>
+      <div class="action-log"><# list or two-column grid, determined by CSS rule #>
+<# for each unsuccessful object #>
+<#  without message #>
+        <div class="name-only"><# object name #></div>
+<#  with message #>
+        <div class="name"><# object name #></div>
+        <div class="message"><# this is optional! Error related to this object #></div>
+<# end for each unsuccessful object #>
+      </div>
+      <div class="spacebar"><# sticky fade-out area #></div>
+    </div>
 
 
-
-<# ============ structure of result of recording commands ===============
-
-## Everything is prepared in CSS, but we should consider uncommenting the
-## 'max-height' property in 'div.rec-commands-results' to avoid unlimited
-## length per recording-commands log.
+<# ============ structure of results of recording commands ==============
+   ======================================================================
 #>
+
 <# for each result #>
-    <div class="rec-commands-results">
-      <div class="spacebar"><# spacer with fade-out effect #></div>
-      <div class="name"><# recording's filename #></div>
+    <div class="result-header"><# stickyness #>
+      <div class="header-data"><# header formatting #>
+        <div class="recording-name"><# name of recording #></div>
+        <img class="iconic button log-expander" src="<# link to small-minus icon #>">
+      </div>
+    </div>
+    <div class="result-log"><# scolling and fade-out effect #>
+      <div class="spacebar"><# sticky fade-out area #></div>
+<#  for a successful object #>
       <pre class="console"><# shell output of recording command #></pre>
-      <div class="spacebar"><# spacer with fade-out effect #></div>
+<#  for an unsuccessful object #>
+      <pre class="message error"><# shell output of recording command #></pre>
+<#  end object #>
+      <div class="spacebar"><# sticky fade-out area #></div>
     </div>
 <# end for each result #>
 
-
-<# end of structure documentation =================================== #>
-
-  </div>  <# id="action_command_result" #>
+<# end of structure documentation ==================================== #>
+  </div>  <# id="action_command_results" #>
   <script>
     let ret_object_json = sessionStorage.getItem("action_result");
     if (ret_object_json) {
       try {
         ret_object = JSON.parse(ret_object_json);
-        replace_action_result(ret_object);
+        replace_action_results(ret_object);
       } catch(e) {
         console.log("Error parsing Json result :");
         console.log(ret_object_json);

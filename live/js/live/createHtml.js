@@ -204,14 +204,21 @@ async function actionOnMarkedRecordings(act, text, confirm_ = true) {
     epgid += '_';
   }
 
+  let items = 0;
   const inputs = document.getElementsByTagName('input');
   for (var i = 0; i<inputs.length; i++) {
     if (inputs[i].type == 'checkbox' && inputs[i].checked &&
         inputs[i].value && inputs[i].value.startsWith('recording_')) {
       epgid += inputs[i].value.substring(10);
       epgid += '_';
+      items++;
     }
   }
+  if (!items) {
+    replace_action_results();
+    return;
+  }
+
   if (!confirm_ || is_popup_disabled(epgid) ) {
     action(epgid);
     return;
@@ -276,99 +283,198 @@ function action_number_unsuccessful(json_result) {
   });
   return i;
 }
-function append_rec_command_result(parent_element, json_result) {
+
+function toggleLog(button, id) {
+  const log = document.getElementById(id);
+  if (button && log) {
+    if (log.style.display) {
+      button.src = getThemedLinkPrefixImg() + "icon_overlay_minus.svg";
+      button.store("tip:title", get_text_Collapse_the_log());
+      log.style.display = "";
+    } else {
+      button.src = getThemedLinkPrefixImg() + "icon_overlay_plus.svg";
+      button.store("tip:title", get_text_Expand_the_log());
+      log.style.display = "none";
+    }
+  }
+}
+
+function inject_rec_command_results(parent_element, json_result)
+{
+  if (json_result.command) {
+    const div_result_header = parent_element.appendChild(document.createElement("div"));
+    div_result_header.className = "result-header";
+    const div_header_data = div_result_header.appendChild(document.createElement("div"));
+    div_header_data.className = "header-data";
+    const div_header_command = div_header_data.appendChild(document.createElement("div"));
+    div_header_command.className = "header-command";
+    div_header_command.textContent = json_result.command;
+  }
   const n_successful = action_number_successful(json_result);
   if (n_successful == 0) {
-    const div_action_result_headline = parent_element.appendChild(document.createElement("div"));
-    div_action_result_headline.className = "headline";
-    div_action_result_headline.textContent = get_texts(json_result.action).headline0;
+    const div_result_header = parent_element.appendChild(document.createElement("div"));
+    div_result_header.className = "result-header";
+    const div_header_data = div_result_header.appendChild(document.createElement("div"));
+    div_header_data.className = "header-data";
+    const div_header_message = div_header_data.appendChild(document.createElement("div"));
+    div_header_message.className = "message error";
+    div_header_message.textContent = get_texts(json_result.action).headline_0;
     return;
   }
-
+  var id = 1;
   json_result.objects.forEach(object => {
-    const div_rec_command_result = parent_element.appendChild(document.createElement("div"));
-    div_rec_command_result.className = "rec-commands-results";
-    div_rec_command_result.appendChild(document.createElement("div")).className = "spacebar";
-
-    const div_name = div_rec_command_result.appendChild(document.createElement("div"));
-    div_name.className = "name";
-    div_name.textContent = object.name;
-
-    const pre_result = div_rec_command_result.appendChild(document.createElement("pre"));
-    pre_result.className = "console";
-    pre_result.textContent = object.message;
-
-    div_rec_command_result.appendChild(document.createElement("div")).className = "spacebar";
+    // header with recording name and collapse/expand button
+    let log_id = "result-log-" + id++;
+    const div_result_header = parent_element.appendChild(document.createElement("div"));
+    div_result_header.className = "result-header";
+    const div_header_data = div_result_header.appendChild(document.createElement("div"));
+    div_header_data.className = "header-data";
+    const div_recording_name = div_header_data.appendChild(document.createElement("div"));
+    div_recording_name.className = "recording-name";
+    div_recording_name.textContent = object.name;
+    if (object.success) {
+      const div_log_expander = div_header_data.appendChild(document.createElement("img"));
+      div_log_expander.className = "iconic button log-expander";
+      div_log_expander.src = getThemedLinkPrefixImg() + "icon_overlay_minus.svg";
+      div_log_expander.setAttribute("title", get_text_Collapse_the_log());
+      div_log_expander.setAttribute("onclick", "toggleLog(this, '" + log_id + "');");
+      div_result_header.appendChild(document.createElement("div")).className = "spacebar";
+      // log (or error message) of recording-command execution
+      const div_result_log = parent_element.appendChild(document.createElement("div"));
+      div_result_log.className = "result-log";
+      div_result_log.id = log_id;
+      div_result_log.appendChild(document.createElement("div")).className = "spacebar";
+      const div_console = div_result_log.appendChild(document.createElement("pre"));
+      div_console.className = "console";
+      div_console.textContent = object.message;
+      div_result_log.appendChild(document.createElement("div")).className = "spacebar";
+    } else {
+      div_recording_name.classList.add("error");
+    }
   });
 }
-function append_action_result(parent_element, json_result) {
 
-  const div_action_result_headline = parent_element.appendChild(document.createElement("div"));
-  div_action_result_headline.className = "headline";
+function inject_action_results(parent_element, json_result)
+{
+  // header for success message
+  const div_result_header = parent_element.appendChild(document.createElement("div"));
+  div_result_header.className = "result-header";
+  const div_header_data = div_result_header.appendChild(document.createElement("div"));
+  div_header_data.className = "header-data";
+  const div_header_message = div_header_data.appendChild(document.createElement("div"));
+  div_header_message.className = "message";
   const n_successful = action_number_successful(json_result);
-  if (n_successful == 0)
-    div_action_result_headline.textContent = get_texts(json_result.action).headline0;
-  else if (n_successful == 1)
-    div_action_result_headline.textContent = get_texts(json_result.action).headline1;
-  else
-    div_action_result_headline.textContent = get_texts(json_result.action).headlinen;
-
-  if (json_result.objects) {
+  if (n_successful == 0) {
+    div_header_message.textContent = get_texts(json_result.action).headline_0;
+    div_header_message.classList.add("error");
+  } else
+    div_header_message.textContent = get_texts(json_result.action).headline_n;
+  // list of successful objects
+  if (n_successful > 0) {
+    const log_id = "result-log-success";
+    const div_log_expander = div_header_data.appendChild(document.createElement("img"));
+    div_log_expander.className = "iconic button log-expander";
+    div_log_expander.src = getThemedLinkPrefixImg() + "icon_overlay_minus.svg";
+    div_log_expander.setAttribute("title", get_text_Collapse_the_log());
+    div_log_expander.setAttribute("onclick", "toggleLog(this, '" + log_id + "');");
+    div_result_header.appendChild(document.createElement("div")).className = "spacebar";
+    const div_result_log = parent_element.appendChild(document.createElement("div"));
+    div_result_log.className = "result-log";
+    div_result_log.id = log_id;
+    div_result_log.appendChild(document.createElement("div")).className = "spacebar";
+    const ul_action_log = div_result_log.appendChild(document.createElement("ul"));
+    ul_action_log.className = "action-log";
     json_result.objects.forEach(object => {
       if (object.success) {
-        const div_name = parent_element.appendChild(document.createElement("div"));
-        div_name.className = "name";
-        div_name.textContent = object.name;
+        const li_item = ul_action_log.appendChild(document.createElement("li"));
+        const span_name = li_item.appendChild(document.createElement("span"));
+        span_name.className = "name";
+        span_name.textContent = object.name;
       }
     });
+    div_result_log.appendChild(document.createElement("div")).className = "spacebar";
+  }
+  // display individual errors, if any
+  const n_errors = action_number_unsuccessful(json_result);
+  if (n_errors > 0) {
+    // we have individual errors
+    const log_id = "result-log-failure";
+    const div_result_header = parent_element.appendChild(document.createElement("div"));
+    div_result_header.className = "result-header";
+    const div_header_data = div_result_header.appendChild(document.createElement("div"));
+    div_header_data.className = "header-data";
+    const div_header_message = div_header_data.appendChild(document.createElement("div"));
+    div_header_message.className = "message error";
+    div_header_message.textContent = get_texts(json_result.action).headline_error;
+    const div_log_expander = div_header_data.appendChild(document.createElement("img"));
+    div_log_expander.className = "iconic button log-expander";
+    div_log_expander.src = getThemedLinkPrefixImg() + "icon_overlay_minus.svg";
+    div_log_expander.setAttribute("title", get_text_Collapse_the_log());
+    div_log_expander.setAttribute("onclick", "toggleLog(this, '" + log_id + "');");
+    div_result_header.appendChild(document.createElement("div")).className = "spacebar";
+    // list of unsuccessful objects
+    const div_result_log = parent_element.appendChild(document.createElement("div"));
+    div_result_log.className = "result-log";
+    div_result_log.id = log_id;
+    div_result_log.appendChild(document.createElement("div")).className = "spacebar";
+    const ul_action_log = div_result_log.appendChild(document.createElement("ul"));
+    ul_action_log.className = "action-log";
+    json_result.objects.forEach(object => {
+      if (!object.success) {
+        const li_item = ul_action_log.appendChild(document.createElement("li"));
+        const span_name = li_item.appendChild(document.createElement("span"));
+        span_name.className = "name error";
+        span_name.textContent = object.name;
+        if (object.message) {
+          span_name.textContent += ": ";
+          const span_message = li_item.appendChild(document.createElement("span"));
+          span_message.className = "message error";
+          span_message.textContent = object.message;
+        }
+      }
+    });
+    div_result_log.appendChild(document.createElement("div")).className = "spacebar";
   }
 }
 
-function replace_action_result(json_result) {
-  const parent_element = document.getElementById('action_command_result');
+function replace_action_results(json_result = null) {
+  const parent_element = document.getElementById('action_command_results');
   if (parent_element) {
     // delete old content / old results
     while (parent_element.firstChild) parent_element.removeChild(parent_element.lastChild);
 
+    // just to be on the safe side, check for empty request
+    if (!json_result) {
+      const div_result_header = parent_element.appendChild(document.createElement("div"));
+      div_result_header.className = "result-header";
+      const div_header_data = div_result_header.appendChild(document.createElement("div"));
+      div_header_data.className = "header-data";
+      const div_header_message = div_header_data.appendChild(document.createElement("div"));
+      div_header_message.className = "message error";
+      div_header_message.textContent = get_text_Nothing_selected();
+      parent_element.style.display = '';
+      return;
+    }
     // check for generic error
     if (!json_result.success) {
-      const div_error_message = parent_element.appendChild(document.createElement("div"));
-      div_error_message.className = "error-message";
+      const div_result_header = parent_element.appendChild(document.createElement("div"));
+      div_result_header.className = "result-header";
+      const div_header_data = div_result_header.appendChild(document.createElement("div"));
+      div_header_data.className = "header-data";
+      const div_header_message = div_header_data.appendChild(document.createElement("div"));
+      div_header_message.className = "message error";
       div_error_message.textContent = json_result.message;
     } else {
-      // overall processing OK, display individual results
-      if (json_result.action == "rcd") {
-        append_rec_command_result(parent_element, json_result);
-      } else {
-        append_action_result(parent_element, json_result);
-      }
-      // display individual errors, if any
-      const n_errors = action_number_unsuccessful(json_result);
-      if (n_errors > 0) {
-        // we have individual errors
-        const div_action_error_headline = parent_element.appendChild(document.createElement("div"));
-        div_action_error_headline.className = "headline";
-        div_action_error_headline.textContent = get_texts(json_result.action).headline_error;
-        json_result.objects.forEach(object => {
-          if (!object.success) {
-            const div_action_error = parent_element.appendChild(document.createElement("div"));
-            div_action_error.className = "action-error";
-
-            const span_name = div_action_error.appendChild(document.createElement("span"));
-            span_name.className = "name";
-            span_name.textContent = object.name;
-            if (object.message) {
-              const span_message = div_action_error.appendChild(document.createElement("span"));
-              span_message.className = "error-message";
-              span_message.textContent = ": "+object.message;
-            }
-          }
-        });
-      }
+      // overall processing OK, so display command and individual results
+      if (json_result.action == "rcd")
+        inject_rec_command_results(parent_element, json_result);
+      else
+        inject_action_results(parent_element, json_result);
     }
     parent_element.style.display = '';
+    if (typeof liveEnhanced !== 'undefined') liveEnhanced.domReadySetup();
   } else {
-    console.log("Info: action results are not displayed on this page. You can add the element with id 'action_command_result' if the system should display the action results on this page");
+    console.log("Info: action results are not displayed on this page. You can add the element with id 'action_command_results' if the system should display the action results on this page");
   }
 }
 async function action(id, history_num_back=0)
@@ -386,12 +492,12 @@ async function action(id, history_num_back=0)
       else location.reload();
     } else {
       // directly change dom to display result
-      replace_action_result(ret_object);
+      replace_action_results(ret_object);
     }
   } catch(e) {
     console.log("Error parsing Json result from url action.html?id=" + encodeURIComponent(id));
     console.log(text)
-    console.log("Error messge: "+e.message);
+    console.log("Error message: "+e.message);
     alert ("Error parsing Json result");
   }
 }

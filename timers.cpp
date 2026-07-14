@@ -419,7 +419,7 @@ namespace vdrlive {
       }
     }
     if (timer_id == -1) {
-      AppendObjectNotFound(result, id, tr("Timer with id %s not found")) << "],\n";
+      AppendObjectNotFound(result, id.substr(6), tr("Timer with id %s not found")) << "],\n";
       AppendTag(result, "num_changed_objects", 0) << "\n}";
     } else {
       AppendNameSuccessMessage(result, name, true) << "],\n";

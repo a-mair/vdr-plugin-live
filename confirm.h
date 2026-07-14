@@ -40,16 +40,15 @@ inline std::vector<std::string> one_object(cSv id) {
 
 class cConfirm {
   public:
-    const char *m_id; // like pur_  for purge_recording
+    const char *m_id;                 // like 'pur_' for 'purge_recording'
     eUserRights m_user_rights;
-    const char *m_headline;  // text, headline of popup
-    const char *m_warning;   // text, warning in popup (can be nullptr)
-    const char *m_prompt;    // text for confirmation button, headline if nullptr)
-    const char *m_headline0;  // text, headline of result if 0 actions where successful
-    const char *m_headline1;  // text, headline of result if 1 actions where successful
-    const char *m_headlinen;  // text, headline of result if >1 actions where successful
-    const char *m_headline_error;  // text, headline for "not done" list, because of errors
-    tConfirmationQuestion m_confirmation_question;
+    const char *m_headline;           // text, headline of popup
+    const char *m_warning;            // text, warning in popup (can be nullptr)
+    const char *m_prompt;             // text for confirmation button, else headline if nullptr
+    const char *m_headline_0;         // text, headline of result if no actions were successful
+    const char *m_headline_n;         // text, headline of result if at least one action was successful
+    const char *m_headline_error;     // text, headline for "not done" list, because of errors
+    tConfirmationQuestion m_question; // function returning confirmation question for popup
     tObjectNames m_objectNames;
     tPerformAction m_perform_action;
 
@@ -57,7 +56,7 @@ class cConfirm {
       return tr(m_headline);
     }
     std::string get_question(cSv id) const {
-      return m_confirmation_question(id.substr(4));
+      return m_question(id.substr(4));
     }
     std::vector<std::string> get_object_names(cSv id) const {
       return m_objectNames(id.substr(4));
@@ -80,13 +79,83 @@ inline bool operator==(const cConfirm &c1, const cConfirm &c2) { return cSv(c1.m
 
 inline static const cSortedVector<cConfirm, std::less<>> g_confirm_popups =
 {
-  { "del_", UR_DELRECS, trNOOP("Delete recording"), nullptr, trNOOP("Delete"), trNOOP("No recording was deleted"), trNOOP("Deleted recording:"), trNOOP("Deleted recordings:"), trNOOP("Error deleting recording(s):"), &RecordingsManager_DeleteConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_DeleteRecording},
-  { "res_", UR_DELRECS, trNOOP("Restore recording"), nullptr, trNOOP("Restore"), trNOOP("No recording was restored"), trNOOP("Restored recording:"), trNOOP("Restored recordings:"), trNOOP("Error restoring recording(s):"), &RecordingsManager_RestoreConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_RestoreRecording},
-  { "pur_", UR_DELRECS, trNOOP("Permanently delete recording"), trNOOP("Warning: This cannot be undone!"), trNOOP("Delete permanently"), trNOOP("No recording was deleted permanently"), trNOOP("Permanently deleted recording:"), trNOOP("Permanently deleted recordings:"), trNOOP("Error permanently deleting recording(s):"), &RecordingsManager_PurgeConfirmationQuestion, &RecordingsManager_object_names, &RecordingsManager_PurgeRecording},
-  { "mov_", UR_EDITRECS, trNOOP("Move recordings"), nullptr, trNOOP("Move"), trNOOP("No recording was moved"), trNOOP("Moved recording:"), trNOOP("Moved recordings:"), trNOOP("Error moving recording(s):"), &RecordingsManager_MoveConfirmationQuestion, &RecordingsManager_object_names_mov, &RecordingsManager_MoveRecording},
-  { "rcd_", UR_EDITRECS, trNOOP("Recording commands"), nullptr, trNOOP("Execute"), trNOOP("Command was not executed on any recording"), "", "", trNOOP("Error executing command on the following recording(s):"), &RecordingsManager_CommandConfirmationQuestion, &RecordingsManager_object_names_mov, &RecordingsManager_CommandRecording},
-  { "det_", UR_DELTIMERS, trNOOP("Delete timer"), nullptr, trNOOP("Delete"), trNOOP("No timer was deleted"), trNOOP("Deleted timer:"), "", trNOOP("Error deleting timer:"), &TimerManager_DeleteConfirmationQuestion, &one_object, &TimerManager_DeleteTimer},
-  { "des_", UR_DELSTIMERS, trNOOP("Delete search timer"), nullptr, trNOOP("Delete"), trNOOP("No search timer was deleted"), trNOOP("Deleted search timer:"), "", trNOOP("Error deleting search timer:"), &SearchTimers_DeleteConfirmationQuestion, &one_object, &SearchTimers_DeleteSearchTimer}
+  { "del_", m_user_rights:    UR_DELRECS,
+            m_headline:       trNOOP("Delete recording"),
+            m_warning:        nullptr,
+            m_prompt:         trNOOP("Delete"),
+            m_headline_0:     trNOOP("No recordings deleted"),
+            m_headline_n:     trNOOP("Deleted recordings:"),
+            m_headline_error: trNOOP("Error deleting recordings:"),
+            m_question:       &RecordingsManager_DeleteConfirmationQuestion,
+            m_objectNames:    &RecordingsManager_object_names,
+            m_perform_action: &RecordingsManager_DeleteRecording
+  },
+  { "res_", m_user_rights:    UR_DELRECS,
+            m_headline:       trNOOP("Restore recording"),
+            m_warning:        nullptr,
+            m_prompt:         trNOOP("Restore"),
+            m_headline_0:     trNOOP("No recordings restored"),
+            m_headline_n:     trNOOP("Restored recordings:"),
+            m_headline_error: trNOOP("Error restoring recordings:"),
+            m_question:       &RecordingsManager_RestoreConfirmationQuestion,
+            m_objectNames:    &RecordingsManager_object_names,
+            m_perform_action: &RecordingsManager_RestoreRecording
+  },
+  { "pur_", m_user_rights:    UR_DELRECS,
+            m_headline:       trNOOP("Permanently delete recording"),
+            m_warning:        trNOOP("Warning: This cannot be undone!"),
+            m_prompt:         trNOOP("Delete permanently"),
+            m_headline_0:     trNOOP("No recordings deleted permanently"),
+            m_headline_n:     trNOOP("Permanently deleted recordings:"),
+            m_headline_error: trNOOP("Error permanently deleting recordings:"),
+            m_question:       &RecordingsManager_PurgeConfirmationQuestion,
+            m_objectNames:    &RecordingsManager_object_names,
+            m_perform_action: &RecordingsManager_PurgeRecording
+  },
+  { "mov_", m_user_rights:    UR_EDITRECS,
+            m_headline:       trNOOP("Move recordings"),
+            m_warning:        nullptr,
+            m_prompt:         trNOOP("Move"),
+            m_headline_0:     trNOOP("No recordings moved"),
+            m_headline_n:     trNOOP("Moved recordings:"),
+            m_headline_error: trNOOP("Error moving recordings:"),
+            m_question:       &RecordingsManager_MoveConfirmationQuestion,
+            m_objectNames:    &RecordingsManager_object_names_mov,
+            m_perform_action: &RecordingsManager_MoveRecording
+  },
+  { "rcd_", m_user_rights:    UR_EDITRECS,
+            m_headline:       trNOOP("Recording commands"),
+            m_warning:        nullptr,
+            m_prompt:         trNOOP("Execute"),
+            m_headline_0:     trNOOP("Command not executed on any recording"),
+            m_headline_n:     "",
+            m_headline_error: trNOOP("Error executing command on the following recordings:"),
+            m_question:       &RecordingsManager_CommandConfirmationQuestion,
+            m_objectNames:    &RecordingsManager_object_names_mov,
+            m_perform_action: &RecordingsManager_CommandRecording
+  },
+  { "det_", m_user_rights:    UR_DELTIMERS,
+            m_headline:       trNOOP("Delete timer"),
+            m_warning:        nullptr,
+            m_prompt:         trNOOP("Delete"),
+            m_headline_0:     trNOOP("No timers deleted"),
+            m_headline_n:     trNOOP("Deleted timers:"),
+            m_headline_error: trNOOP("Error deleting timers:"),
+            m_question:       &TimerManager_DeleteConfirmationQuestion,
+            m_objectNames:    &one_object,
+            m_perform_action: &TimerManager_DeleteTimer
+  },
+  { "des_", m_user_rights:    UR_DELSTIMERS,
+            m_headline:       trNOOP("Delete search timer"),
+            m_warning:        nullptr,
+            m_prompt:         trNOOP("Delete"),
+            m_headline_0:     trNOOP("No search timers deleted"),
+            m_headline_n:     trNOOP("Deleted search timers:"),
+            m_headline_error: trNOOP("Error deleting search timers:"),
+            m_question:       &SearchTimers_DeleteConfirmationQuestion,
+            m_objectNames:    &one_object,
+            m_perform_action: &SearchTimers_DeleteSearchTimer
+  }
 };
 
 inline const cConfirm *get_confirm_popup(cSv id) {
