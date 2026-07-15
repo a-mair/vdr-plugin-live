@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 3.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 20:37+0200\n"
+"POT-Creation-Date: 2026-07-15 09:17+0200\n"
 "PO-Revision-Date: 2026-01-27 20:15+0200\n"
 "Last-Translator: Stefan Hofmann <info@stefans-galerie.de>\n"
 "Language-Team: see developers in README\n"
@@ -216,10 +216,7 @@ msgstr "Timer ist bereits vorhanden"
 
 #, c-format
 msgid "Event with id %s not found"
-msgstr ""
-
-msgid "Timer already exists"
-msgstr ""
+msgstr "EPG-Eintrag mit Kennung \"%s\" nicht vorhanden"
 
 #, c-format
 msgid "Delete timer \"%s\"?"
@@ -1437,16 +1434,13 @@ msgid "Error deleting search timers:"
 msgstr "Fehler beim Löschen von Suchtimern:"
 
 msgid "No timers created"
-msgstr ""
+msgstr "Keine Timer angelegt"
 
 msgid "Created timers:"
-msgstr ""
+msgstr "Angelegte Timer:"
 
 msgid "Error creating timers:"
-msgstr ""
-
-#~ msgid "Error: couldn't set timer to (in)active"
-#~ msgstr "Fehler: Timer konnte nicht (de)aktiviert werden"
+msgstr "Fehler beim Anlegen der Timer:"
 
 #~ msgid "Copy only"
 #~ msgstr "Nur kopieren"

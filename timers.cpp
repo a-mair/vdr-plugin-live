@@ -375,7 +375,7 @@ namespace vdrlive {
       Timer->SetRemote(::Setup.SVDRPDefaultHost);
     AppendId(result, "timer_id", SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*Timer)) );
     if (Timers->GetTimer(Timer)) {
-      AppendNameSuccessMessage(result, *Timer->ToDescr(), false, tr("Timer already exists") ) << "],\n";
+      AppendNameSuccessMessage(result, *Timer->ToDescr(), false, tr("Timer already defined") ) << "],\n";
       AppendTagB(result, "reload_required", true) << "\n}";
       delete Timer;
       return std::string(result);
