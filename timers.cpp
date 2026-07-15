@@ -321,6 +321,50 @@ namespace vdrlive {
       isyslog("live: local timer %s toggled %s", *toggleTimer->ToDescr(), toggleTimer->HasFlags(tfActive) ? "on" : "off");
     }
   }
+  std::string TimerManager::DeActivateTimer(cSv id, bool activate) {
+    // activate   the timer if activate == true
+    // deactivate the timer if activate == false
+    TimerConflictNotifier timerNotifier;
+    cToSvConcat result("{\n");
+    AppendTagB(result, "success", true) << ",\n\"objects\": [\n";
+    AppendId(result, "timer_id", id);
+
+    {
+      LOCK_TIMERS_WRITE
+      Timers->SetExplicitModify();
+      cTimer* timer = (cTimer*)SortedTimers::GetByTimerId(SortedTimers::DecodeDomId(id), Timers);
+      if (!timer) {
+        AppendObjectNotFound(result, id.substr(6), tr("Timer with id %s not found")) << "],\n";
+        AppendTagB(result, "reload_required", true) << "\n}";
+        return std::string(result);
+      }
+      if (timer->HasFlags(tfActive) == activate) {
+        AppendNameSuccessMessage(result, timer->File(), false, activate?tr("Timer already active"):tr("Timer already inactive")) << "],\n";
+        AppendTagB(result, "reload_required", true) << "\n}";
+        return std::string(result);
+      }
+      Timers->SetModified();
+      timer->OnOff();
+      if (timer->Remote()) {
+        Timers->SetSyncStateKey(StateKeySVDRPRemoteTimersPoll);
+        int svdrpOK = ExecSVDRPCommandReportErrors(timer->Remote(), cToSvConcat("MODT ", timer->Id(), " ", *timer->ToText(true)).c_str(), "TimerManager_ActivateTimer()");
+        if (svdrpOK != 0) {
+          timerNotifier.SetTimerModification();
+          AppendNameSuccessMessage(result, timer->File(), false, trVDR("Error while accessing remote timer")) << "],\n";
+          AppendTagB(result, "reload_required", true) << "\n}";
+          return std::string(result);
+        }
+      }
+      {
+        LOCK_SCHEDULES_READ;
+        timer->SetEventFromSchedule(Schedules);
+      }
+      AppendNameSuccessMessage(result, timer->File(), true) << "],\n";
+    }
+    AppendTagB(result, "reload_required", true) << "\n}";
+    timerNotifier.SetTimerModification();
+    return std::string(result);
+  }
 
   const cTimer* TimerManager::GetTimer(const cEvent *event, const cChannel *channel, const cTimers *Timers)
   {
@@ -375,7 +419,7 @@ namespace vdrlive {
       Timer->SetRemote(::Setup.SVDRPDefaultHost);
     AppendId(result, "timer_id", SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*Timer)) );
     if (Timers->GetTimer(Timer)) {
-      AppendNameSuccessMessage(result, *Timer->ToDescr(), false, tr("Timer already defined") ) << "],\n";
+      AppendNameSuccessMessage(result, Timer->File(), false, tr("Timer already defined") ) << "],\n";
       AppendTagB(result, "reload_required", true) << "\n}";
       delete Timer;
       return std::string(result);
@@ -385,7 +429,7 @@ namespace vdrlive {
     if (!HandleRemoteTimerModifications(Timer, nullptr, &ErrorMessage) ) {
 // must add the timer before HandleRemoteModifications to get proper log messages with timer ids
       esyslog3("creating timer ", *Timer->ToDescr(), " ErrorMessage: ", *ErrorMessage);
-      AppendNameSuccessMessage(result, *Timer->ToDescr(), false, *ErrorMessage) << "],\n";
+      AppendNameSuccessMessage(result, Timer->File(), false, *ErrorMessage) << "],\n";
       AppendTagB(result, "reload_required", false) << "\n}";
       Timers->Del(Timer);
       return std::string(result);
@@ -398,7 +442,7 @@ namespace vdrlive {
     timerNotifier.SetTimerModification();
 
     isyslog("live: timer %s added", *Timer->ToDescr() );
-    AppendNameSuccessMessage(result, *Timer->ToDescr(), true) << "],\n";
+    AppendNameSuccessMessage(result, Timer->File(), true) << "],\n";
     AppendTagB(result, "reload_required", true) << "\n}";
     return std::string(result);
   }
@@ -441,8 +485,8 @@ namespace vdrlive {
       timerNotifier.SetTimerModification();
     }
 
-  dsyslog3("result = \"", result, "\"");
-  return std::string(result);
+    dsyslog3("result = \"", result, "\"");
+    return std::string(result);
   }
 
 } // namespace vdrlive

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-15 09:36+0200\n"
+"POT-Creation-Date: 2026-07-15 19:02+0200\n"
 "PO-Revision-Date: 2026-07-14 16:25+0200\n"
 "Last-Translator: Carel Willemse <carel@nekanali.nl>\n"
 "Language-Team: see developers in README\n"
@@ -217,6 +217,16 @@ msgid "Timer already defined"
 msgstr "Timer al gedefinieerd"
 
 #, c-format
+msgid "Timer with id %s not found"
+msgstr "Timer met ID %s niet gevonden"
+
+msgid "Timer already active"
+msgstr ""
+
+msgid "Timer already inactive"
+msgstr ""
+
+#, c-format
 msgid "Event with id %s not found"
 msgstr ""
 
@@ -226,10 +236,6 @@ msgstr "Timer \"%s\" verwijderen?"
 
 msgid "Delete timer [timer name unavailable]?"
 msgstr "Timer verwijderen [timernaam niet beschikbaar]?"
-
-#, c-format
-msgid "Timer with id %s not found"
-msgstr "Timer met ID %s niet gevonden"
 
 msgid "Sorry, no permission. Please contact your administrator!"
 msgstr "Sorry, geen toestemming. Neem contact op met uw systeembeheerder!"
@@ -1307,6 +1313,12 @@ msgstr "Duur"
 msgid "Timer is recording"
 msgstr "Timer neemt op"
 
+msgid "Timer is activ. Click to deactivate timer"
+msgstr ""
+
+msgid "Timer is inactiv. Click to activate timer"
+msgstr ""
+
 msgid "Users"
 msgstr "Gebruikers"
 
@@ -1443,6 +1455,24 @@ msgid "Created timers:"
 msgstr ""
 
 msgid "Error creating timers:"
+msgstr ""
+
+msgid "No timers activated"
+msgstr ""
+
+msgid "Activated timers:"
+msgstr ""
+
+msgid "Error activating timers:"
+msgstr ""
+
+msgid "No timers deactivated"
+msgstr ""
+
+msgid "Deactivated timers:"
+msgstr ""
+
+msgid "Error deactivating timers:"
 msgstr ""
 
 #, c-format

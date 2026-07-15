@@ -172,6 +172,28 @@ inline static const cSortedVector<cConfirm, std::less<>> g_confirm_popups =
             m_question:       nullptr,
             m_objectNames:    &one_object,
             m_perform_action: &TimerManager_CreateTimer
+  },
+  { "act_", m_user_rights:    UR_EDITTIMERS,
+            m_headline:       nullptr,
+            m_warning:        nullptr,
+            m_prompt:         nullptr,
+            m_headline_0:     trNOOP("No timers activated"),
+            m_headline_n:     trNOOP("Activated timers:"),
+            m_headline_error: trNOOP("Error activating timers:"),
+            m_question:       nullptr,
+            m_objectNames:    &one_object,
+            m_perform_action: &TimerManager_ActivateTimer
+  },
+  { "dat_", m_user_rights:    UR_EDITTIMERS,
+            m_headline:       nullptr,
+            m_warning:        nullptr,
+            m_prompt:         nullptr,
+            m_headline_0:     trNOOP("No timers deactivated"),
+            m_headline_n:     trNOOP("Deactivated timers:"),
+            m_headline_error: trNOOP("Error deactivating timers:"),
+            m_question:       nullptr,
+            m_objectNames:    &one_object,
+            m_perform_action: &TimerManager_DeactivateTimer
   }
 };
 
@@ -201,7 +223,7 @@ inline const cConfirm *get_confirm_popup(cSv id) {
              or because an object was changed
   "objects": array. Required if "success" == true, otherwise ignored
              even if the "objects" array is required, the array may be empty
-             if no objets are selected for processing
+             if no objects are selected for processing
              -> there must be one array element for each object selected for processing
   [
     {

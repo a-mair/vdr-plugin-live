@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 3.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-15 09:17+0200\n"
+"POT-Creation-Date: 2026-07-15 18:35+0200\n"
 "PO-Revision-Date: 2026-01-27 20:15+0200\n"
 "Last-Translator: Stefan Hofmann <info@stefans-galerie.de>\n"
 "Language-Team: see developers in README\n"
@@ -215,6 +215,16 @@ msgid "Timer already defined"
 msgstr "Timer ist bereits vorhanden"
 
 #, c-format
+msgid "Timer with id %s not found"
+msgstr "Timer mit Kennung \"%s\" nicht vorhanden"
+
+msgid "Timer already active"
+msgstr "Timer ist bereits aktiv"
+
+msgid "Timer already inactive"
+msgstr "Timer ist bereits inaktiv"
+
+#, c-format
 msgid "Event with id %s not found"
 msgstr "EPG-Eintrag mit Kennung \"%s\" nicht vorhanden"
 
@@ -224,10 +234,6 @@ msgstr "Timer \"%s\" löschen?"
 
 msgid "Delete timer [timer name unavailable]?"
 msgstr "Timer löschen [Name nicht verfügbar]?"
-
-#, c-format
-msgid "Timer with id %s not found"
-msgstr "Timer mit Kennung \"%s\" nicht vorhanden"
 
 msgid "Sorry, no permission. Please contact your administrator!"
 msgstr "Keine ausreichenden Rechte. Bitte kontaktieren Sie Ihren Administrator!"
@@ -1304,6 +1310,12 @@ msgstr "Dauer"
 msgid "Timer is recording"
 msgstr "Timer zeichnet auf"
 
+msgid "Timer is activ. Click to deactivate timer"
+msgstr "Timer ist activ. Zum deativieren klicken"
+
+msgid "Timer is inactiv. Click to activate timer"
+msgstr "Timer ist inactiv. Zum ativieren klicken"
+
 msgid "Users"
 msgstr "Benutzer"
 
@@ -1441,6 +1453,24 @@ msgstr "Angelegte Timer:"
 
 msgid "Error creating timers:"
 msgstr "Fehler beim Anlegen der Timer:"
+
+msgid "No timers activated"
+msgstr "Kein Timer aktiviert"
+
+msgid "Activated timers:"
+msgstr "Aktivierte Timer:"
+
+msgid "Error activating timers:"
+msgstr "Fehler beim Aktivieren der Timer:"
+
+msgid "No timers deactivated"
+msgstr "Kein Timer deactiviert"
+
+msgid "Deactivated timers:"
+msgstr "Deaktivierte Timer:"
+
+msgid "Error deactivating timers:"
+msgstr "Fehler beim Deaktivieren der Timer:"
 
 #~ msgid "Copy only"
 #~ msgstr "Nur kopieren"

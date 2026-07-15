@@ -37,16 +37,24 @@ template<std::size_t N>
       void UpdateTimer(int timerId, cStr remote, cStr oldRemote, cStr builder);
       void DeleteTimer(int timerId, cStr remote);
       void ToggleTimerActive(int timerId, cStr remote);
+      static std::string DeActivateTimer(cSv id, bool activate);
       static const cTimer* GetTimer(tEventID eventid, tChannelID channelid, const cTimers* Timers);
       static const cTimer* GetTimer(const cEvent *event, const cChannel *channel, const cTimers* Timers);
+      static int ExecSVDRPCommandReportErrors(cStr ServerName, const char *Command, cSv context);
 
     private:
-      int ExecSVDRPCommandReportErrors(cStr ServerName, const char *Command, cSv context);
       void CreateTimer(cStr remote, cStr builder);
   };
   std::string TimerManager_DeleteConfirmationQuestion(cSv id);
   std::string TimerManager_DeleteTimer(cSv id);
   std::string TimerManager_CreateTimer(cSv id);
+
+  inline std::string TimerManager_DeactivateTimer(cSv id) {
+    return TimerManager::DeActivateTimer(id, false);
+  }
+  inline std::string TimerManager_ActivateTimer(cSv id) {
+    return TimerManager::DeActivateTimer(id, true);
+  }
 
 } // namespace vdrlive
 

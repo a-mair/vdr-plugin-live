@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-15 09:50+0200\n"
+"POT-Creation-Date: 2026-07-15 19:02+0200\n"
 "PO-Revision-Date: 2010-05-10 22:15+0200\n"
 "Last-Translator: Vladimír Bárta <vladimir.barta@k2atmitec.cz>,Radek Stastny <dedkus@gmail.com> \n"
 "Language-Team: see developers in README\n"
@@ -216,6 +216,16 @@ msgid "Timer already defined"
 msgstr "Nahrávaní již nastaveno"
 
 #, c-format
+msgid "Timer with id %s not found"
+msgstr ""
+
+msgid "Timer already active"
+msgstr ""
+
+msgid "Timer already inactive"
+msgstr ""
+
+#, c-format
 msgid "Event with id %s not found"
 msgstr ""
 
@@ -224,10 +234,6 @@ msgid "Delete timer \"%s\"?"
 msgstr ""
 
 msgid "Delete timer [timer name unavailable]?"
-msgstr ""
-
-#, c-format
-msgid "Timer with id %s not found"
 msgstr ""
 
 msgid "Sorry, no permission. Please contact your administrator!"
@@ -1314,6 +1320,12 @@ msgstr ""
 msgid "Timer is recording"
 msgstr "Probíhá nahrávání"
 
+msgid "Timer is activ. Click to deactivate timer"
+msgstr ""
+
+msgid "Timer is inactiv. Click to activate timer"
+msgstr ""
+
 msgid "Users"
 msgstr "Uživatelé"
 
@@ -1450,6 +1462,24 @@ msgid "Created timers:"
 msgstr ""
 
 msgid "Error creating timers:"
+msgstr ""
+
+msgid "No timers activated"
+msgstr ""
+
+msgid "Activated timers:"
+msgstr ""
+
+msgid "Error activating timers:"
+msgstr ""
+
+msgid "No timers deactivated"
+msgstr ""
+
+msgid "Deactivated timers:"
+msgstr ""
+
+msgid "Error deactivating timers:"
 msgstr ""
 
 #~ msgid "Deleted recording:"
