@@ -325,24 +325,13 @@ namespace vdrlive {
     // activate   the timer if activate == true
     // deactivate the timer if activate == false
     TimerConflictNotifier timerNotifier;
-    cToSvConcat result("{\n");
-    AppendTagB(result, "success", true) << ",\n\"objects\": [\n";
-    AppendId(result, "timer_id", id);
-
     {
       LOCK_TIMERS_WRITE
       Timers->SetExplicitModify();
       cTimer* timer = (cTimer*)SortedTimers::GetByTimerId(SortedTimers::DecodeDomId(id), Timers);
-      if (!timer) {
-        AppendObjectNotFound(result, id.substr(6), tr("Timer with id %s not found")) << "],\n";
-        AppendTagB(result, "reload_required", true) << "\n}";
-        return std::string(result);
-      }
-      if (timer->HasFlags(tfActive) == activate) {
-        AppendNameSuccessMessage(result, timer->File(), false, activate?tr("Timer already active"):tr("Timer already inactive")) << "],\n";
-        AppendTagB(result, "reload_required", true) << "\n}";
-        return std::string(result);
-      }
+      if (!timer) return JsonReturnOneObjectNotFound(id, tr("Timer with id %s not found"));
+      if (timer->HasFlags(tfActive) == activate)
+        return JsonReturnOneObject(id, timer->File(), false, true, activate?tr("Timer already active"):tr("Timer already inactive"));
       Timers->SetModified();
       timer->OnOff();
       if (timer->Remote()) {
@@ -350,20 +339,16 @@ namespace vdrlive {
         int svdrpOK = ExecSVDRPCommandReportErrors(timer->Remote(), cToSvConcat("MODT ", timer->Id(), " ", *timer->ToText(true)).c_str(), "TimerManager_ActivateTimer()");
         if (svdrpOK != 0) {
           timerNotifier.SetTimerModification();
-          AppendNameSuccessMessage(result, timer->File(), false, trVDR("Error while accessing remote timer")) << "],\n";
-          AppendTagB(result, "reload_required", true) << "\n}";
-          return std::string(result);
+          return JsonReturnOneObject(id, timer->File(), false, true, trVDR("Error while accessing remote timer"));
         }
       }
       {
         LOCK_SCHEDULES_READ;
         timer->SetEventFromSchedule(Schedules);
       }
-      AppendNameSuccessMessage(result, timer->File(), true) << "],\n";
+      timerNotifier.SetTimerModification();
+      return JsonReturnOneObject(id, timer->File(), true);
     }
-    AppendTagB(result, "reload_required", true) << "\n}";
-    timerNotifier.SetTimerModification();
-    return std::string(result);
   }
 
   const cTimer* TimerManager::GetTimer(const cEvent *event, const cChannel *channel, const cTimers *Timers)
@@ -394,10 +379,6 @@ namespace vdrlive {
   std::string TimerManager_CreateTimer(cSv epgid)
 // See confirm.h for documentation if required Json return structure
   {
-    cToSvConcat result("{\n");
-    AppendTagB(result, "success", true) << ",\n";
-    AppendTag(result, "message", "see also the individual results") << ",\n\"objects\": [\n";
-
     dsyslog3("create default timer");
 #ifdef DEBUG_LOCK
     dsyslog3("LOCK_TIMERS_WRITE");
@@ -409,30 +390,24 @@ namespace vdrlive {
     const cEvent *event = EpgEvents::GetEventByEpgId(epgid, Schedules);
     if (!event) {
       esyslog3("event ", epgid, " not found");
-      AppendId(result, "event_id", epgid);
-      AppendObjectNotFound(result, epgid, tr("Event with id %s not found")) << "],\n";
-      AppendTagB(result, "reload_required", true) << "\n}";
-      return std::string(result);
+      return JsonReturnOneObjectNotFound(epgid, tr("Event with id %s not found"));
     }
     cTimer *Timer = new cTimer(event);
     if (::Setup.SVDRPPeering && *::Setup.SVDRPDefaultHost)
       Timer->SetRemote(::Setup.SVDRPDefaultHost);
-    AppendId(result, "timer_id", SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*Timer)) );
     if (Timers->GetTimer(Timer)) {
-      AppendNameSuccessMessage(result, Timer->File(), false, tr("Timer already defined") ) << "],\n";
-      AppendTagB(result, "reload_required", true) << "\n}";
+      std::string result = JsonReturnOneObject(SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*Timer)), Timer->File(), false, true, tr("Timer already defined"));
       delete Timer;
-      return std::string(result);
+      return result;
     }
     Timers->Add(Timer);
     cString ErrorMessage;
     if (!HandleRemoteTimerModifications(Timer, nullptr, &ErrorMessage) ) {
 // must add the timer before HandleRemoteModifications to get proper log messages with timer ids
       esyslog3("creating timer ", *Timer->ToDescr(), " ErrorMessage: ", *ErrorMessage);
-      AppendNameSuccessMessage(result, Timer->File(), false, *ErrorMessage) << "],\n";
-      AppendTagB(result, "reload_required", false) << "\n}";
+      std::string result = JsonReturnOneObject(SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*Timer)), Timer->File(), false, false, *ErrorMessage);
       Timers->Del(Timer);
-      return std::string(result);
+      return result;
     }
     Timers->SetModified();
     if (Timer->Remote())
@@ -442,9 +417,7 @@ namespace vdrlive {
     timerNotifier.SetTimerModification();
 
     isyslog("live: timer %s added", *Timer->ToDescr() );
-    AppendNameSuccessMessage(result, Timer->File(), true) << "],\n";
-    AppendTagB(result, "reload_required", true) << "\n}";
-    return std::string(result);
+    return JsonReturnOneObject(SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*Timer)), Timer->File(), true);
   }
 
   std::string TimerManager_DeleteConfirmationQuestion(cSv id) {
@@ -455,11 +428,6 @@ namespace vdrlive {
     return tr("Delete timer [timer name unavailable]?");
   }
   std::string TimerManager_DeleteTimer(cSv id) {
-    cToSvConcat result("{\n");
-    AppendTagB(result, "success", true) << ",\n";
-    AppendTag(result, "message", "see also the individual results") << ",\n\"objects\": [\n";
-    AppendId(result, "timer_id", id);
-
     int timer_id = -1;
     cToSvConcat name;
     cToSvConcat remote;
@@ -467,26 +435,19 @@ namespace vdrlive {
     {
       LOCK_TIMERS_READ;
       const cTimer* timer = SortedTimers::GetByTimerId(tId, Timers);
-      if (timer) {
-        timer_id = timer->Id();
-        remote << timer->Remote();
-        name   << timer->File();
-      }
+      if (!timer)
+        return JsonReturnOneObjectNotFound(tId, tr("Timer with id %s not found"));
+      timer_id = timer->Id();
+      remote << timer->Remote();
+      name   << timer->File();
     }
-    if (timer_id == -1) {
-      AppendObjectNotFound(result, id.substr(6), tr("Timer with id %s not found")) << "],\n";
-      AppendTagB(result, "reload_required", true) << "\n}";
-    } else {
-      AppendNameSuccessMessage(result, name, true) << "],\n";
-      AppendTagB(result, "reload_required", true) << "\n}";
+    std::string result = JsonReturnOneObject(tId, name, true);
 
-      TimerManager().DeleteTimer(timer_id, cStr(remote) );
-      TimerConflictNotifier timerNotifier;
-      timerNotifier.SetTimerModification();
-    }
+    TimerManager().DeleteTimer(timer_id, cStr(remote) );
+    TimerConflictNotifier timerNotifier;
+    timerNotifier.SetTimerModification();
 
-    dsyslog3("result = \"", result, "\"");
-    return std::string(result);
+    return result;
   }
 
 } // namespace vdrlive

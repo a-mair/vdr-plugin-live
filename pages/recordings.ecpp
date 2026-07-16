@@ -323,7 +323,6 @@ else active_r = "recordings";
             </div>
           </div>
 %         }
-          <& pageelems.action_results &>
         </div>
 %       }
       </form>
@@ -334,6 +333,7 @@ std::chrono::duration<double> timeNeeded = std::chrono::high_resolution_clock::n
 dsyslog("live, time recordings.ecpp: %f", timeNeeded.count());
 </%cpp>
     </tbody></table>
+    <& pageelems.action_results &>
     <div class="spacebar"><# spacer with fade-out effect #></div>
   </div>
 </body>

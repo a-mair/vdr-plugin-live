@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-15 19:02+0200\n"
+"POT-Creation-Date: 2026-07-16 15:26+0200\n"
 "PO-Revision-Date: 2026-07-14 16:25+0200\n"
 "Last-Translator: Carel Willemse <carel@nekanali.nl>\n"
 "Language-Team: see developers in README\n"
@@ -53,16 +53,25 @@ msgstr "FTA"
 msgid "EPGSearch version outdated! Please update."
 msgstr "EPGSearch-versie verouderd! Werk deze a.u.b. bij."
 
+#, c-format
+msgid "Search timer with id %s not found"
+msgstr "Zoektimer met ID %s niet gevonden"
+
+msgid "Search timer already active"
+msgstr ""
+
+msgid "Search timer already inactive"
+msgstr ""
+
+msgid "Error saving search timer"
+msgstr ""
+
 msgid "Delete search timer [search timer name unavailable]?"
 msgstr "Zoektimer verwijderen [naam van zoektimer niet beschikbaar]?"
 
 #, c-format
 msgid "Delete search timer \"%s\"?"
 msgstr "Zoektimer \"%s\" verwijderen?"
-
-#, c-format
-msgid "Search timer with id %s not found"
-msgstr "Zoektimer met ID %s niet gevonden"
 
 msgid "Nothing selected!"
 msgstr "Niets geselecteerd!"
@@ -1146,8 +1155,11 @@ msgstr "Expressie"
 msgid "Starts between"
 msgstr "Start tussen"
 
-msgid "Toggle search timer actions (in)active"
-msgstr "Zoektimeracties (in)actief schakelen"
+msgid "Search timer is activ. Click to deactivate search timer"
+msgstr ""
+
+msgid "Search timer is inactiv. Click to activate search timer"
+msgstr ""
 
 msgid "Browse search timer results"
 msgstr "Bladeren door zoektimerresultaten"
@@ -1298,8 +1310,11 @@ msgstr "Timer is actief"
 msgid "Transponder"
 msgstr "Transponder"
 
-msgid "Toggle timer (in)active"
-msgstr "Timer (in)actief schakelen"
+msgid "Timer is activ. Click to deactivate timer"
+msgstr ""
+
+msgid "Timer is inactiv. Click to activate timer"
+msgstr ""
 
 msgid "Delete timer"
 msgstr "Timer verwijderen"
@@ -1312,12 +1327,6 @@ msgstr "Duur"
 
 msgid "Timer is recording"
 msgstr "Timer neemt op"
-
-msgid "Timer is activ. Click to deactivate timer"
-msgstr ""
-
-msgid "Timer is inactiv. Click to activate timer"
-msgstr ""
 
 msgid "Users"
 msgstr "Gebruikers"
@@ -1439,15 +1448,6 @@ msgstr "Verwijderde timer:"
 msgid "Error deleting timers:"
 msgstr "Fout bij het verwijderen van timer:"
 
-msgid "No search timers deleted"
-msgstr "Er is geen zoektimer verwijderd"
-
-msgid "Deleted search timers:"
-msgstr "Verwijderde zoektimer:"
-
-msgid "Error deleting search timers:"
-msgstr "Fout bij het verwijderen van zoektimer:"
-
 msgid "No timers created"
 msgstr ""
 
@@ -1474,6 +1474,39 @@ msgstr ""
 
 msgid "Error deactivating timers:"
 msgstr ""
+
+msgid "No search timers deleted"
+msgstr "Er is geen zoektimer verwijderd"
+
+msgid "Deleted search timers:"
+msgstr "Verwijderde zoektimer:"
+
+msgid "Error deleting search timers:"
+msgstr "Fout bij het verwijderen van zoektimer:"
+
+msgid "No search timers activated"
+msgstr ""
+
+msgid "Activated search timers:"
+msgstr ""
+
+msgid "Error activating search timers:"
+msgstr ""
+
+msgid "No search timers deactivated"
+msgstr ""
+
+msgid "Deactivated search timers:"
+msgstr ""
+
+msgid "Error deactivating search timers:"
+msgstr ""
+
+#~ msgid "Toggle search timer actions (in)active"
+#~ msgstr "Zoektimeracties (in)actief schakelen"
+
+#~ msgid "Toggle timer (in)active"
+#~ msgstr "Timer (in)actief schakelen"
 
 #, c-format
 #~ msgid "Searchtimer with id %s not found"

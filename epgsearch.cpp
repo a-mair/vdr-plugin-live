@@ -407,6 +407,21 @@ bool SearchTimers::ToggleActive(std::string const& id)
   search->SetUseAsSearchTimer(search->UseAsSearchTimer()==1?0:1);
   return Save(search);
 }
+std::string SearchTimers::DeActivateSearchTimer(cSv id, bool activate) {
+// activate   the search timer if activate == true
+// deactivate the search timer if activate == false
+  SearchTimer* search = GetByTimerId(id);
+  if (!search) return JsonReturnOneObjectNotFound(id, tr("Search timer with id %s not found"));
+  if (search->UseAsSearchTimer() == 1 && activate)
+    return JsonReturnOneObject(id, search->Search(), false, true, tr("Search timer already active"));
+  if (search->UseAsSearchTimer() == 0 && !activate)
+    return JsonReturnOneObject(id, search->Search(), false, true, tr("Search timer already inactive"));
+  search->SetUseAsSearchTimer(activate?1:0);
+  if (Save(search) )
+    return JsonReturnOneObject(id, search->Search(), true, true);
+  else
+    return JsonReturnOneObject(id, search->Search(), false, true, tr("Error saving search timer"));
+}
 
 bool SearchTimers::Delete(cSv id)
 {
@@ -430,29 +445,15 @@ std::string SearchTimers_DeleteConfirmationQuestion(cSv id) {
 }
 
 std::string SearchTimers_DeleteSearchTimer(cSv id) {
-  cToSvConcat result("{\n");
-  AppendTagB(result, "success", true) << ",\n";
-  AppendTag(result, "message", "see also the individual results") << ",\n\"objects\": [\n";
-  AppendId(result, "searchtimer_id", id);
-
   SearchTimers searchTimers;
   SearchTimer* search = searchTimers.GetByTimerId(id);
-  if (!search) {
-    AppendObjectNotFound(result, id, tr("Search timer with id %s not found")) << "],\n";
-    AppendTagB(result, "reload_required", true) << "\n}";
-  } else {
-    cToSvConcat name(search->Search());
-    bool res = searchTimers.Delete(id);
-    if (!res) {
-      AppendNameSuccessMessage(result, name, false) << "],\n";
-      AppendTagB(result, "reload_required", false) << "\n}";
-    } else {
-      AppendNameSuccessMessage(result, name, true) << "],\n";
-      AppendTagB(result, "reload_required", true) << "\n}";
-    }
-  }
-  dsyslog3("result = \"", result, "\"");
-  return std::string(result);
+  if (!search) return JsonReturnOneObjectNotFound(id, tr("Search timer with id %s not found"));
+
+  cToSvConcat name(search->Search());
+  if (searchTimers.Delete(id))
+    return JsonReturnOneObject(id, name, true, true);
+  else
+    return JsonReturnOneObject(id, name, false, false);
 }
 
 void SearchTimers::TriggerUpdate()

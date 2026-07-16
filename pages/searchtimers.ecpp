@@ -124,7 +124,12 @@ reply.setHeader (tnt::httpheader::cacheControl, "no-store, no-cache, max-age=0, 
             <div class="event_actions">
 %             constexpr auto regexBreaksAtLeft = "{[(|";
 %             constexpr auto regexBreaksAtRight = "|)]}";
+<#
               <a href="searchtimers.html?searchtimerid=<$ timerID $>&action=toggle"><img class="icon" src="<$ GetThemedLink("img", timer->UseAsSearchTimer() ? "active.svg" : "inactive.svg") $>" alt="<$ tr("Toggle search timer actions (in)active") $>" <& tooltip.hint label=(timer->Search()) className=("click-action") breaksAtLeft=(regexBreaksAtLeft) breaksAtRight=(regexBreaksAtRight) text=(tr("Toggle search timer actions (in)active")) &> /></a>
+#>
+              <a onclick="return action('<$timer->UseAsSearchTimer()?"das":"acs"$>_<$ timerID $>')">
+                <img class="icon" src="<$ GetThemedLink("img", timer->UseAsSearchTimer() ? "active.svg" : "inactive.svg") $>" alt="" <& tooltip.hint label=(timer->Search()) className=("click-action") breaksAtLeft=(regexBreaksAtLeft) breaksAtRight=(regexBreaksAtRight) text=(timer->UseAsSearchTimer()?tr("Search timer is activ. Click to deactivate search timer"):tr("Search timer is inactiv. Click to activate search timer")) &> />
+              </a>
               <a href="searchresults.html?searchtimerid=<$ timerID $>"><img class="icon" src="<$ GetThemedLink("img", "search.svg") $>" alt="<$ tr("Browse search timer results") $>" <& tooltip.hint label=(timer->Search()) className=("click-action") breaksAtLeft=(regexBreaksAtLeft) breaksAtRight=(regexBreaksAtRight) text=(tr("Browse search timer results")) &> /></a>
               <a href="edit_searchtimer.html?searchtimerid=<$ timerID $>"><img class="icon" src="<$ GetThemedLink("img", "edit.svg") $>" alt="<$ tr("Edit search timer") $>" <& tooltip.hint label=(timer->Search()) className=("click-action") breaksbreaksAtLeft=(regexBreaksAtLeft) breaksAtRight=(regexBreaksAtRight) text=(tr("Edit search timer")) &> /></a>
               <a href="epginfo.html?epgid=des_<$ timerID $>&history_num_back=1"><img class="icon" src="<$ GetThemedLink("img", "del.svg") $>" alt="<$ tr("Delete search timer") $>" <& tooltip.hint label=(timer->Search()) className=("click-action") breaksAtLeft=(regexBreaksAtLeft) breaksAtRight=(regexBreaksAtRight) text=(tr("Delete search timer")) &> /></a>

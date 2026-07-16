@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-15 19:02+0200\n"
+"POT-Creation-Date: 2026-07-16 15:26+0200\n"
 "PO-Revision-Date: 2007-08-19 20:15+0200\n"
 "Last-Translator: Javier Bradineras <jbradi@hotmail.com>\n"
 "Language-Team: see developers in README\n"
@@ -50,15 +50,24 @@ msgstr "FTA"
 msgid "EPGSearch version outdated! Please update."
 msgstr "¡Versión de EPGSearch antigua!. Por favor actualice"
 
+#, c-format
+msgid "Search timer with id %s not found"
+msgstr ""
+
+msgid "Search timer already active"
+msgstr ""
+
+msgid "Search timer already inactive"
+msgstr ""
+
+msgid "Error saving search timer"
+msgstr ""
+
 msgid "Delete search timer [search timer name unavailable]?"
 msgstr ""
 
 #, c-format
 msgid "Delete search timer \"%s\"?"
-msgstr ""
-
-#, c-format
-msgid "Search timer with id %s not found"
 msgstr ""
 
 msgid "Nothing selected!"
@@ -1142,8 +1151,11 @@ msgstr "Expresión"
 msgid "Starts between"
 msgstr "Iniciar entre"
 
-msgid "Toggle search timer actions (in)active"
-msgstr "Cambiar acciones de la programación de búsqueda (in)activo"
+msgid "Search timer is activ. Click to deactivate search timer"
+msgstr ""
+
+msgid "Search timer is inactiv. Click to activate search timer"
+msgstr ""
 
 msgid "Browse search timer results"
 msgstr "Navegar por los resultados de la búsqueda"
@@ -1293,8 +1305,11 @@ msgstr "La programación está activa"
 msgid "Transponder"
 msgstr ""
 
-msgid "Toggle timer (in)active"
-msgstr "Cambiar programación activa/inactiva"
+msgid "Timer is activ. Click to deactivate timer"
+msgstr ""
+
+msgid "Timer is inactiv. Click to activate timer"
+msgstr ""
 
 msgid "Delete timer"
 msgstr "Borrar programación"
@@ -1307,12 +1322,6 @@ msgstr ""
 
 msgid "Timer is recording"
 msgstr "La programación se está grabando."
-
-msgid "Timer is activ. Click to deactivate timer"
-msgstr ""
-
-msgid "Timer is inactiv. Click to activate timer"
-msgstr ""
 
 msgid "Users"
 msgstr "Usuarios"
@@ -1434,15 +1443,6 @@ msgstr ""
 msgid "Error deleting timers:"
 msgstr ""
 
-msgid "No search timers deleted"
-msgstr ""
-
-msgid "Deleted search timers:"
-msgstr ""
-
-msgid "Error deleting search timers:"
-msgstr ""
-
 msgid "No timers created"
 msgstr ""
 
@@ -1469,6 +1469,39 @@ msgstr ""
 
 msgid "Error deactivating timers:"
 msgstr ""
+
+msgid "No search timers deleted"
+msgstr ""
+
+msgid "Deleted search timers:"
+msgstr ""
+
+msgid "Error deleting search timers:"
+msgstr ""
+
+msgid "No search timers activated"
+msgstr ""
+
+msgid "Activated search timers:"
+msgstr ""
+
+msgid "Error activating search timers:"
+msgstr ""
+
+msgid "No search timers deactivated"
+msgstr ""
+
+msgid "Deactivated search timers:"
+msgstr ""
+
+msgid "Error deactivating search timers:"
+msgstr ""
+
+#~ msgid "Toggle search timer actions (in)active"
+#~ msgstr "Cambiar acciones de la programación de búsqueda (in)activo"
+
+#~ msgid "Toggle timer (in)active"
+#~ msgstr "Cambiar programación activa/inactiva"
 
 #~ msgid "Deleted recording:"
 #~ msgstr "Grabación borrada:"

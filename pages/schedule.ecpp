@@ -144,11 +144,11 @@ bool events_available = false;
 <script>
 document.write(addEventListString(<$col_span$>, <$$ epg_item.c_str() $>))
 </script>
-<& pageelems.action_results &>
 <%cpp>
     }
   }
 </%cpp>
+      <& pageelems.action_results &>
       <div class="spacebar"><# spacer with fade-out effect #></div>
     </div>
     <script>imgLoad()</script>

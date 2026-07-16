@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 3.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-15 18:35+0200\n"
+"POT-Creation-Date: 2026-07-16 12:09+0200\n"
 "PO-Revision-Date: 2026-01-27 20:15+0200\n"
 "Last-Translator: Stefan Hofmann <info@stefans-galerie.de>\n"
 "Language-Team: see developers in README\n"
@@ -52,16 +52,25 @@ msgstr "FTA"
 msgid "EPGSearch version outdated! Please update."
 msgstr "EPGSearch-Version zu alt, bitte aktualisieren!"
 
+#, c-format
+msgid "Search timer with id %s not found"
+msgstr "Suchtimer mit Kennung \"%s\" nicht vorhanden"
+
+msgid "Search timer already active"
+msgstr "Suchtimer ist bereits aktiv"
+
+msgid "Search timer already inactive"
+msgstr "Suchtimer ist bereits inaktiv"
+
+msgid "Error saving search timer"
+msgstr "Fehler beim Speichern der Suchtimer"
+
 msgid "Delete search timer [search timer name unavailable]?"
 msgstr "Suchtimer löschen [Name nicht verfügbar]?"
 
 #, c-format
 msgid "Delete search timer \"%s\"?"
 msgstr "Suchtimer \"%s\" löschen?"
-
-#, c-format
-msgid "Search timer with id %s not found"
-msgstr "Suchtimer mit Kennung \"%s\" nicht vorhanden"
 
 msgid "Nothing selected!"
 msgstr "Keine Auswahl getroffen!"
@@ -1144,8 +1153,11 @@ msgstr "Suchbegriff"
 msgid "Starts between"
 msgstr "Beginnt zwischen"
 
-msgid "Toggle search timer actions (in)active"
-msgstr "Aktionen des Suchtimers (de)aktivieren"
+msgid "Search timer is activ. Click to deactivate search timer"
+msgstr "Der Suchtimer ist aktiv. Zum deaktivieren klicken"
+
+msgid "Search timer is inactiv. Click to activate search timer"
+msgstr "Der Suchtimer ist inaktiv. Zum aktivieren klicken"
 
 msgid "Browse search timer results"
 msgstr "Suchtimer-Ergebnisse betrachten"
@@ -1295,8 +1307,11 @@ msgstr "Timer ist aktiv"
 msgid "Transponder"
 msgstr "Transponder"
 
-msgid "Toggle timer (in)active"
-msgstr "Timer (de)aktivieren"
+msgid "Timer is activ. Click to deactivate timer"
+msgstr "Timer ist activ. Zum deativieren klicken"
+
+msgid "Timer is inactiv. Click to activate timer"
+msgstr "Timer ist inactiv. Zum ativieren klicken"
 
 msgid "Delete timer"
 msgstr "Timer löschen"
@@ -1309,12 +1324,6 @@ msgstr "Dauer"
 
 msgid "Timer is recording"
 msgstr "Timer zeichnet auf"
-
-msgid "Timer is activ. Click to deactivate timer"
-msgstr "Timer ist activ. Zum deativieren klicken"
-
-msgid "Timer is inactiv. Click to activate timer"
-msgstr "Timer ist inactiv. Zum ativieren klicken"
 
 msgid "Users"
 msgstr "Benutzer"
@@ -1436,15 +1445,6 @@ msgstr "Gelöschter Timer:"
 msgid "Error deleting timers:"
 msgstr "Fehler beim Löschen von Timern:"
 
-msgid "No search timers deleted"
-msgstr "Keine Suchtimer gelöscht"
-
-msgid "Deleted search timers:"
-msgstr "Gelöschte Suchtimer:"
-
-msgid "Error deleting search timers:"
-msgstr "Fehler beim Löschen von Suchtimern:"
-
 msgid "No timers created"
 msgstr "Keine Timer angelegt"
 
@@ -1471,6 +1471,39 @@ msgstr "Deaktivierte Timer:"
 
 msgid "Error deactivating timers:"
 msgstr "Fehler beim Deaktivieren der Timer:"
+
+msgid "No search timers deleted"
+msgstr "Keine Suchtimer gelöscht"
+
+msgid "Deleted search timers:"
+msgstr "Gelöschte Suchtimer:"
+
+msgid "Error deleting search timers:"
+msgstr "Fehler beim Löschen von Suchtimern:"
+
+msgid "No search timers activated"
+msgstr "Es wurde kein Suchtimer aktiviert"
+
+msgid "Activated search timers:"
+msgstr "Aktivierte Suchtimer:"
+
+msgid "Error activating search timers:"
+msgstr "Fehler beim Aktivieren der Suchtimer:"
+
+msgid "No search timers deactivated"
+msgstr "Es wurde kein Suchtimer deaktiviert"
+
+msgid "Deactivated search timers:"
+msgstr "Deaktivierte Suchtimer:"
+
+msgid "Error deactivating search timers:"
+msgstr "Fehler beim Deaktivieren der Suchtimer:"
+
+#~ msgid "Toggle search timer actions (in)active"
+#~ msgstr "Aktionen des Suchtimers (de)aktivieren"
+
+#~ msgid "Toggle timer (in)active"
+#~ msgstr "Timer (de)aktivieren"
 
 #~ msgid "Copy only"
 #~ msgstr "Nur kopieren"

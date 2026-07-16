@@ -26,10 +26,12 @@ namespace vdrlive {
 //  "rcd_" recording command
 //  "mov_" move recordings
 //  "det_" delete timer
-//  "des_" delete search timer
 //  "crt_" create timer
 //  "act_" activate timer
 //  "dat_" deactivate timer
+//  "des_" delete search timer
+//  "acs_" activate search timer
+//  "das_" deactivate search timer
 //
 typedef std::string (*tConfirmationQuestion)(cSv id);
 typedef std::vector<std::string> (*tObjectNames)(cSv id);
@@ -151,17 +153,6 @@ inline static const cSortedVector<cConfirm, std::less<>> g_confirm_popups =
             m_objectNames:    &one_object,
             m_perform_action: &TimerManager_DeleteTimer
   },
-  { "des_", m_user_rights:    UR_DELSTIMERS,
-            m_headline:       trNOOP("Delete search timer"),
-            m_warning:        nullptr,
-            m_prompt:         trNOOP("Delete"),
-            m_headline_0:     trNOOP("No search timers deleted"),
-            m_headline_n:     trNOOP("Deleted search timers:"),
-            m_headline_error: trNOOP("Error deleting search timers:"),
-            m_question:       &SearchTimers_DeleteConfirmationQuestion,
-            m_objectNames:    &one_object,
-            m_perform_action: &SearchTimers_DeleteSearchTimer
-  },
   { "crt_", m_user_rights:    UR_EDITTIMERS,
             m_headline:       nullptr,
             m_warning:        nullptr,
@@ -194,6 +185,39 @@ inline static const cSortedVector<cConfirm, std::less<>> g_confirm_popups =
             m_question:       nullptr,
             m_objectNames:    &one_object,
             m_perform_action: &TimerManager_DeactivateTimer
+  },
+  { "des_", m_user_rights:    UR_DELSTIMERS,
+            m_headline:       trNOOP("Delete search timer"),
+            m_warning:        nullptr,
+            m_prompt:         trNOOP("Delete"),
+            m_headline_0:     trNOOP("No search timers deleted"),
+            m_headline_n:     trNOOP("Deleted search timers:"),
+            m_headline_error: trNOOP("Error deleting search timers:"),
+            m_question:       &SearchTimers_DeleteConfirmationQuestion,
+            m_objectNames:    &one_object,
+            m_perform_action: &SearchTimers_DeleteSearchTimer
+  },
+  { "acs_", m_user_rights:    UR_EDITSTIMERS,
+            m_headline:       nullptr,
+            m_warning:        nullptr,
+            m_prompt:         nullptr,
+            m_headline_0:     trNOOP("No search timers activated"),
+            m_headline_n:     trNOOP("Activated search timers:"),
+            m_headline_error: trNOOP("Error activating search timers:"),
+            m_question:       nullptr,
+            m_objectNames:    &one_object,
+            m_perform_action: &SearchTimers_ActivateTimer
+  },
+  { "das_", m_user_rights:    UR_EDITSTIMERS,
+            m_headline:       nullptr,
+            m_warning:        nullptr,
+            m_prompt:         nullptr,
+            m_headline_0:     trNOOP("No search timers deactivated"),
+            m_headline_n:     trNOOP("Deactivated search timers:"),
+            m_headline_error: trNOOP("Error deactivating search timers:"),
+            m_question:       nullptr,
+            m_objectNames:    &one_object,
+            m_perform_action: &SearchTimers_DeactivateTimer
   }
 };
 
@@ -227,8 +251,9 @@ inline const cConfirm *get_confirm_popup(cSv id) {
              -> there must be one array element for each object selected for processing
   [
     {
-      "<tag for object id>"  : object id,   // required
-      "name"   : Name of object, as known by the user
+      "id"     : object id,   // required
+      "name"   : Name of object, as known by the user. Required.
+                 If object was not found, here is the object not found message
       "success": boolean,   // required
       "message": ignored if "success" == true for this object, otherwise optional
     },
@@ -259,13 +284,48 @@ inline cToSvConcat<N>& AppendTagB(cToSvConcat<N>& target, cSv tag, bool value) {
 }
 
 template <size_t N>
-inline cToSvConcat<N>& AppendId(cToSvConcat<N>& result, cSv name_id, cSv id) {
+inline cToSvConcat<N>& JsonOpen(cToSvConcat<N>& result) {
+/*
+{
+  "success": true,
+  "objects":
+  [
+*/
   result << "{\n";
-  AppendTag(result, name_id, id) << ",\n";
+  AppendTagB(result, "success", true) << ",\n\"objects\": [";
   return result;
 }
 template <size_t N>
-inline cToSvConcat<N>& AppendSuccessMessage(cToSvConcat<N>& result, bool success, cSv message) {
+inline cToSvConcat<N>& JsonOpen(cToSvConcat<N>& result, cSv tag, cSv value) {
+/*
+{
+  "success": true,
+  "<$tag$>": "<$value$>",
+  "objects":
+  [
+*/
+  result << "{\n";
+  AppendTagB(result, "success", true) << ",\n";
+  AppendTag(result, tag, value) << ",\n\"objects\": [";
+  return result;
+}
+template <size_t N>
+inline cToSvConcat<N>& JsonAppendObject(cToSvConcat<N>& result, cSv id, cSv name, bool success, cSv message = cSv() ) {
+/*
+, (add a comma here if required)
+{
+  "id"     : "<$id$>",
+  "name"   : "<$name$>",
+  "success": <$success$>,
+  "message": "<$message$>"  (if !message.empty() )
+}
+*/
+  if (result.length() < 1) esyslog3("JsonAppendObject called before JsonOpen, result = ", result);
+  else if (result[result.length() - 1] != '[') result << ',';
+
+  result << "\n{\n";
+  AppendTag(result, "id", id) << ",\n";
+  AppendTag(result, "name", name) << ",\n";
   AppendTagB(result, "success", success);
   if (!message.empty() ) {
     result << ",\n";
@@ -275,19 +335,35 @@ inline cToSvConcat<N>& AppendSuccessMessage(cToSvConcat<N>& result, bool success
   return result;
 }
 template <size_t N>
-inline cToSvConcat<N>& AppendNameSuccessMessage(cToSvConcat<N>& result, cSv name, bool success, cSv message = cSv() ) {
-  AppendTag(result, "name", name) << ",\n";
-  AppendSuccessMessage(result, success, message);
+inline cToSvConcat<N>& JsonAppendObjectNotFound(cToSvConcat<N>& result, cSv id, const char* message) {
+/*
+, (add a comma here if required)
+{
+  "id"     : "<$id$>",
+  "name"   : "<$printf(message, id)$>", (message indicating that the object with this id was not found)
+  "success": false
+}
+*/
+  cToSvFormatted message_f(message, cToSvConcat(id).c_str() );
+  JsonAppendObject(result, id, message_f, false);
   return result;
+}
+template <size_t N>
+inline std::string JsonClose(cToSvConcat<N>& result, bool reload_required = true) {
+/*
+  ],
+  "reload_required": <$reload_required$>
+}
+*/
+  result << "],\n";
+  AppendTagB(result, "reload_required", reload_required) << "\n}";
+  return std::string(result);
 }
 
-template <size_t N>
-inline cToSvConcat<N>& AppendObjectNotFound(cToSvConcat<N>& result, cSv id, const char* message) {
-  cToSvFormatted message_f(message, cToSvConcat(id).c_str() );
-  AppendNameSuccessMessage(result, message_f, false);
-  return result;
-}
-inline std::string simpleJsonReturn(cSv message) {
+// ================================================================
+// === create complete Json result with one metod =================
+// ================================================================
+inline std::string JsonReturnError(cSv message) {
 //{
 //  "success": false,
 //  "message": <$ cToSvStringEscapedAndCorrectNonUTF8(message) $>,
@@ -300,5 +376,48 @@ inline std::string simpleJsonReturn(cSv message) {
   return std::string(result);
 }
 
+// === if you have exactly one object, these methods create the complete
+//     Json result for you
+inline std::string JsonReturnOneObjectNotFound(cSv id, const char* message) {
+/*
+{
+  "success": true,
+  "objects":
+  [
+    {
+      "id"     : "<$id$>",
+      "name"   : "<$message$>",   // like timer with id ... not found
+      "success": false,
+    }
+  ],
+  "reload_required": true
+}
+*/
+  cToSvConcat result;
+  JsonOpen(result);
+  JsonAppendObjectNotFound(result, id, message);
+  return JsonClose(result, true);
+}
+inline std::string JsonReturnOneObject(cSv id, cSv name, bool success, bool reload_required = true, cSv message = cSv() ) {
+/*
+{
+  "success": true,
+  "objects":
+  [
+    {
+      "id"     : "<$id$>",
+      "name"   : "<$name$>",
+      "success": <$success$>,
+      "message": "<$message$>"  (if !message.empty() )
+    }
+  ],
+  "reload_required": <$reload_required$>
+}
+*/
+  cToSvConcat result;
+  JsonOpen(result);
+  JsonAppendObject(result, id, name, success, message);
+  return JsonClose(result, reload_required);
+}
 } // namespace live
 #endif

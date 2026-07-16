@@ -566,56 +566,29 @@ std::string RecordingsManager_PurgeConfirmationQuestion(cSv recordings_hash) {
 
 
 std::string RecordingsManager_DeleteRecording(cSv recordings_hash) {
-//{
-//  "success": <$success?"true":"false"$>,
-//  "message": <$ cToSvStringEscapedAndCorrectNonUTF8(message) $>,
-//  "objects":
-//  [
-//    {
-//      "recid"  : "$<recid$>",
-//      "name"   : "$<rec_name$>",
-//      "success": <$success?"true":"false"$>,
-//      "message": <$ cToSvStringEscapedAndCorrectNonUTF8(message) $>
-//    },
-//    { ...}
-//  ]
-//  "reload_required": true/false
-//}
-  bool reload_required = false;
+// see confirm.h for definition of Json result
+
   std::string name;
-  cToSvConcat result("{\n");
-  AppendTagB(result, "success", true) << ",\n";
-  AppendTag(result, "message", "see also the individual results") << ",\n";
-  result << "\"objects\":\n[";
-
   if (recordings_hash.length() == 42) {
-    AppendId(result, "recid", RecordingsManager::GetHash(recordings_hash));
-
     switch (RecordingsManager::DeleteRecording(RecordingsManager::GetHash(recordings_hash), &name)) {
-      case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
-      case 1: AppendObjectNotFound(result, RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found")); reload_required = true; break;
-      case 2: AppendNameSuccessMessage(result, name, false, tr("Error: couldn't set timer to inactive")); break;
-      default: AppendNameSuccessMessage(result, name, false); break;
-    }
-  } else {
-    bool first = true;
-    for (cSv id: cSplit(recordings_hash.substr(10), '_')) if (id.length() == 32) {
-      if (first) first = false;
-      else result << ',';
-      AppendId(result, "recid", id);
-
-      switch (RecordingsManager::DeleteRecording(id, &name)) {
-        case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
-        case 1: AppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
-        case 2: AppendNameSuccessMessage(result, name, false, tr("Error: couldn't set timer to inactive")); break;
-        default: AppendNameSuccessMessage(result, name, false); break;
-      }
+      case 0: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, true);
+      case 1: return JsonReturnOneObjectNotFound(RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found"));
+      case 2: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, false, false, tr("Error: couldn't set timer to inactive"));
+      default: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, false, false);
     }
   }
-  result << "  ],";
-  AppendTagB(result, "reload_required", reload_required) << "\n}";
-  dsyslog3("result = \"", result, "\"");
-  return std::string(result);
+  bool reload_required = false;
+  cToSvConcat result;
+  JsonOpen(result);
+  for (cSv id: cSplit(recordings_hash.substr(10), '_')) if (id.length() == 32) {
+    switch (RecordingsManager::DeleteRecording(id, &name)) {
+      case 0: JsonAppendObject(result, id, name, true); reload_required = true; break;
+      case 1: JsonAppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
+      case 2: JsonAppendObject(result, id, name, false, tr("Error: couldn't set timer to inactive")); break;
+      default: JsonAppendObject(result, id, name, false); break;
+    }
+  }
+  return JsonClose(result, reload_required);
 }
 
 bool is_in_command_list(cList<cNestedItem> *commands, cSv text) {
@@ -629,6 +602,7 @@ bool is_in_command_list(cList<cNestedItem> *commands, cSv text) {
 }
 
 std::string RecordingsManager_CommandRecording(cSv recordings_hash) {
+// see confirm.h for definition of Json result
 //{
 //  "success": <$ success ? "true" : "false" $>,
 //  "command": <$ cToSvStringEscapedAndCorrectNonUTF8(command) $>,
@@ -648,47 +622,41 @@ std::string RecordingsManager_CommandRecording(cSv recordings_hash) {
   cSv recordings;
   if (!split_recordings_hash(recordings_hash, text, recordings)) {
     esyslog3("Error in split_recordings_hash recordings_hash = \"", recordings_hash, "\"");
-    return simpleJsonReturn("Error in split_recordings_hash");
+    return JsonReturnError("Error in split_recordings_hash");
   }
 // security check to prevent execution of arbitrary commands
   if (!is_in_command_list(&RecordingCommands, text)) {
     esyslog3("text \"", text, "\" not in reccommands list. Someone might try to attack your system");
-    return simpleJsonReturn("Illegal command");
+    return JsonReturnError("Illegal command");
   }
   dsyslog3("recordings command text '", text, "'");
   size_t command_pos = text.find(':');
   if (command_pos == std::string::npos) {
     esyslog3("text \"", text, "\" invalid: ':' missing");
-    return simpleJsonReturn("Recording command text invalid: ':' missing");
+    return JsonReturnError("Recording command text invalid: ':' missing");
   }
   bool reload_required = false;
-  cToSvConcat result("{\n");
-  AppendTagB(result, "success", true) << ",\n";
-  AppendTag(result, "command", trim(cSv(text).substr(0, command_pos))) << ",\n";
-  AppendTag(result, "message", "see also the individual results") << ",\n";
-  result << "\"objects\":\n[";
+  cToSvConcat result;
+  JsonOpen(result, "command", trim(cSv(text).substr(0, command_pos)));
 
-  bool first = true;
   for (cSv id: cSplit(recordings, '_')) if (id.length() == 32) {
-    if (first) first = false;
-    else result << ',';
-    AppendId(result, "recid", id);
 
     cToSvConcat command(trim(cSv(text).substr(command_pos+1)));
+    cToSvConcat name;
     {
       LOCK_RECORDINGS_READ;
       const cRecording *recording = RecordingsManager::GetByHash(id, Recordings);
       if (!recording) {
         esyslog3("recording with recid ", id, " not found");
-        AppendObjectNotFound(result, id, tr("Recording with id %s not found"));
+        JsonAppendObjectNotFound(result, id, tr("Recording with id %s not found"));
         reload_required = true;
         continue;
       }
 // cString::sprintf("\"%s\"", *strescape(ri->Recording()->FileName(), "\\\"$"))));
       command.append(" ").appendStringEscapedAndCorrectNonUTF8(recording->FileName() );
-      AppendTag(result, "name", recording->Name() ) << ",\n";
+      name << recording->Name();
     }
-    isyslog3("executing ", command);
+    dsyslog3("executing ", command);
 
     cPipe p;
     if (p.Open(command.c_str(), "r")) {
@@ -696,120 +664,81 @@ std::string RecordingsManager_CommandRecording(cSv recordings_hash) {
       int c;
       while ((c = fgetc(p)) != EOF) result_this_command << (char)c;
       p.Close();
-      AppendSuccessMessage(result, true, result_this_command);
+      JsonAppendObject(result, id, name, true, result_this_command);
     } else {
       esyslog3("opening pipe for command \"", command, "\" failed");
-      AppendSuccessMessage(result, false, "Error: opening pipe failed");
+      JsonAppendObject(result, id, name, false, "Error: opening pipe failed");
     }
   }
-  result << "  ],";
-  AppendTagB(result, "reload_required", reload_required) << "\n}";
-  dsyslog3("result = \"", result, "\"");
-  return std::string(result);
+  return JsonClose(result, reload_required);
 }
 std::string RecordingsManager_MoveRecording(cSv recordings_hash) {
   cSv folder;
   cSv recordings;
   if (!split_recordings_hash(recordings_hash, folder, recordings)) {
     esyslog3("Error in split_recordings_hash");
-    return simpleJsonReturn("Error in split_recordings_hash");
+    return JsonReturnError("Error in split_recordings_hash");
   }
   dsyslog2("move recordings to folder '", folder, "'");
 
   std::string name;
   bool reload_required = false;
-  cToSvConcat result("{\n");
-  AppendTagB(result, "success", true) << ",\n";
-  AppendTag(result, "message", "see also the individual results") << ",\n";
-  result << "\"objects\":\n[";
+  cToSvConcat result;
+  JsonOpen(result);
 
-  bool first = true;
   for (cSv id: cSplit(recordings, '_')) if (id.length() == 32) {
-    if (first) first = false;
-    else result << ',';
-    AppendId(result, "recid", id);
-
     switch (RecordingsManager::MoveRecording(id, folder, &name)) {
-      case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
-      case 1: AppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
-      case 2: AppendNameSuccessMessage(result, name, false, tr("Error: recording still in use")); break;
-      default: AppendNameSuccessMessage(result, name, false); break;
+      case 0: JsonAppendObject(result, id, name, true); reload_required = true; break;
+      case 1: JsonAppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
+      case 2: JsonAppendObject(result, id, name, false, tr("Error: recording still in use")); break;
+      default: JsonAppendObject(result, id, name, false); break;
     }
   }
-  result << "  ],";
-  AppendTagB(result, "reload_required", reload_required) << "\n}";
-  dsyslog3("result = \"", result, "\"");
-  return std::string(result);
+  return JsonClose(result, reload_required);
 }
 std::string RecordingsManager_RestoreRecording(cSv recordings_hash) {
   std::string name;
-  bool reload_required = false;
-  cToSvConcat result("{\n");
-  AppendTagB(result, "success", true) << ",\n";
-  AppendTag(result, "message", "see also the individual results") << ",\n";
-  result << "\"objects\":\n[";
-
   if (recordings_hash.length() == 42) {
-    AppendId(result, "recid", RecordingsManager::GetHash(recordings_hash));
-
     switch (RecordingsManager::RestoreRecording(RecordingsManager::GetHash(recordings_hash), &name)) {
-      case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
-      case 1: AppendObjectNotFound(result, RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found")); reload_required = true; break;
-      default: AppendNameSuccessMessage(result, name, false); break;
-    }
-  } else {
-    bool first = true;
-    for (cSv id: cSplit(recordings_hash.substr(10), '_')) if (id.length() == 32) {
-      if (first) first = false;
-      else result << ',';
-      AppendId(result, "recid", id);
-
-      switch (RecordingsManager::RestoreRecording(id, &name)) {
-        case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
-        case 1: AppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
-        default: AppendNameSuccessMessage(result, name, false); break;
-      }
+      case 0: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, true);
+      case 1: return JsonReturnOneObjectNotFound(RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found"));
+      default: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, false, false);
     }
   }
-  result << "  ],";
-  AppendTagB(result, "reload_required", reload_required) << "\n}";
-  dsyslog3("result = \"", result, "\"");
-  return std::string(result);
+
+  bool reload_required = false;
+  cToSvConcat result;
+  JsonOpen(result);
+  for (cSv id: cSplit(recordings_hash.substr(10), '_')) if (id.length() == 32) {
+    switch (RecordingsManager::RestoreRecording(id, &name)) {
+      case 0: JsonAppendObject(result, id, name, true); reload_required = true; break;
+      case 1: JsonAppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
+      default: JsonAppendObject(result, id, name, false); break;
+    }
+  }
+  return JsonClose(result, reload_required);
 }
 std::string RecordingsManager_PurgeRecording(cSv recordings_hash) {
   std::string name;
-  bool reload_required = false;
-  cToSvConcat result("{\n");
-  AppendTagB(result, "success", true) << ",\n";
-  AppendTag(result, "message", "see also the individual results") << ",\n";
-  result << "\"objects\":\n[";
-
   if (recordings_hash.length() == 42) {
-    AppendId(result, "recid", RecordingsManager::GetHash(recordings_hash));
-
     switch (RecordingsManager::PurgeRecording(RecordingsManager::GetHash(recordings_hash), &name)) {
-      case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
-      case 1: AppendObjectNotFound(result, RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found")); reload_required = true; break;
-      default: AppendNameSuccessMessage(result, name, false); break;
-    }
-  } else {
-    bool first = true;
-    for (cSv id: cSplit(recordings_hash.substr(10), '_')) if (id.length() == 32) {
-      if (first) first = false;
-      else result << ',';
-      AppendId(result, "recid", id);
-
-      switch (RecordingsManager::PurgeRecording(id, &name)) {
-        case 0: AppendNameSuccessMessage(result, name, true); reload_required = true; break;
-        case 1: AppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
-        default: AppendNameSuccessMessage(result, name, false); break;
-      }
+      case 0: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, true);
+      case 1: return JsonReturnOneObjectNotFound(RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found"));
+      default: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, false, false);
     }
   }
-  result << "],\n";
-  AppendTagB(result, "reload_required", reload_required) << "\n}";
-  dsyslog3("result = \"", result, "\"");
-  return std::string(result);
+
+  bool reload_required = false;
+  cToSvConcat result;
+  JsonOpen(result);
+  for (cSv id: cSplit(recordings_hash.substr(10), '_')) if (id.length() == 32) {
+    switch (RecordingsManager::PurgeRecording(id, &name)) {
+      case 0: JsonAppendObject(result, id, name, true); reload_required = true; break;
+      case 1: JsonAppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
+      default: JsonAppendObject(result, id, name, false); break;
+    }
+  }
+  return JsonClose(result, reload_required);
 }
 
 bool RecordingsManager::StillRecording(cSv RecordingFileName) {

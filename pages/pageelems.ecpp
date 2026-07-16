@@ -1134,9 +1134,11 @@ for (const cTvMedia &media: *media_v) {
 <# only if there are successful objects #>
     <div class="result-log"><# scolling and fade-out effect #>
       <div class="spacebar"><# sticky fade-out area #></div>
+      <ul class="action-log">
 <# for  each successful object #>
-      <div class="name"><# name of object #></div>
+        <li><span class="name"><# name of object #></span></li>
 <# end for each successful object #>
+      </ul>
       <div class="spacebar"><# sticky fade-out area #></div>
     </div>
 
@@ -1151,15 +1153,17 @@ for (const cTvMedia &media: *media_v) {
     </div>
     <div class="result-log"><# scolling and fade-out effect #>
       <div class="spacebar"><# sticky fade-out area #></div>
-      <div class="action-log"><# list or two-column grid, determined by CSS rule #>
+      <ul class="action-log">
 <# for each unsuccessful object #>
 <#  without message #>
-        <div class="name-only"><# object name #></div>
+        <li><span class="name error"><# object name #></span></li>
 <#  with message #>
-        <div class="name"><# object name #></div>
-        <div class="message"><# this is optional! Error related to this object #></div>
+        <li>
+          <span class="name error"><# object name #></span>
+          <span class="message error"><# this is optional! Error related to this object #></span>
+        </li>
 <# end for each unsuccessful object #>
-      </div>
+      </ul>
       <div class="spacebar"><# sticky fade-out area #></div>
     </div>
 

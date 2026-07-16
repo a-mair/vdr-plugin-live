@@ -328,6 +328,7 @@ public:
   const_iterator end() const { return m_timers.end(); }
   SearchTimer* GetByTimerId(cSv id);
   bool ToggleActive(std::string const& id);
+  std::string DeActivateSearchTimer(cSv id, bool activate);
   bool Delete(cSv id);
   void TriggerUpdate();
 private:
@@ -336,6 +337,12 @@ private:
 
 std::string SearchTimers_DeleteConfirmationQuestion(cSv id);
 std::string SearchTimers_DeleteSearchTimer(cSv id);
+inline std::string SearchTimers_ActivateTimer(cSv id) {
+  return SearchTimers().DeActivateSearchTimer(id, true);
+}
+inline std::string SearchTimers_DeactivateTimer(cSv id) {
+  return SearchTimers().DeActivateSearchTimer(id, false);
+}
 
 class Blacklist
 {
