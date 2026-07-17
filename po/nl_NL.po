@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-16 15:26+0200\n"
+"POT-Creation-Date: 2026-07-17 17:48+0200\n"
 "PO-Revision-Date: 2026-07-14 16:25+0200\n"
 "Last-Translator: Carel Willemse <carel@nekanali.nl>\n"
 "Language-Team: see developers in README\n"
@@ -66,9 +66,6 @@ msgstr ""
 msgid "Error saving search timer"
 msgstr ""
 
-msgid "Delete search timer [search timer name unavailable]?"
-msgstr "Zoektimer verwijderen [naam van zoektimer niet beschikbaar]?"
-
 #, c-format
 msgid "Delete search timer \"%s\"?"
 msgstr "Zoektimer \"%s\" verwijderen?"
@@ -80,9 +77,6 @@ msgstr "Niets geselecteerd!"
 msgid "Delete recording \"%s\"?"
 msgstr "Opname \"%s\" verwijderen?"
 
-msgid "Delete recording [recording name unavailable]?"
-msgstr "Opname verwijderen [naam van opname niet beschikbaar]?"
-
 #, c-format
 msgid "Delete the following %i recordings?"
 msgstr "De volgende %i opnames verwijderen?"
@@ -90,9 +84,6 @@ msgstr "De volgende %i opnames verwijderen?"
 #, c-format
 msgid "Move recording \"%s\" to folder \"%.*s\"?"
 msgstr "Opname \"%s\" verplaatsen naar map \"%.*s\"?"
-
-msgid "Move recording [recording name unavailable]?"
-msgstr "Opname verplaatsen [naam van opname niet beschikbaar]?"
 
 #, c-format
 msgid "Move the following %i recordings to folder \"%.*s\"?"
@@ -102,9 +93,6 @@ msgstr "De volgende %i opnames verplaatsen naar map \"%.*s\"?"
 msgid "Execute command \"%.*s\" on recording \"%s\"?"
 msgstr "Opdracht \"%.*s\" uitvoeren op opname \"%s\"?"
 
-msgid "Execute command on recording [recording name unavailable]?"
-msgstr "Opdracht uitvoeren op opname [naam van opname niet beschikbaar]?"
-
 #, c-format
 msgid "Execute command \"%.*s\" on the following %i recordings?"
 msgstr "Opdracht \"%.*s\" uitvoeren op de volgende %i opnames?"
@@ -112,9 +100,6 @@ msgstr "Opdracht \"%.*s\" uitvoeren op de volgende %i opnames?"
 #, c-format
 msgid "Restore recording \"%s\"?"
 msgstr "Opname \"%s\" herstellen?"
-
-msgid "Restore recording [recording name unavailable]?"
-msgstr "Opname herstellen [naam van opname niet beschikbaar]?"
 
 #, c-format
 msgid "Restore the following %i recordings?"
@@ -124,9 +109,6 @@ msgstr "De volgende %i opnames herstellen?"
 msgid "Permanently delete recording \"%s\"?"
 msgstr "Opname \"%s\" definitief verwijderen?"
 
-msgid "Permanently delete recording [recording name unavailable]?"
-msgstr "Opname definitief verwijderen [naam van opname niet beschikbaar]?"
-
 #, c-format
 msgid "Permanently delete the following %i recordings?"
 msgstr "De volgende %i opnames definitief verwijderen?"
@@ -135,11 +117,17 @@ msgstr "De volgende %i opnames definitief verwijderen?"
 msgid "Recording with id %s not found"
 msgstr "Opname met ID %s niet gevonden"
 
-msgid "Error: couldn't set timer to inactive"
-msgstr "Fout: kon timer niet op inactief zetten"
+msgid "Recording was deleted"
+msgstr ""
 
-msgid "Error: recording still in use"
-msgstr "Fout: opname is nog in gebruik"
+msgid "Couldn't set timer to inactive"
+msgstr "Kon timer niet op inactief zetten"
+
+msgid "Recording still in use"
+msgstr "Opname is nog in gebruik"
+
+msgid "Recording was restored"
+msgstr ""
 
 #, c-format
 msgid "%a,"
@@ -243,9 +231,6 @@ msgstr ""
 msgid "Delete timer \"%s\"?"
 msgstr "Timer \"%s\" verwijderen?"
 
-msgid "Delete timer [timer name unavailable]?"
-msgstr "Timer verwijderen [timernaam niet beschikbaar]?"
-
 msgid "Sorry, no permission. Please contact your administrator!"
 msgstr "Sorry, geen toestemming. Neem contact op met uw systeembeheerder!"
 
@@ -261,13 +246,10 @@ msgstr "Opname bewerken"
 msgid "Name"
 msgstr "Naam"
 
-msgid "Directory"
-msgstr "Map"
-
 msgid "Create new directory"
 msgstr "Nieuwe map aanmaken"
 
-msgid "Separate directories with a tilde '~'; directory names must not start with a tilde, dot, or whitespace"
+msgid "Separate folders with a tilde '~'; folder names must not start with a tilde, dot, or whitespace"
 msgstr "Scheid mappen met een tilde '~'; mapnamen mogen niet beginnen met een tilde, punt of spatie"
 
 msgid "Delete resume information"
@@ -675,8 +657,14 @@ msgstr "Informatie elektronische programmagids"
 msgid "Couldn't find recording or no recordings available"
 msgstr "Kon de opname niet vinden of er zijn geen opnames beschikbaar"
 
+msgid "Objects on this page are outdated. Please reload page"
+msgstr ""
+
 msgid "Do not ask again during this session"
 msgstr "Niet opnieuw vragen tijdens deze sessie"
+
+msgid "Reload"
+msgstr ""
 
 msgid "Page error"
 msgstr "Paginafout"
@@ -1155,10 +1143,10 @@ msgstr "Expressie"
 msgid "Starts between"
 msgstr "Start tussen"
 
-msgid "Search timer is activ. Click to deactivate search timer"
+msgid "Search timer is active. Click to deactivate search timer"
 msgstr ""
 
-msgid "Search timer is inactiv. Click to activate search timer"
+msgid "Search timer is inactive. Click to activate search timer"
 msgstr ""
 
 msgid "Browse search timer results"
@@ -1310,10 +1298,10 @@ msgstr "Timer is actief"
 msgid "Transponder"
 msgstr "Transponder"
 
-msgid "Timer is activ. Click to deactivate timer"
+msgid "Timer is active. Click to deactivate timer"
 msgstr ""
 
-msgid "Timer is inactiv. Click to activate timer"
+msgid "Timer is inactive. Click to activate timer"
 msgstr ""
 
 msgid "Delete timer"
@@ -1501,6 +1489,36 @@ msgstr ""
 
 msgid "Error deactivating search timers:"
 msgstr ""
+
+#~ msgid "Error: couldn't set timer to inactive"
+#~ msgstr "Fout: kon timer niet op inactief zetten"
+
+#~ msgid "Error: recording still in use"
+#~ msgstr "Fout: opname is nog in gebruik"
+
+#~ msgid "Directory"
+#~ msgstr "Map"
+
+#~ msgid "Delete search timer [search timer name unavailable]?"
+#~ msgstr "Zoektimer verwijderen [naam van zoektimer niet beschikbaar]?"
+
+#~ msgid "Delete recording [recording name unavailable]?"
+#~ msgstr "Opname verwijderen [naam van opname niet beschikbaar]?"
+
+#~ msgid "Move recording [recording name unavailable]?"
+#~ msgstr "Opname verplaatsen [naam van opname niet beschikbaar]?"
+
+#~ msgid "Execute command on recording [recording name unavailable]?"
+#~ msgstr "Opdracht uitvoeren op opname [naam van opname niet beschikbaar]?"
+
+#~ msgid "Restore recording [recording name unavailable]?"
+#~ msgstr "Opname herstellen [naam van opname niet beschikbaar]?"
+
+#~ msgid "Permanently delete recording [recording name unavailable]?"
+#~ msgstr "Opname definitief verwijderen [naam van opname niet beschikbaar]?"
+
+#~ msgid "Delete timer [timer name unavailable]?"
+#~ msgstr "Timer verwijderen [timernaam niet beschikbaar]?"
 
 #~ msgid "Toggle search timer actions (in)active"
 #~ msgstr "Zoektimeracties (in)actief schakelen"

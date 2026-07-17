@@ -1073,7 +1073,7 @@ const char *TNT_ARRAY = "";
                     </tr>
 
                     <tr>
-                      <td class="label"><div class="withmargin"><$ tr("Directory") $>:</div></td>
+                      <td class="label"><div class="withmargin"><$ trVDR("Folder") $>:</div></td>
                       <td>
                         <div><input type="text" name="directory" id="directory" value="<$ directory $>" class="width99" size="70" /></div>
                         <div><select onchange="changeddirselection(this)" name="recordingdirsselection" size="1" id="recordingdirsselection">

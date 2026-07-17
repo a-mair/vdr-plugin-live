@@ -380,7 +380,7 @@ TimerConflictNotifier timerNotifier;
             RecordingDirs recordingdirs(true);
 </%cpp>
           <tr>
-            <td class="label leftcol"><div class="withmargin"><$ tr("Directory" ) $>:</div></td>
+            <td class="label leftcol"><div class="withmargin"><$ trVDR("Folder") $>:</div></td>
             <td class="rightcol"><select name="directory" size="1" id="directory">
                  <option></option>
 %           for (RecordingDirs::iterator rdir = recordingdirs.begin(); rdir != recordingdirs.end(); ++rdir) {

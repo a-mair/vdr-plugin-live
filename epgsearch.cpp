@@ -437,11 +437,12 @@ bool SearchTimers::Delete(cSv id)
   return false;
 }
 
-std::string SearchTimers_DeleteConfirmationQuestion(cSv id) {
+std::string SearchTimers_DeleteConfirmationQuestion(cSv id, bool &all_exist) {
   SearchTimers searchTimers;
   SearchTimer* search = searchTimers.GetByTimerId(id);
-  if (!search) return tr("Delete search timer [search timer name unavailable]?");
-  return std::string(cToSvFormatted(tr("Delete search timer \"%s\"?"), search->Search().c_str()  ));
+  all_exist = search != nullptr;
+  if (all_exist) return std::string(cToSvFormatted(tr("Delete search timer \"%s\"?"), search->Search().c_str()  ));
+  return std::string();
 }
 
 std::string SearchTimers_DeleteSearchTimer(cSv id) {

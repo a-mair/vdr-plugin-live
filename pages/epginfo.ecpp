@@ -173,8 +173,13 @@ using namespace vdrlive;
   }
   if (confirm) {
     vdrlive::cToSvXxHash128 id_select_html_elements(epgid);
-    auto obj_list = confirm->get_object_names(epgid);
-    bool need_confirmation = !obj_list.empty();
+    bool exist_obj_list;
+    auto obj_list = confirm->get_object_names(epgid, exist_obj_list);
+    bool exist_question;
+    std::string confirmation_question = confirm->get_question(epgid, exist_question);
+    bool all_objects_exist = exist_obj_list & exist_question;
+    if (!all_objects_exist) confirmation_question = tr("Objects on this page are outdated. Please reload page");
+    bool need_confirmation = !obj_list.empty() & all_objects_exist;
 </%cpp>
 <div class="epg_description" id="<$$ id_select_html_elements $>">
   <div class="station">
@@ -182,8 +187,8 @@ using namespace vdrlive;
   </div>
   <div class="epg_content confirmation">
     <div class="about_head">
-      <div class="prompt"><$ confirm->get_question(epgid).c_str() $></div>
-%     if (obj_list.size() > 1) {
+      <div class="prompt"><$ confirmation_question.c_str() $></div>
+%     if (obj_list.size() > 1 && all_objects_exist) {
         <div class="object-list">
           <ul>
 %         for (const auto &obj: obj_list) {
@@ -214,6 +219,13 @@ using namespace vdrlive;
             </button>
           </div>
 %         }
+%         if (!all_objects_exist) {
+          <div class="about_left">
+            <button id="reload_<$$ id_select_html_elements $>" class="green" type="button" onclick="action_reload(<$ history_num_back $>)"><$tr("Reload")$>
+            </button>
+          </div>
+%         }
+
           <div class="about_right">
             <button id="close_<$$ id_select_html_elements $>" class="red" type="button" onclick="back_depending_referrer(1, <$history_num_back $>)"><$ tr("Cancel") $>
             </button>

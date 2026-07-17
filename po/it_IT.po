@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-16 15:26+0200\n"
+"POT-Creation-Date: 2026-07-17 17:48+0200\n"
 "PO-Revision-Date: 2011-12-25 23:22+0100\n"
 "Last-Translator: Diego Pierotto <vdr-italian@tiscali.it>\n"
 "Language-Team: see developers in README\n"
@@ -68,9 +68,6 @@ msgstr ""
 msgid "Error saving search timer"
 msgstr ""
 
-msgid "Delete search timer [search timer name unavailable]?"
-msgstr ""
-
 #, c-format
 msgid "Delete search timer \"%s\"?"
 msgstr ""
@@ -82,18 +79,12 @@ msgstr ""
 msgid "Delete recording \"%s\"?"
 msgstr ""
 
-msgid "Delete recording [recording name unavailable]?"
-msgstr ""
-
 #, c-format
 msgid "Delete the following %i recordings?"
 msgstr ""
 
 #, c-format
 msgid "Move recording \"%s\" to folder \"%.*s\"?"
-msgstr ""
-
-msgid "Move recording [recording name unavailable]?"
 msgstr ""
 
 #, c-format
@@ -104,18 +95,12 @@ msgstr ""
 msgid "Execute command \"%.*s\" on recording \"%s\"?"
 msgstr ""
 
-msgid "Execute command on recording [recording name unavailable]?"
-msgstr ""
-
 #, c-format
 msgid "Execute command \"%.*s\" on the following %i recordings?"
 msgstr ""
 
 #, c-format
 msgid "Restore recording \"%s\"?"
-msgstr ""
-
-msgid "Restore recording [recording name unavailable]?"
 msgstr ""
 
 #, c-format
@@ -126,9 +111,6 @@ msgstr ""
 msgid "Permanently delete recording \"%s\"?"
 msgstr ""
 
-msgid "Permanently delete recording [recording name unavailable]?"
-msgstr ""
-
 #, c-format
 msgid "Permanently delete the following %i recordings?"
 msgstr ""
@@ -137,10 +119,16 @@ msgstr ""
 msgid "Recording with id %s not found"
 msgstr ""
 
-msgid "Error: couldn't set timer to inactive"
+msgid "Recording was deleted"
 msgstr ""
 
-msgid "Error: recording still in use"
+msgid "Couldn't set timer to inactive"
+msgstr ""
+
+msgid "Recording still in use"
+msgstr ""
+
+msgid "Recording was restored"
 msgstr ""
 
 #, c-format
@@ -244,9 +232,6 @@ msgstr ""
 msgid "Delete timer \"%s\"?"
 msgstr ""
 
-msgid "Delete timer [timer name unavailable]?"
-msgstr ""
-
 msgid "Sorry, no permission. Please contact your administrator!"
 msgstr "Spiacenti, senza permessi. Per favore contatta l'amministratore!"
 
@@ -262,13 +247,10 @@ msgstr "Modifica registrazione"
 msgid "Name"
 msgstr "Nome"
 
-msgid "Directory"
-msgstr "Directory"
-
 msgid "Create new directory"
 msgstr ""
 
-msgid "Separate directories with a tilde '~'; directory names must not start with a tilde, dot, or whitespace"
+msgid "Separate folders with a tilde '~'; folder names must not start with a tilde, dot, or whitespace"
 msgstr ""
 
 msgid "Delete resume information"
@@ -676,7 +658,13 @@ msgstr "Info Guida Elettronica Programmi (EPG)"
 msgid "Couldn't find recording or no recordings available"
 msgstr "Impossibile trovare registrazioni o nessuna registrazione disponibile"
 
+msgid "Objects on this page are outdated. Please reload page"
+msgstr ""
+
 msgid "Do not ask again during this session"
+msgstr ""
+
+msgid "Reload"
 msgstr ""
 
 msgid "Page error"
@@ -1156,10 +1144,10 @@ msgstr "Termine ricerca"
 msgid "Starts between"
 msgstr "Inizia tra"
 
-msgid "Search timer is activ. Click to deactivate search timer"
+msgid "Search timer is active. Click to deactivate search timer"
 msgstr ""
 
-msgid "Search timer is inactiv. Click to activate search timer"
+msgid "Search timer is inactive. Click to activate search timer"
 msgstr ""
 
 msgid "Browse search timer results"
@@ -1310,10 +1298,10 @@ msgstr "Timer attivo."
 msgid "Transponder"
 msgstr ""
 
-msgid "Timer is activ. Click to deactivate timer"
+msgid "Timer is active. Click to deactivate timer"
 msgstr ""
 
-msgid "Timer is inactiv. Click to activate timer"
+msgid "Timer is inactive. Click to activate timer"
 msgstr ""
 
 msgid "Delete timer"
@@ -1501,6 +1489,9 @@ msgstr ""
 
 msgid "Error deactivating search timers:"
 msgstr ""
+
+#~ msgid "Directory"
+#~ msgstr "Directory"
 
 #~ msgid "Toggle search timer actions (in)active"
 #~ msgstr "Attiva/disattiva azioni ricerca timer"

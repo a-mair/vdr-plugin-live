@@ -18,8 +18,6 @@
 
 namespace vdrlive {
 
-// note: list of ids must also be available in live/js/live/infowin.js, async function id_from_epgid(epgid)
-//(action_id == "del_" || action_id == "pur_" || action_id == "res_" || action_id == "mov_" || action_id == "det_" || action_id == "des_")
 //  "del_" delete recording
 //  "pur_" permanently delete recording
 //  "res_" restore recording
@@ -33,11 +31,12 @@ namespace vdrlive {
 //  "acs_" activate search timer
 //  "das_" deactivate search timer
 //
-typedef std::string (*tConfirmationQuestion)(cSv id);
-typedef std::vector<std::string> (*tObjectNames)(cSv id);
+typedef std::string (*tConfirmationQuestion)(cSv id, bool &all_exist);
+typedef std::vector<std::string> (*tObjectNames)(cSv id, bool &all_exist);
 typedef std::string (*tPerformAction)(cSv id); // return Json, see below for required Json format
 
-inline std::vector<std::string> one_object(cSv id) {
+inline std::vector<std::string> one_object(cSv id, bool &all_exist) {
+  all_exist = true;   // actual check is in ConfirmationQuestion
   std::vector<std::string> result;
   result.push_back(std::string());
   return result;
@@ -60,11 +59,11 @@ class cConfirm {
     const char *get_headline() const {
       return tr(m_headline);
     }
-    std::string get_question(cSv id) const {
-      return m_question(id.substr(4));
+    std::string get_question(cSv id, bool &all_exist) const {
+      return m_question(id.substr(4), all_exist);
     }
-    std::vector<std::string> get_object_names(cSv id) const {
-      return m_objectNames(id.substr(4));
+    std::vector<std::string> get_object_names(cSv id, bool &all_exist) const {
+      return m_objectNames(id.substr(4), all_exist);
     }
     std::string get_prompt() const {
       return tr(m_prompt && *m_prompt ? m_prompt : m_headline);

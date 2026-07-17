@@ -114,7 +114,7 @@ const cRecording *RecordingsManager::GetByHash(cSv hash, const cRecordings* Reco
 #endif
   return nullptr;
 }
-const char *RecordingsManager::GetNameByHash(cSv hash) {
+const char *RecordingsManager::GetNameByHash(cSv hash, bool &exists) {
   if (hash.length() != 32) dsyslog3("hash = \"", hash, "\"");
   LOCK_RECORDINGS_READ;
 #if VDRVERSNUM >= 20708
@@ -123,7 +123,8 @@ const char *RecordingsManager::GetNameByHash(cSv hash) {
 #else
   const cRecording *recording = RecordingsManager::GetByHash(hash, Recordings);
 #endif
-  if (recording == nullptr) return nullptr;
+  exists = recording != nullptr;
+  if (!exists) return nullptr;
   return recording->Name();
 }
 
@@ -290,35 +291,63 @@ int RecordingsManager::MoveRecording(cSv hash, cSv folder, std::string *name) {
 // return values
 //   0 sucess
 //   1 no recording with this hash
-//   2 recording is in use
-//   3 other error returned by recording->ChangeName(...)
+//   2 deleted
+//   3 recording is in use
+//   4 other error returned by recording->ChangeName(...)
   if (hash.length() != 32) dsyslog3("hash = \"", hash, "\"");
   cToSvConcat NewName;
   if (!folder.empty() ) NewName.concat(folder, '~');
   {
     LOCK_RECORDINGS_WRITE;
     cRecording *recording = const_cast<cRecording *>(RecordingsManager::GetByHash(hash, Recordings));
-    if (!recording) return 1;
+    if (!recording) {
+#if VDRVERSNUM >= 20708
+      LOCK_DELETEDRECORDINGS_READ;
+      const cRecording *recording_d = GetByHash(hash, DeletedRecordings);
+      if (recording_d) {
+        if (name) *name = cSv(recording_d->Name());
+        return 2;
+      }
+#endif
+      return 1;
+    }
     cSv name_l(recording->Name());
     if (name) *name = name_l;
-    if (recording->IsInUse() ) return 2;
-    if (StillRecording(recording->FileName())) return 2; // check recording by another VDR
+    if (recording->IsInUse() ) return 3;
+    if (StillRecording(recording->FileName())) return 3; // check recording by another VDR
     cSv::size_type pos = name_l.rfind('~');
     if (pos == cSv::npos) NewName.concat(name_l);
     else NewName.concat(name_l.substr(pos+1));
     isyslog2("move \"", name_l, "\" to \"", NewName, "\"");
-    if (!recording->ChangeName(NewName.c_str() )) return 3;
+    if (!recording->ChangeName(NewName.c_str() )) return 4;
   }
   return 0;
 }
 int RecordingsManager::DeleteRecording(cSv hash, std::string *name)
+/* return codes
+  0: success
+  1: not existing
+  2: already deleted
+  3: couldn't set timer to inactive
+  4: other error
+*/
 {
   if (hash.length() != 32) dsyslog3("hash = \"", hash, "\"");
   std::string fileName;
   {
     LOCK_RECORDINGS_READ;
-    const cRecording *recording = RecordingsManager::GetByHash(hash, Recordings);
-    if (!recording) return 1;
+    const cRecording *recording = GetByHash(hash, Recordings);
+    if (!recording) {
+#if VDRVERSNUM >= 20708
+      LOCK_DELETEDRECORDINGS_READ;
+      recording = GetByHash(hash, DeletedRecordings);
+      if (recording) {
+        if (name) *name = cSv(recording->Name());
+        return 2;
+      }
+#endif
+      return 1;
+    }
     fileName = recording->FileName();
   }
   RecordingsHandler.Del(fileName.c_str() ); // must do this w/o holding a lock, because the cleanup section in cDirCopier::Action() might request one!
@@ -329,7 +358,17 @@ int RecordingsManager::DeleteRecording(cSv hash, std::string *name)
   Timers->SetExplicitModify();
   LOCK_RECORDINGS_WRITE;
   cRecording *recording = const_cast<cRecording *>(RecordingsManager::GetByHash(hash, Recordings));
-  if (!recording) return 1;
+  if (!recording) {
+#if VDRVERSNUM >= 20708
+    LOCK_DELETEDRECORDINGS_READ;
+    const cRecording *recording_d = GetByHash(hash, DeletedRecordings);
+    if (recording_d) {
+      if (name) *name = cSv(recording_d->Name());
+      return 2;
+    }
+#endif
+    return 1;
+  }
   fileName = recording->FileName();  // should not be required, but there is a short time without a lock ...
   if (name) *name = cSv(recording->Name());
 
@@ -363,12 +402,12 @@ int RecordingsManager::DeleteRecording(cSv hash, std::string *name)
                       cString ErrorMessage2;
                       if (!HandleRemoteTimerModifications(Timer, NULL, &ErrorMessage2)) {  // add deactivated timer on remote VDR
                           esyslog("live: adding inactive remote timer %s failed: %s", *Timer->ToDescr(), *ErrorMessage2);
-                          return 2;
+                          return 3;
                       }
                   }
                   else {
                       esyslog("live: deleting active remote timer %s failed: %s", *Timer->ToDescr(), *ErrorMessage1);
-                      return 2;
+                      return 3;
                   }
               }
           }
@@ -387,15 +426,29 @@ int RecordingsManager::DeleteRecording(cSv hash, std::string *name)
     Recordings->SetModified();
 #endif
   }
-  return result?0:3;
+  return result?0:4;
 }
 int RecordingsManager::RestoreRecording(cSv hash, std::string *name) {
+/* return codes
+  0: success
+  1: not existing
+  2: already restored
+  4: other error
+  5: VDR version too old, not supported
+*/
   if (hash.length() != 32) dsyslog3("hash = \"", hash, "\"");
 #if VDRVERSNUM >= 20708
   LOCK_RECORDINGS_WRITE
   LOCK_DELETEDRECORDINGS_WRITE
   cRecording *recording = const_cast<cRecording *>(RecordingsManager::GetByHash(hash, DeletedRecordings));
-  if (!recording) return 1;
+  if (!recording) {
+    const cRecording *recording_d = GetByHash(hash, Recordings);
+    if (recording_d) {
+      if (name) *name = cSv(recording_d->Name());
+      return 2;
+    }
+    return 1;
+  }
   if (name) *name = cSv(recording->Name());
 
   bool result = recording->Undelete();
@@ -404,17 +457,32 @@ int RecordingsManager::RestoreRecording(cSv hash, std::string *name) {
     Recordings->Add(recording);
     cVideoDiskUsage::ForceCheck();
   }
-  return result?0:3;
+  return result?0:4;
 #else
   return 5;
 #endif
 }
 int RecordingsManager::PurgeRecording(cSv hash, std::string *name) {
+/* return codes
+  0: success
+  1: not existing
+  2: restored
+  4: other error
+  5: VDR version too old, not supported
+*/
   if (hash.length() != 32) dsyslog3("hash = \"", hash, "\"");
 #if VDRVERSNUM >= 20708
+  LOCK_RECORDINGS_READ
   LOCK_DELETEDRECORDINGS_WRITE
   cRecording *recording = const_cast<cRecording *>(RecordingsManager::GetByHash(hash, DeletedRecordings));
-  if (!recording) return 1;
+  if (!recording) {
+    const cRecording *recording_d = GetByHash(hash, Recordings);
+    if (recording_d) {
+      if (name) *name = cSv(recording_d->Name());
+      return 2;
+    }
+    return 1;
+  }
   if (name) *name = cSv(recording->Name());
 
   bool result = recording->Remove();
@@ -422,7 +490,7 @@ int RecordingsManager::PurgeRecording(cSv hash, std::string *name) {
     DeletedRecordings->Del(recording);
     cVideoDiskUsage::ForceCheck();
   }
-  return result?0:3;
+  return result?0:4;
 #else
   return 5;
 #endif
@@ -469,7 +537,7 @@ int get_number_of_objects(cSv recordings_hash) {
   return std::count(recordings_hash.begin()+10, recordings_hash.end(), '_');
 }
 
-std::vector<std::string> RecordingsManager_object_names_mov(cSv recordings_hash) {
+std::vector<std::string> RecordingsManager_object_names_mov(cSv recordings_hash, bool &all_exist) {
   std::vector<std::string> result;
   cSv folder;
   cSv recordings;
@@ -477,35 +545,44 @@ std::vector<std::string> RecordingsManager_object_names_mov(cSv recordings_hash)
     esyslog3("Error in split_recordings_hash");
     return result;
   }
+  all_exist = true;
   for (cSv id: cSplit(recordings, '_')) if (id.length() == 32) {
-    const char *name = RecordingsManager::GetNameByHash(id);
+    bool exists;
+    const char *name = RecordingsManager::GetNameByHash(id, exists);
+    all_exist &= exists;
     result.push_back(std::string(cSv(name)));
   }
   return result;
 }
-std::vector<std::string> RecordingsManager_object_names(cSv recordings_hash) {
+std::vector<std::string> RecordingsManager_object_names(cSv recordings_hash, bool &all_exist) {
   std::vector<std::string> result;
+  all_exist = true;
   if (recordings_hash.length() == 42) {
-    result.push_back(std::string(cSv(RecordingsManager::GetNameByHash(RecordingsManager::GetHash(recordings_hash)))));
+    result.push_back(std::string(cSv(RecordingsManager::GetNameByHash(RecordingsManager::GetHash(recordings_hash), all_exist))));
   } else {
     for (cSv id: cSplit(recordings_hash.substr(10), '_')) if (id.length() == 32) {
-      const char *name = RecordingsManager::GetNameByHash(id);
+      bool exists;
+      const char *name = RecordingsManager::GetNameByHash(id, exists);
+      all_exist &= exists;
       result.push_back(std::string(cSv(name)));
     }
   }
   return result;
 }
-std::string RecordingsManager_DeleteConfirmationQuestion(cSv recordings_hash) {
+std::string RecordingsManager_DeleteConfirmationQuestion(cSv recordings_hash, bool &all_exist) {
+  all_exist = true;
   int num_recs = get_number_of_objects(recordings_hash);
   if (num_recs == 0) return tr("Nothing selected!");
   if (num_recs == 1) {
-    const char *name = RecordingsManager::GetNameByHash(RecordingsManager::GetHash(recordings_hash.substr(0, 42)));
-    if (name) return std::string(cToSvFormatted(tr("Delete recording \"%s\"?"), name));
-    return tr("Delete recording [recording name unavailable]?");
+    const char *name = RecordingsManager::GetNameByHash(RecordingsManager::GetHash(recordings_hash.substr(0, 42)), all_exist);
+    if (!all_exist) return std::string();
+    if (!name) name = "";
+    return std::string(cToSvFormatted(tr("Delete recording \"%s\"?"), name));
   }
   return std::string(cToSvFormatted(tr("Delete the following %i recordings?"), num_recs));
 }
-std::string RecordingsManager_MoveConfirmationQuestion(cSv recordings_hash) {
+std::string RecordingsManager_MoveConfirmationQuestion(cSv recordings_hash, bool &all_exist) {
+  all_exist = true;
   cSv folder;
   cSv recordings;
   if (!split_recordings_hash(recordings_hash, folder, recordings)) {
@@ -514,13 +591,15 @@ std::string RecordingsManager_MoveConfirmationQuestion(cSv recordings_hash) {
   int num_recs = std::count(recordings.begin(), recordings.end(), '_');
   if (num_recs == 0) return tr("Nothing selected!");
   if (num_recs == 1) {
-    const char *name = RecordingsManager::GetNameByHash(recordings.substr(0, 32));
-    if (name) return std::string(cToSvFormatted(tr("Move recording \"%s\" to folder \"%.*s\"?"), name, static_cast<int>(folder.length()), folder.data() ));
-    return tr("Move recording [recording name unavailable]?");
+    const char *name = RecordingsManager::GetNameByHash(recordings.substr(0, 32), all_exist);
+    if (!all_exist) return std::string();
+    if (!name) name = "";
+    return std::string(cToSvFormatted(tr("Move recording \"%s\" to folder \"%.*s\"?"), name, static_cast<int>(folder.length()), folder.data() ));
   }
   return std::string(cToSvFormatted(tr("Move the following %i recordings to folder \"%.*s\"?"), num_recs, static_cast<int>(folder.length()), folder.data() ));
 }
-std::string RecordingsManager_CommandConfirmationQuestion(cSv recordings_hash) {
+std::string RecordingsManager_CommandConfirmationQuestion(cSv recordings_hash, bool &all_exist) {
+  all_exist = true;
   cSv text;
   cSv recordings;
   if (!split_recordings_hash(recordings_hash, text, recordings)) {
@@ -537,29 +616,34 @@ std::string RecordingsManager_CommandConfirmationQuestion(cSv recordings_hash) {
   int num_recs = std::count(recordings.begin(), recordings.end(), '_');
   if (num_recs == 0) return tr("Nothing selected!");
   if (num_recs == 1) {
-    const char *name = RecordingsManager::GetNameByHash(recordings.substr(0, 32));
-    if (name) return std::string(cToSvFormatted(tr("Execute command \"%.*s\" on recording \"%s\"?"), static_cast<int>(display_text.length()), display_text.data(), name));
-    return tr("Execute command on recording [recording name unavailable]?");
+    const char *name = RecordingsManager::GetNameByHash(recordings.substr(0, 32), all_exist);
+    if (!all_exist) return std::string();
+    if (!name) name = "";
+    return std::string(cToSvFormatted(tr("Execute command \"%.*s\" on recording \"%s\"?"), static_cast<int>(display_text.length()), display_text.data(), name));
   }
   return std::string(cToSvFormatted(tr("Execute command \"%.*s\" on the following %i recordings?"), static_cast<int>(display_text.length()), display_text.data(), num_recs));
 }
-std::string RecordingsManager_RestoreConfirmationQuestion(cSv recordings_hash) {
+std::string RecordingsManager_RestoreConfirmationQuestion(cSv recordings_hash, bool &all_exist) {
+  all_exist = true;
   int num_recs = get_number_of_objects(recordings_hash);
   if (num_recs == 0) return tr("Nothing selected!");
   if (num_recs == 1) {
-    const char *name = RecordingsManager::GetNameByHash(RecordingsManager::GetHash(recordings_hash.substr(0, 42)));
-    if (name) return std::string(cToSvFormatted(tr("Restore recording \"%s\"?"), name));
-    return tr("Restore recording [recording name unavailable]?");
+    const char *name = RecordingsManager::GetNameByHash(RecordingsManager::GetHash(recordings_hash.substr(0, 42)), all_exist);
+    if (!all_exist) return std::string();
+    if (!name) name = "";
+    return std::string(cToSvFormatted(tr("Restore recording \"%s\"?"), name));
   }
   return std::string(cToSvFormatted(tr("Restore the following %i recordings?"), num_recs));
 }
-std::string RecordingsManager_PurgeConfirmationQuestion(cSv recordings_hash) {
+std::string RecordingsManager_PurgeConfirmationQuestion(cSv recordings_hash, bool &all_exist) {
+  all_exist = true;
   int num_recs = get_number_of_objects(recordings_hash);
   if (num_recs == 0) return tr("Nothing selected!");
   if (num_recs == 1) {
-    const char *name = RecordingsManager::GetNameByHash(RecordingsManager::GetHash(recordings_hash.substr(0, 42)));
-    if (name) return std::string(cToSvFormatted(tr("Permanently delete recording \"%s\"?"), name));
-    return tr("Permanently delete recording [recording name unavailable]?");
+    const char *name = RecordingsManager::GetNameByHash(RecordingsManager::GetHash(recordings_hash.substr(0, 42)), all_exist);
+    if (!all_exist) return std::string();
+    if (!name) name = "";
+    return std::string(cToSvFormatted(tr("Permanently delete recording \"%s\"?"), name));
   }
   return std::string(cToSvFormatted(tr("Permanently delete the following %i recordings?"), num_recs));
 }
@@ -573,7 +657,8 @@ std::string RecordingsManager_DeleteRecording(cSv recordings_hash) {
     switch (RecordingsManager::DeleteRecording(RecordingsManager::GetHash(recordings_hash), &name)) {
       case 0: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, true);
       case 1: return JsonReturnOneObjectNotFound(RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found"));
-      case 2: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, false, false, tr("Error: couldn't set timer to inactive"));
+      case 2: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, false, true, tr("Recording was deleted"));
+      case 3: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, false, false, tr("Couldn't set timer to inactive"));
       default: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, false, false);
     }
   }
@@ -584,7 +669,8 @@ std::string RecordingsManager_DeleteRecording(cSv recordings_hash) {
     switch (RecordingsManager::DeleteRecording(id, &name)) {
       case 0: JsonAppendObject(result, id, name, true); reload_required = true; break;
       case 1: JsonAppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
-      case 2: JsonAppendObject(result, id, name, false, tr("Error: couldn't set timer to inactive")); break;
+      case 2: JsonAppendObject(result, id, name, false, tr("Recording was deleted")); reload_required = true; break;
+      case 3: JsonAppendObject(result, id, name, false, tr("Couldn't set timer to inactive")); break;
       default: JsonAppendObject(result, id, name, false); break;
     }
   }
@@ -647,9 +733,17 @@ std::string RecordingsManager_CommandRecording(cSv recordings_hash) {
       LOCK_RECORDINGS_READ;
       const cRecording *recording = RecordingsManager::GetByHash(id, Recordings);
       if (!recording) {
-        esyslog3("recording with recid ", id, " not found");
-        JsonAppendObjectNotFound(result, id, tr("Recording with id %s not found"));
         reload_required = true;
+#if VDRVERSNUM >= 20708
+        LOCK_DELETEDRECORDINGS_READ;
+        const cRecording *recording_d = RecordingsManager::GetByHash(id, DeletedRecordings);
+        if (recording_d) {
+          JsonAppendObject(result, id, recording_d->Name(), false, tr("Recording was deleted"));
+          continue;
+        }
+#endif
+        dsyslog3("recording with recid ", id, " not found");
+        JsonAppendObjectNotFound(result, id, tr("Recording with id %s not found"));
         continue;
       }
 // cString::sprintf("\"%s\"", *strescape(ri->Recording()->FileName(), "\\\"$"))));
@@ -673,6 +767,7 @@ std::string RecordingsManager_CommandRecording(cSv recordings_hash) {
   return JsonClose(result, reload_required);
 }
 std::string RecordingsManager_MoveRecording(cSv recordings_hash) {
+// see confirm.h for definition of Json result
   cSv folder;
   cSv recordings;
   if (!split_recordings_hash(recordings_hash, folder, recordings)) {
@@ -690,18 +785,21 @@ std::string RecordingsManager_MoveRecording(cSv recordings_hash) {
     switch (RecordingsManager::MoveRecording(id, folder, &name)) {
       case 0: JsonAppendObject(result, id, name, true); reload_required = true; break;
       case 1: JsonAppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
-      case 2: JsonAppendObject(result, id, name, false, tr("Error: recording still in use")); break;
+      case 2: JsonAppendObject(result, id, name, false, tr("Recording was deleted")); reload_required = true; break;
+      case 3: JsonAppendObject(result, id, name, false, tr("Recording still in use")); break;
       default: JsonAppendObject(result, id, name, false); break;
     }
   }
   return JsonClose(result, reload_required);
 }
 std::string RecordingsManager_RestoreRecording(cSv recordings_hash) {
+// see confirm.h for definition of Json result
   std::string name;
   if (recordings_hash.length() == 42) {
     switch (RecordingsManager::RestoreRecording(RecordingsManager::GetHash(recordings_hash), &name)) {
       case 0: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, true);
       case 1: return JsonReturnOneObjectNotFound(RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found"));
+      case 2: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, false, true, tr("Recording was restored"));
       default: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, false, false);
     }
   }
@@ -713,17 +811,20 @@ std::string RecordingsManager_RestoreRecording(cSv recordings_hash) {
     switch (RecordingsManager::RestoreRecording(id, &name)) {
       case 0: JsonAppendObject(result, id, name, true); reload_required = true; break;
       case 1: JsonAppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
+      case 2: JsonAppendObject(result, id, name, false, tr("Recording was restored")); reload_required = true; break;
       default: JsonAppendObject(result, id, name, false); break;
     }
   }
   return JsonClose(result, reload_required);
 }
 std::string RecordingsManager_PurgeRecording(cSv recordings_hash) {
+// see confirm.h for definition of Json result
   std::string name;
   if (recordings_hash.length() == 42) {
     switch (RecordingsManager::PurgeRecording(RecordingsManager::GetHash(recordings_hash), &name)) {
       case 0: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, true);
       case 1: return JsonReturnOneObjectNotFound(RecordingsManager::GetHash(recordings_hash), tr("Recording with id %s not found"));
+      case 2: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, false, true, tr("Recording was restored"));
       default: return JsonReturnOneObject(RecordingsManager::GetHash(recordings_hash), name, false, false);
     }
   }
@@ -735,6 +836,7 @@ std::string RecordingsManager_PurgeRecording(cSv recordings_hash) {
     switch (RecordingsManager::PurgeRecording(id, &name)) {
       case 0: JsonAppendObject(result, id, name, true); reload_required = true; break;
       case 1: JsonAppendObjectNotFound(result, id, tr("Recording with id %s not found")); reload_required = true; break;
+      case 2: JsonAppendObject(result, id, name, false, tr("Recording was restored")); reload_required = true; break;
       default: JsonAppendObject(result, id, name, false); break;
     }
   }
@@ -2017,7 +2119,7 @@ template class const_rec_iterator<RecordingsItemRec*>;
       if (scraperDataAvailable) m_maxLevel = std::max(m_maxLevel, recPtr->HierarchyLevels() + 1);
       else m_maxLevel = std::max(m_maxLevel, recPtr->HierarchyLevels() );
 
-// add file system directories
+// add file system folders
       RecordingsItemDirPtr dir = m_rootFileSystem;
       if (!recPtr->Folder().empty())
         for (cSv folderPart: cSplit(recPtr->Folder(), FOLDERDELIMCHAR)) {
@@ -2068,7 +2170,7 @@ template class const_rec_iterator<RecordingsItemRec*>;
     for (RecordingsItemRec *recPtr: all_recordings_iterator(1) ) {
       m_maxLevel = std::max(m_maxLevel, recPtr->HierarchyLevels() );
 
-// add file system directories
+// add file system folders
       RecordingsItemDirPtr dir = m_rootFileSystem;
       if (!recPtr->Folder().empty())
         for (cSv folderPart: cSplit(recPtr->Folder(), FOLDERDELIMCHAR)) {

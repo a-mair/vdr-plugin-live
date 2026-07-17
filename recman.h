@@ -109,7 +109,7 @@ namespace vdrlive {
 #else
       static const cRecording *GetByHash(cSv hash, const cRecordings* Recordings);
 #endif
-      static const char *GetNameByHash(cSv hash);
+      static const char *GetNameByHash(cSv hash, bool &exists);
 
       /**
        *  get RecordingsItemRec from the all_recordings. Returns
@@ -188,13 +188,13 @@ namespace vdrlive {
     private:
       static bool StateChanged();
   };
-  std::string RecordingsManager_DeleteConfirmationQuestion(cSv recordings_hash);
-  std::string RecordingsManager_RestoreConfirmationQuestion(cSv recordings_hash);
-  std::string RecordingsManager_PurgeConfirmationQuestion(cSv recordings_hash);
-  std::string RecordingsManager_MoveConfirmationQuestion(cSv recordings_hash);
-  std::string RecordingsManager_CommandConfirmationQuestion(cSv recordings_hash);
-  std::vector<std::string> RecordingsManager_object_names(cSv recordings_hash);
-  std::vector<std::string> RecordingsManager_object_names_mov(cSv recordings_hash);
+  std::string RecordingsManager_DeleteConfirmationQuestion(cSv recordings_hash, bool &all_exist);
+  std::string RecordingsManager_RestoreConfirmationQuestion(cSv recordings_hash, bool &all_exist);
+  std::string RecordingsManager_PurgeConfirmationQuestion(cSv recordings_hash, bool &all_exist);
+  std::string RecordingsManager_MoveConfirmationQuestion(cSv recordings_hash, bool &all_exist);
+  std::string RecordingsManager_CommandConfirmationQuestion(cSv recordings_hash, bool &all_exist);
+  std::vector<std::string> RecordingsManager_object_names(cSv recordings_hash, bool &all_exist);
+  std::vector<std::string> RecordingsManager_object_names_mov(cSv recordings_hash, bool &all_exist);
   std::string RecordingsManager_DeleteRecording(cSv recordings_hash);
   std::string RecordingsManager_RestoreRecording(cSv recordings_hash);
   std::string RecordingsManager_PurgeRecording(cSv recordings_hash);
@@ -416,7 +416,7 @@ inline all_recordings_iterator begin(all_recordings_iterator &it) { return it; }
 inline all_recordings_iterator end  (all_recordings_iterator &it) { return all_recordings_iterator(iterator_end(), it); }
 
 // C == RecordingsItemRec*   -> iterate over recordings
-// C == RecordingsItemDirPtr -> iterate over directories
+// C == RecordingsItemDirPtr -> iterate over folders
 template<typename C>
   class const_rec_iterator {
     public:
@@ -452,8 +452,8 @@ template<typename C>
 inline iterator_end end(const_rec_iterator<C> &it) { return iterator_end(); }
 
 /**
- *  A recordings item that resembles a directory with other
- *  subdirectories and/or real recordings.
+ *  A recordings item that resembles a folder with other
+ *  subfolders and/or real recordings.
  */
   class RecordingsItemDir
   {

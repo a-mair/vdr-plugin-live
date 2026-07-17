@@ -45,7 +45,7 @@ template<std::size_t N>
     private:
       void CreateTimer(cStr remote, cStr builder);
   };
-  std::string TimerManager_DeleteConfirmationQuestion(cSv id);
+  std::string TimerManager_DeleteConfirmationQuestion(cSv id, bool &all_exist);
   std::string TimerManager_DeleteTimer(cSv id);
   std::string TimerManager_CreateTimer(cSv id);
 

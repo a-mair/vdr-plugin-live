@@ -295,7 +295,7 @@ else active_r = "recordings";
               <div class="buttons">
                 <button class="green move" type="button" onclick="clearSavedSelection(); actionOnMarkedRecordings('mov')" ><$ tr("Move selected recordings") $></button>
                 <div class="destination">
-                  <span class="label"><label for="dirSelection"><$ tr("Directory") $></label>:</span>
+                  <span class="label"><label for="dirSelection"><$ trVDR("Folder") $></label>:</span>
                   <div class="with-action-icon" id="dirSelection">
                     <select name="directory" id="directory" size="1">
 % RecordingsTreePtr recordingsTree(RecordingsManager::GetRecordingsTree());
@@ -306,7 +306,7 @@ else active_r = "recordings";
                     <img id="new_dir_button" class="icon button new-dir" src="<$ GetThemedLink("img", "icon_overlay_plus.svg") $>" title="<$tr("Create new directory")$>" alt="" onclick="new_dir()">
                   </div>
                   <div class="with-action-icon" id="dirEntry" style="display: none">
-                    <input type="text" name="newdir" id="newdir" value="." size="55" disabled="true" pattern="^([^~.\s][^~]*)(~[^~.\s][^~]*)*$" title="<$tr("Separate directories with a tilde '~'; directory names must not start with a tilde, dot, or whitespace")$>" />
+                    <input type="text" name="newdir" id="newdir" value="." size="55" disabled="true" pattern="^([^~.\s][^~]*)(~[^~.\s][^~]*)*$" title="<$tr("Separate folders with a tilde '~'; folder names must not start with a tilde, dot, or whitespace")$>" />
                   </div>
                 </div>
               </div>

@@ -420,12 +420,13 @@ namespace vdrlive {
     return JsonReturnOneObject(SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*Timer)), Timer->File(), true);
   }
 
-  std::string TimerManager_DeleteConfirmationQuestion(cSv id) {
+  std::string TimerManager_DeleteConfirmationQuestion(cSv id, bool &all_exist) {
     std::string tId = SortedTimers::DecodeDomId(id);
     LOCK_TIMERS_READ;
     const cTimer* timer = SortedTimers::GetByTimerId(tId, Timers);
-    if (timer) return std::string(cToSvFormatted(tr("Delete timer \"%s\"?"), timer->File() ));
-    return tr("Delete timer [timer name unavailable]?");
+    all_exist = timer != nullptr;
+    if (all_exist) return std::string(cToSvFormatted(tr("Delete timer \"%s\"?"), timer->File() ));
+    return std::string();
   }
   std::string TimerManager_DeleteTimer(cSv id) {
     int timer_id = -1;

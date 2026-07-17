@@ -289,7 +289,7 @@ namespace vdrlive {
             return false;
           }
 
-          // loop through all files, but skip all subdirectories
+          // loop through all files, but skip all subfolders
           while ((e = d.Next()) != NULL) {
             // skip generic entries
             if (strcmp(e->d_name, ".") && strcmp(e->d_name, "..") && strcmp(e->d_name, "lost+found")) {
@@ -333,7 +333,7 @@ namespace vdrlive {
           // release allocated buffer
           free(buffer);
 
-          // delete all created target files and directories
+          // delete all created target files and folders
           if (!success) {
             size_t found = target.find_last_of(delim);
             if (found != std::string::npos) {
@@ -357,7 +357,7 @@ namespace vdrlive {
             return false;
           }
 
-          // delete all empty source directories
+          // delete all empty source folders
           if (!copy) {
             size_t found = source.find_last_of(delim);
             if (found != std::string::npos) {
@@ -375,7 +375,7 @@ namespace vdrlive {
         }
         else {
           esyslog("live: %s requires %dMB - only %dMB available", copy ? "moving" : "copying", required, available);
-          // delete all created empty target directories
+          // delete all created empty target folders
           size_t found = target.find_last_of(delim);
           if (found != std::string::npos) {
             target = target.substr(0, found);

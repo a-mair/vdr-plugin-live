@@ -213,7 +213,7 @@ using namespace vdrlive;
                     <a class="action-rightcol" href="timers.html?timerid=<$ SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*timer)) $>&action=toggle"><img class="icon" src="<$ GetThemedLink("img", (timer->Flags() & tfActive) ? "active.svg" : "inactive.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtRight=(fileNameBreaks) text=(tr("Toggle timer (in)active")) &> /></a>
 #>
                     <a class="action-rightcol" onclick="return action('<$timer->HasFlags(tfActive)?"dat":"act"$>_<$ SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*timer)) $>')">
-                      <img class="icon" src="<$ GetThemedLink("img", timer->HasFlags(tfActive)? "active.svg" : "inactive.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtRight=(fileNameBreaks) text=(timer->HasFlags(tfActive)?tr("Timer is activ. Click to deactivate timer"):tr("Timer is inactiv. Click to activate timer")) &> />
+                      <img class="icon" src="<$ GetThemedLink("img", timer->HasFlags(tfActive)? "active.svg" : "inactive.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtRight=(fileNameBreaks) text=(timer->HasFlags(tfActive)?tr("Timer is active. Click to deactivate timer"):tr("Timer is inactive. Click to activate timer")) &> />
                     </a>
 
                     <div class="action-rightcol"><& pageelems.edit_timer timerId=(SortedTimers::GetTimerId(*timer)) className="icon" label=(label) breaksAtRight=(fileNameBreaks) iCounter=((uintptr_t)&xsVisibleIcons) &></div>

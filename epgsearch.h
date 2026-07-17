@@ -335,7 +335,7 @@ private:
   TimerList m_timers;
 };
 
-std::string SearchTimers_DeleteConfirmationQuestion(cSv id);
+std::string SearchTimers_DeleteConfirmationQuestion(cSv id, bool &all_exist);
 std::string SearchTimers_DeleteSearchTimer(cSv id);
 inline std::string SearchTimers_ActivateTimer(cSv id) {
   return SearchTimers().DeActivateSearchTimer(id, true);

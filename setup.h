@@ -18,7 +18,7 @@
 
 namespace vdrlive {
 
-// directories within /tmp for storing plugin data
+// folders within /tmp for storing plugin data
 #define tmpDir              "/tmp/live/"
 #define tmpImageDir         tmpDir "images/"
 #define tmpHlsBufferDir     tmpDir "hls-buffer/"

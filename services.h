@@ -91,7 +91,7 @@ class cEnvironment
   public:
 //in: nothing, no input required
 //out
-    std::string basePath;  // All images are in this path or subdirectories. This was given to the plugin with --dir, or is the default cache directory for the plugin.
+    std::string basePath;  // All images are in this path or subfolders. This was given to the plugin with --dir, or is the default cache folder for the plugin.
     std::string seriesPath;
     std::string moviesPath;
 };

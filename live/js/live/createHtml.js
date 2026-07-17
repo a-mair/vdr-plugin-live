@@ -451,6 +451,10 @@ function replace_action_results(json_result = null) {
     console.log("Info: action results are not displayed on this page. You can add the element with id 'action_command_results' if the system should display the action results on this page");
   }
 }
+function action_reload(history_num_back) {
+  if (history_num_back > 0) history.go(-history_num_back);
+  else location.reload();
+}
 async function action(id, history_num_back=0)
 {
   const response = await fetch('action.html?id=' + encodeURIComponent(id));
