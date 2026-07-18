@@ -248,7 +248,7 @@ msgid "Create new directory"
 msgstr "Neuen Ordner erstellen"
 
 msgid "Separate folders with a tilde '~'; folder names must not start with a tilde, dot, or whitespace"
-msgstr "Ordner mit Tilde (\"~\") trennen; ordnernamen dürfen nicht mit Tilde, Punkt oder Leerzeichen beginnen"
+msgstr "Ordner mit Tilde (\"~\") trennen; Ordnernamen dürfen nicht mit Tilde, Punkt oder Leerzeichen beginnen"
 
 msgid "Delete resume information"
 msgstr "Wiedergabeposition löschen"
@@ -1299,7 +1299,7 @@ msgid "Timer is active. Click to deactivate timer"
 msgstr "Timer ist aktiv. Zum Deaktivieren klicken"
 
 msgid "Timer is inactive. Click to activate timer"
-msgstr "Timer ist inaktive. Zum Aktivieren klicken"
+msgstr "Timer ist inaktiv. Zum Aktivieren klicken"
 
 msgid "Delete timer"
 msgstr "Timer löschen"

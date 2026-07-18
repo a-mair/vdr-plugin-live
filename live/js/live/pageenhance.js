@@ -67,7 +67,7 @@ var PageEnhance = new Class({
         const found = /epgid=([^&]+)/.exec(href);
         if (found && found.length > 1) {
           const epgid = decodeURIComponent(found[1]);
-          const epgid_is_action = is_action(epgid);
+          const epgid_is_action = epgid != 'aboutBox' && is_action(epgid);
           if (epgid_is_action && ((/confirm=0/.exec(href)) || !get_texts(epgid.substring(0,3)).confirmationSupported)) {
             el.addEvent('click', async function(event){
               const event_ = new DOMEvent(event);
