@@ -96,6 +96,7 @@ using namespace vdrlive;
 document.write(addEventListString(<$col_span$>, <$$ epg_item.c_str() $>))
 </script>
 %       } }
+      <& pageelems.action_results &>
       <div class="spacebar"><# spacer with fade-out effect #></div>
     </div>
     <script>imgLoad()</script>

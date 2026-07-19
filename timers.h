@@ -20,6 +20,7 @@ namespace vdrlive {
 
       // en- or decodes a timer into an id usable for DOM Ids.
       static std::string EncodeDomId(cSv timerid);
+      static std::string GetEncodedTimerId(cTimer const& timer);
       static std::string DecodeDomId(cSv timerDomId);
 
       static std::string GetTimerDays(cTimer const *timer);
@@ -36,7 +37,6 @@ template<std::size_t N>
     public:
       void UpdateTimer(int timerId, cStr remote, cStr oldRemote, cStr builder);
       void DeleteTimer(int timerId, cStr remote);
-      void ToggleTimerActive(int timerId, cStr remote);
       static std::string DeActivateTimer(cSv id, bool activate);
       static const cTimer* GetTimer(tEventID eventid, tChannelID channelid, const cTimers* Timers);
       static const cTimer* GetTimer(const cEvent *event, const cChannel *channel, const cTimers* Timers);

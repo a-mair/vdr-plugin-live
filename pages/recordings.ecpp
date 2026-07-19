@@ -268,18 +268,6 @@ else active_r = "recordings";
 %       if (!recording_item.empty()) {
         <div class="submission withmargin hidden-xs">
 %         if (currentRecycle_bin == 0) {
-            <script type="text/javascript">
-              function new_dir() {
-                var dirSelection = document.getElementById("dirSelection");
-                dirSelection.style.display = "none";
-                var dirEntry = document.getElementById("dirEntry");
-                dirEntry.style.display = "";
-                var dir = document.getElementById("directory");
-                var newdir = document.getElementById("newdir");
-                newdir.value = dir.value;
-                newdir.disabled = false;
-              }
-            </script>
 % if (RecordingCommands.First()) {
             <div class="rec-commands">
               <div id="fl_reccommands" class="rec-commands-folder root sticky" style="--rec-commands-level: 0" onclick="click_reccommands_folder_line(event, 'reccommands')">
@@ -303,7 +291,7 @@ else active_r = "recordings";
                       <option value="<$ dir $>"<$$ dir.empty() ? " selected=\"selected\"" : "" $>><$ dir $></option>
 % }
                     </select>
-                    <img id="new_dir_button" class="icon button new-dir" src="<$ GetThemedLink("img", "icon_overlay_plus.svg") $>" title="<$tr("Create new directory")$>" alt="" onclick="new_dir()">
+                    <img id="new_dir_button" class="icon button new-dir" src="<$ GetThemedLink("img", "icon_overlay_plus.svg") $>" title="<$trVDR("New folder")$>" alt="" onclick="new_dir()">
                   </div>
                   <div class="with-action-icon" id="dirEntry" style="display: none">
                     <input type="text" name="newdir" id="newdir" value="." size="55" disabled="true" pattern="^([^~.\s][^~]*)(~[^~.\s][^~]*)*$" title="<$tr("Separate folders with a tilde '~'; folder names must not start with a tilde, dot, or whitespace")$>" />

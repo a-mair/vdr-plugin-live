@@ -67,6 +67,10 @@ int update_status(1);
 </%def>
 
 <%def scripts>
+<# make sure to include this with
+     <& pageelems.scripts &>
+   in all pages, so every page can rely on availability of these functions
+#>
 <script type="text/javascript"><!--
 const liveNamePrefix = "<$ liveNamePrefix $>"
 
@@ -75,7 +79,7 @@ function getThemedLinkPrefix()     { return "<$ cToSvConcat("/themes/", effectiv
 function getThemedLinkPrefixImg()  { return "<$ cToSvConcat("/themes/", effectiveTheme, "/img/") $>"; }
 function getThemedLink(type, name) { return "<$ cToSvConcat("/themes/", effectiveTheme, "/") $>" + type + "/" + name; }
 --></script>
-<script type="text/javascript" src="js/live/scrolling.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
+<script type="text/javascript" src="js/live/scripts.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
 <script type="text/javascript" src="js/live/epg_tt_box.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
 </%def>
 
@@ -394,7 +398,6 @@ if (!rfid.empty() ) {
   <script type="text/javascript" src="js/mootools/MooTools-Core-1.6.0.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript" src="js/mootools/MooTools-More-1.6.0.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript" src="js/live/infowin.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
-  <script type="text/javascript" src="js/live/browserwin.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript" src="js/live/pageenhance.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   <script type="text/javascript"><!--
     var liveEnhanced = new PageEnhance(

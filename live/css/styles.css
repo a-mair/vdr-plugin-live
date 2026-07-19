@@ -2502,6 +2502,13 @@ table.form div.with-action-icon {
   column-gap: var(--margin-left-right);
 }
 
+form div.with-tooltip:has(> .width99),
+form div.with-action-icon:has(> .width99),
+table.form div.with-tooltip:has(> .width99),
+table.form div.with-action-icon:has(> .width99) {
+  display: block;
+}
+
 form div.message {
   margin: var(--margin-top-bottom) 0px;
 }

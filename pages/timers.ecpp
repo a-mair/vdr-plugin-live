@@ -11,11 +11,6 @@
 using namespace vdrlive;
 
 </%pre>
-<%args>
-  // input parameters
-  std::string timerid;
-  std::string action;
-</%args>
 <%session scope="global">
   TimerConflictNotifier timerNotifier;
 </%session>
@@ -28,38 +23,6 @@ using namespace vdrlive;
   pageTitle = trVDR("Timers");
   TimerConflicts timerConflicts;
 
-  if ( !timerid.empty()  && !action.empty() ) {
-    std::string tId = SortedTimers::DecodeDomId(timerid);
-//    dsyslog("live: DEBUG: TIMER: tId = %s", tId.c_str());
-    int timer_id;
-    const char *remote;
-    {
-      LOCK_TIMERS_READ;
-      const cTimer* timer = SortedTimers::GetByTimerId(tId, Timers);
-      if (!timer)
-        throw HtmlError( tr("Couldn't find timer. Maybe you mistyped your request?") );
-      timer_id = timer->Id();
-      remote   = timer->Remote();
-    }
-    if (action == "delete") {
-      if (!cUser::CurrentUserHasRightTo(UR_DELTIMERS))
-        throw HtmlError( tr("Sorry, no permission. Please contact your administrator!") );
-      TimerManager().DeleteTimer(timer_id, remote);
-      timerNotifier.SetTimerModification();
-    }
-    if (action == "toggle") {
-      TimerManager().ToggleTimerActive(timer_id, remote);
-      timerNotifier.SetTimerModification();
-    }
-</%cpp>
-<!DOCTYPE html>
-<html>
-  <script>
-    history.go(-1);
-  </script>
-</html>
-<%cpp>
-  } else {
   std::string previousDay = "";
 </%cpp>
 <& pageelems.doc_type &>
@@ -292,11 +255,11 @@ using namespace vdrlive;
 %             constexpr auto fileNameBreaks = "~";
 %             cToSvDateTime label(tr("%I:%M %p"), timer->StartTime());
 %             label.append(tr(" - ")).append(timer->File() );
-              <a class="action-rightcol" onclick="return action('<$timer->HasFlags(tfActive)?"dat":"act"$>_<$ SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*timer)) $>')">
+              <a class="action-rightcol" onclick="return action('<$timer->HasFlags(tfActive)?"dat":"act"$>_<$ SortedTimers::GetEncodedTimerId(*timer) $>')">
                <img class="icon" src="<$ GetThemedLink("img", timer->HasFlags(tfActive)? "active.svg" : "inactive.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtRight=(fileNameBreaks) text=(timer->HasFlags(tfActive)?tr("Timer is active. Click to deactivate timer"):tr("Timer is inactive. Click to activate timer")) &> />
               </a>
               <div class="action-rightcol"><& pageelems.edit_timer timerId=(SortedTimers::GetTimerId(*timer)) className="icon" label=(label) breaksAtRight=(fileNameBreaks) &></div>
-              <a class="action-rightcol" href="epginfo.html?epgid=det_<$ SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*timer)) $>&history_num_back=1"><img class="icon" src="<$ GetThemedLink("img", "del.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtRight=(fileNameBreaks) text=(tr("Delete timer")) &> /></a>
+              <a class="action-rightcol" href="epginfo.html?epgid=det_<$ SortedTimers::GetEncodedTimerId(*timer) $>&history_num_back=1"><img class="icon" src="<$ GetThemedLink("img", "del.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtRight=(fileNameBreaks) text=(tr("Delete timer")) &> /></a>
             </div>
           </td>
         </tr>
@@ -309,7 +272,6 @@ using namespace vdrlive;
     </div>
   </body>
 </html>
-% }
 <%include>page_exit.eh</%include>
 
 <%def event_actions>

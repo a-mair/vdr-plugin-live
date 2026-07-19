@@ -9,9 +9,6 @@
 using namespace vdrlive;
 
 </%pre>
-<%args>
-  // input parameters
-</%args>
 <%include>page.eh</%include>
 <%include>page_init.eh</%include>
 <& login.authentication &>
@@ -210,14 +207,14 @@ using namespace vdrlive;
 %                   int xsVisibleIcons = 3;     // all except the edit-timer icon
                     <a class="action-rightcol" href="searchresults.html?searchplain=<$$ cToSvUrlEscaped(title) $>"><img class="icon" src="<$ GetThemedLink("img", "search.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtRight=(fileNameBreaks) text=(tr("Search for repeats")) &> /></a>
 <#
-                    <a class="action-rightcol" href="timers.html?timerid=<$ SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*timer)) $>&action=toggle"><img class="icon" src="<$ GetThemedLink("img", (timer->Flags() & tfActive) ? "active.svg" : "inactive.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtRight=(fileNameBreaks) text=(tr("Toggle timer (in)active")) &> /></a>
+                    <a class="action-rightcol" href="timers.html?timerid=<$ SortedTimers::GetEncodedTimerId(*timer) $>&action=toggle"><img class="icon" src="<$ GetThemedLink("img", (timer->Flags() & tfActive) ? "active.svg" : "inactive.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtRight=(fileNameBreaks) text=(tr("Toggle timer (in)active")) &> /></a>
 #>
-                    <a class="action-rightcol" onclick="return action('<$timer->HasFlags(tfActive)?"dat":"act"$>_<$ SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*timer)) $>')">
+                    <a class="action-rightcol" onclick="return action('<$timer->HasFlags(tfActive)?"dat":"act"$>_<$ SortedTimers::GetEncodedTimerId(*timer) $>')">
                       <img class="icon" src="<$ GetThemedLink("img", timer->HasFlags(tfActive)? "active.svg" : "inactive.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtRight=(fileNameBreaks) text=(timer->HasFlags(tfActive)?tr("Timer is active. Click to deactivate timer"):tr("Timer is inactive. Click to activate timer")) &> />
                     </a>
 
                     <div class="action-rightcol"><& pageelems.edit_timer timerId=(SortedTimers::GetTimerId(*timer)) className="icon" label=(label) breaksAtRight=(fileNameBreaks) iCounter=((uintptr_t)&xsVisibleIcons) &></div>
-                    <a class="action-rightcol" href="epginfo.html?epgid=det_<$ SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*timer)) $>&history_num_back=1"><img class="icon" src="<$ GetThemedLink("img", "del.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtRight=(fileNameBreaks) text=(tr("Delete timer")) &> /></a>
+                    <a class="action-rightcol" href="epginfo.html?epgid=det_<$ SortedTimers::GetEncodedTimerId(*timer) $>&history_num_back=1"><img class="icon" src="<$ GetThemedLink("img", "del.svg") $>" alt="" <& tooltip.hint label=(label) className=("click-action") breaksAtRight=(fileNameBreaks) text=(tr("Delete timer")) &> /></a>
                     <div class="notpresent xs-visible-<$ xsVisibleIcons $> xs-columns-<$ (xsVisibleIcons  + 2) / 3 $>"></div>
                   </div>
                 </td>

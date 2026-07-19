@@ -594,8 +594,10 @@ std::string RecordingsManager_MoveConfirmationQuestion(cSv recordings_hash, bool
     const char *name = RecordingsManager::GetNameByHash(recordings.substr(0, 32), all_exist);
     if (!all_exist) return std::string();
     if (!name) name = "";
-    return std::string(cToSvFormatted(tr("Move recording \"%s\" to folder \"%.*s\"?"), name, static_cast<int>(folder.length()), folder.data() ));
+    if (folder.empty()) return std::string(cToSvFormatted(tr("Move recording \"%s\" to root folder?"), name));
+    return std::string(cToSvFormatted(tr("Move recording \"%s\" to folder \"%.*s\"?"), name, static_cast<int>(folder.length()), folder.data()));
   }
+  if (folder.empty()) return std::string(cToSvFormatted(tr("Move the following %i recordings to root folder?"), num_recs));
   return std::string(cToSvFormatted(tr("Move the following %i recordings to folder \"%.*s\"?"), num_recs, static_cast<int>(folder.length()), folder.data() ));
 }
 std::string RecordingsManager_CommandConfirmationQuestion(cSv recordings_hash, bool &all_exist) {

@@ -131,17 +131,6 @@ std::string active_r;
   }
 </%cpp>
   <script type="text/javascript" src="js/live/treeview.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
-  <script type="text/javascript">
-    function new_dir() {
-      var dirSelection = document.getElementById("dirSelection");
-      dirSelection.style.display = "none";
-      var dir = document.getElementById("directory");
-      var newdir = document.getElementById("newdir");
-      newdir.value = dir.value;
-      newdir.disabled = false;
-      newdir.style.display = "";
-    }
-  </script>
   </head>
   <body onpagehide="saveScrollPosition('content')" onpageshow="restoreScrollPosition()">
 <%cpp>
@@ -179,9 +168,11 @@ std::string active_r;
   }
 </%cpp>
                 </select>
-                <img id="new_dir_button" class="icon button new-dir" src="<$ GetThemedLink("img", "icon_overlay_plus.svg") $>" title="<$tr("Create new directory")$>" alt="" onclick="new_dir()">
+                <img id="new_dir_button" class="icon button new-dir" src="<$ GetThemedLink("img", "icon_overlay_plus.svg") $>" title="<$trVDR("New folder")$>" alt="" onclick="new_dir()">
               </div>
-              <input type="text" name="newdir" id="newdir" value="." size="55" class="width99" style="display: none" disabled="true" pattern="^([^~.\s][^~]*)(~[^~.\s][^~]*)*$" title="<$tr("Separate folders with a tilde '~'; folder names must not start with a tilde, dot, or whitespace")$>" />
+              <div class="with-action-icon" id="dirEntry" style="display: none">
+                <input class="width99" type="text" name="newdir" id="newdir" value="." size="55" disabled="true" pattern="^([^~.\s][^~]*)(~[^~.\s][^~]*)*$" title="<$tr("Separate folders with a tilde '~'; folder names must not start with a tilde, dot, or whitespace")$>" />
+              </div>
             </td>
           </tr>
           <tr>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:48+0200\n"
+"POT-Creation-Date: 2026-07-19 20:48+0200\n"
 "PO-Revision-Date: 2007-08-19 20:15+0200\n"
 "Last-Translator: Valdemaras Pipiras <varas@ambernet.lt>\n"
 "Language-Team: see developers in README\n"
@@ -79,7 +79,15 @@ msgid "Delete the following %i recordings?"
 msgstr ""
 
 #, c-format
+msgid "Move recording \"%s\" to root folder?"
+msgstr ""
+
+#, c-format
 msgid "Move recording \"%s\" to folder \"%.*s\"?"
+msgstr ""
+
+#, c-format
+msgid "Move the following %i recordings to root folder?"
 msgstr ""
 
 #, c-format
@@ -241,9 +249,6 @@ msgstr ""
 
 msgid "Name"
 msgstr "Vardas"
-
-msgid "Create new directory"
-msgstr ""
 
 msgid "Separate folders with a tilde '~'; folder names must not start with a tilde, dot, or whitespace"
 msgstr ""

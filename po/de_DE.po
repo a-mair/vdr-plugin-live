@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 3.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:48+0200\n"
+"POT-Creation-Date: 2026-07-19 20:48+0200\n"
 "PO-Revision-Date: 2026-01-27 20:15+0200\n"
 "Last-Translator: Stefan Hofmann <info@stefans-galerie.de>\n"
 "Language-Team: see developers in README\n"
@@ -81,12 +81,20 @@ msgid "Delete the following %i recordings?"
 msgstr "Folgende %i Aufzeichnungen löschen?"
 
 #, c-format
+msgid "Move recording \"%s\" to root folder?"
+msgstr "Aufzeichnung \"%s\" in den Stammordner verschieben?"
+
+#, c-format
 msgid "Move recording \"%s\" to folder \"%.*s\"?"
-msgstr "Aufzeichnung \"%s\" in das Verzeichnis \"%.*s\" verschieben?"
+msgstr "Aufzeichnung \"%s\" in den Ordner \"%.*s\" verschieben?"
+
+#, c-format
+msgid "Move the following %i recordings to root folder?"
+msgstr "Folgende %i Aufzeichnungen in den Stammordner verschieben?"
 
 #, c-format
 msgid "Move the following %i recordings to folder \"%.*s\"?"
-msgstr "Folgende %i Aufzeichnungen in des Verzeichnis \"%.*s\" verschieben?"
+msgstr "Folgende %i Aufzeichnungen in den Ordner \"%.*s\" verschieben?"
 
 #, c-format
 msgid "Execute command \"%.*s\" on recording \"%s\"?"
@@ -243,9 +251,6 @@ msgstr "Aufzeichnung bearbeiten"
 
 msgid "Name"
 msgstr "Name"
-
-msgid "Create new directory"
-msgstr "Neuen Ordner erstellen"
 
 msgid "Separate folders with a tilde '~'; folder names must not start with a tilde, dot, or whitespace"
 msgstr "Ordner mit Tilde (\"~\") trennen; Ordnernamen dürfen nicht mit Tilde, Punkt oder Leerzeichen beginnen"

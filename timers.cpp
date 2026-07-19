@@ -46,11 +46,6 @@ namespace vdrlive {
     if (ret == 2) throw HtmlError(tr("Error in timer settings") );
     return ret;
   }
-  std::string SortedTimers::GetTimerId(cTimer const& timer)
-  {
-    return std::string(cToSvConcat(timer.Channel()->GetChannelID(), ':', timer.WeekDays(), ':', timer.Day(), ':', timer.Start(), ':', timer.Stop()) );
-  }
-
   const cTimer* SortedTimers::GetByTimerId(cSv timerid, const cTimers* Timers)
   {
     cSplit parts(timerid, ':');
@@ -84,11 +79,24 @@ namespace vdrlive {
     return nullptr;
   }
 
+  std::string SortedTimers::GetTimerId(cTimer const& timer)
+  {
+    return std::string(cToSvConcat(timer.Channel()->GetChannelID(), ':', timer.WeekDays(), ':', timer.Day(), ':', timer.Start(), ':', timer.Stop()) );
+  }
+
   std::string SortedTimers::EncodeDomId(cSv timerid)
   {
     cToSvConcat tId("timer_");
     size_t enc_begin = tId.length();
     tId.append(timerid);
+    vdrlive::EncodeDomId(tId.begin() + enc_begin, tId.end(), ".-:", "pmc");
+    return std::string(tId);
+  }
+  std::string SortedTimers::GetEncodedTimerId(cTimer const& timer)
+  {
+    cToSvConcat tId("timer_");
+    size_t enc_begin = tId.length();
+    tId.concat(timer.Channel()->GetChannelID(), ':', timer.WeekDays(), ':', timer.Day(), ':', timer.Start(), ':', timer.Stop());
     vdrlive::EncodeDomId(tId.begin() + enc_begin, tId.end(), ".-:", "pmc");
     return std::string(tId);
   }
@@ -277,50 +285,6 @@ namespace vdrlive {
     }
   }
 
-  void TimerManager::ToggleTimerActive(int timerId, cStr remote)
-  {
-    if (!remote.empty() ) {
-// toggle remote timer via svdrpsend
-#ifdef DEBUG_LOCK
-      dsyslog3("LOCK_TIMERS_READ");
-#endif
-      LOCK_TIMERS_READ;
-      const cTimer* toggleTimer = Timers->GetById(timerId, remote.vdr_str());
-      if (!toggleTimer) {
-        esyslog3("Remote timer is not defined, timerid '", timerId, "' remote '", remote, "'");
-        throw HtmlError(tr("Timer not defined") );
-        return;
-      }
-      cToSvConcat command("MODT ", timerId);
-      if (toggleTimer->HasFlags(tfActive)) {
-        dsyslog3("Remote timer is active, timerid '", timerId, "' remote '", remote, "'");
-        command.append(" off");
-      } else {
-        dsyslog3("Remote timer is not active, timerid '", timerId, "' remote '", remote, "'");
-        command.append(" on");
-      }
-      int svdrpOK = ExecSVDRPCommandReportErrors(remote, command.c_str(), "ToggleTimerActive()");
-      if (svdrpOK == 0) {
-        isyslog2("Remote timer toggled, timerid '", timerId, "' remote '", remote, "'");
-      }
-    } else {
-// toggle local timer
-#ifdef DEBUG_LOCK
-      dsyslog3("LOCK_TIMERS_WRITE");
-#endif
-      LOCK_TIMERS_WRITE;
-      Timers->SetExplicitModify();
-      cTimer* toggleTimer = Timers->GetById(timerId);
-      if (!toggleTimer) {
-        esyslog3("Local timer is not defined, timerid '", timerId, "'");
-        throw HtmlError(tr("Timer not defined") );
-        return;
-      }
-      toggleTimer->OnOff();
-      Timers->SetModified();
-      isyslog("live: local timer %s toggled %s", *toggleTimer->ToDescr(), toggleTimer->HasFlags(tfActive) ? "on" : "off");
-    }
-  }
   std::string TimerManager::DeActivateTimer(cSv id, bool activate) {
     // activate   the timer if activate == true
     // deactivate the timer if activate == false
@@ -396,7 +360,7 @@ namespace vdrlive {
     if (::Setup.SVDRPPeering && *::Setup.SVDRPDefaultHost)
       Timer->SetRemote(::Setup.SVDRPDefaultHost);
     if (Timers->GetTimer(Timer)) {
-      std::string result = JsonReturnOneObject(SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*Timer)), Timer->File(), false, true, tr("Timer already defined"));
+      std::string result = JsonReturnOneObject(SortedTimers::GetEncodedTimerId(*Timer), Timer->File(), false, true, tr("Timer already defined"));
       delete Timer;
       return result;
     }
@@ -405,7 +369,7 @@ namespace vdrlive {
     if (!HandleRemoteTimerModifications(Timer, nullptr, &ErrorMessage) ) {
 // must add the timer before HandleRemoteModifications to get proper log messages with timer ids
       esyslog3("creating timer ", *Timer->ToDescr(), " ErrorMessage: ", *ErrorMessage);
-      std::string result = JsonReturnOneObject(SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*Timer)), Timer->File(), false, false, *ErrorMessage);
+      std::string result = JsonReturnOneObject(SortedTimers::GetEncodedTimerId(*Timer), Timer->File(), false, false, *ErrorMessage);
       Timers->Del(Timer);
       return result;
     }
@@ -417,7 +381,7 @@ namespace vdrlive {
     timerNotifier.SetTimerModification();
 
     isyslog("live: timer %s added", *Timer->ToDescr() );
-    return JsonReturnOneObject(SortedTimers::EncodeDomId(SortedTimers::GetTimerId(*Timer)), Timer->File(), true);
+    return JsonReturnOneObject(SortedTimers::GetEncodedTimerId(*Timer), Timer->File(), true);
   }
 
   std::string TimerManager_DeleteConfirmationQuestion(cSv id, bool &all_exist) {

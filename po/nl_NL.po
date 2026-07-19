@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:48+0200\n"
+"POT-Creation-Date: 2026-07-19 20:48+0200\n"
 "PO-Revision-Date: 2026-07-14 16:25+0200\n"
 "Last-Translator: Carel Willemse <carel@nekanali.nl>\n"
 "Language-Team: see developers in README\n"
@@ -82,8 +82,16 @@ msgid "Delete the following %i recordings?"
 msgstr "De volgende %i opnames verwijderen?"
 
 #, c-format
+msgid "Move recording \"%s\" to root folder?"
+msgstr ""
+
+#, c-format
 msgid "Move recording \"%s\" to folder \"%.*s\"?"
 msgstr "Opname \"%s\" verplaatsen naar map \"%.*s\"?"
+
+#, c-format
+msgid "Move the following %i recordings to root folder?"
+msgstr ""
 
 #, c-format
 msgid "Move the following %i recordings to folder \"%.*s\"?"
@@ -245,9 +253,6 @@ msgstr "Opname bewerken"
 
 msgid "Name"
 msgstr "Naam"
-
-msgid "Create new directory"
-msgstr "Nieuwe map aanmaken"
 
 msgid "Separate folders with a tilde '~'; folder names must not start with a tilde, dot, or whitespace"
 msgstr "Scheid mappen met een tilde '~'; mapnamen mogen niet beginnen met een tilde, punt of spatie"
@@ -1489,6 +1494,9 @@ msgstr ""
 
 msgid "Error deactivating search timers:"
 msgstr ""
+
+#~ msgid "Create new directory"
+#~ msgstr "Nieuwe map aanmaken"
 
 #~ msgid "Error: couldn't set timer to inactive"
 #~ msgstr "Fout: kon timer niet op inactief zetten"
