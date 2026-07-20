@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 20:48+0200\n"
+"POT-Creation-Date: 2026-07-20 11:50+0200\n"
 "PO-Revision-Date: 2010-05-10 22:15+0200\n"
 "Last-Translator: Vladimír Bárta <vladimir.barta@k2atmitec.cz>,Radek Stastny <dedkus@gmail.com> \n"
 "Language-Team: see developers in README\n"
@@ -768,12 +768,6 @@ msgstr ""
 msgid "Deselect all recordings in this folder"
 msgstr ""
 
-msgid "Collapse the log"
-msgstr ""
-
-msgid "Expand the log"
-msgstr ""
-
 msgid "Wrong username or password"
 msgstr "Chybné jméno, nebo heslo"
 
@@ -844,6 +838,12 @@ msgid "Prev. entry"
 msgstr ""
 
 msgid "Next entry"
+msgstr ""
+
+msgid "Collapse the log"
+msgstr ""
+
+msgid "Expand the log"
 msgstr ""
 
 msgid "Play this channel in the browser"

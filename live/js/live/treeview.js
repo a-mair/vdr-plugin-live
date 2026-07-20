@@ -8,6 +8,7 @@
 // --- Version: 0.3          Date: 14-6-2017  --
 // ---------------------------------------------
 
+// functions for the recordings treeview
 function set_folder_closed(rec_list) {
   const fldr_hash = rec_list.id;
   uncheck_all(rec_list);
@@ -73,18 +74,6 @@ function uncheck_all(rec_list)
   }
 }
 
-function click_reccommands_folder_line(e, fldr_hash) {
-  const reccommands_list = document.getElementById(fldr_hash);
-  if (!reccommands_list) return;
-
-  if (reccommands_list.style.display == 'none') {
-    set_icons_open(document.getElementById('pm_'+fldr_hash), document.getElementById('fs_'+fldr_hash));
-    reccommands_list.style.display = '';
-  } else {
-    set_icons_closed(document.getElementById('pm_'+fldr_hash), document.getElementById('fs_'+fldr_hash));
-    reccommands_list.style.display = 'none';
-  }
-}
 async function click_folder_line (e, fldr_hash) {
 //alert('click_folder_line, currentTarget='+e.currentTarget.id+' target='+e.target.id+' fldr_hash='+fldr_hash);
 //alert('click_folder_line, target='+e.target.id+' fldr_hash='+fldr_hash);
@@ -287,3 +276,42 @@ async function recordings_DOMContentLoaded() {
   imgLoad();
 }
 
+//The following cookie functions have evolved from the examples of http://www.quirksmode.org/js/cookies.html
+function createCookie(name, value, days)
+{
+  const scope = "; SameSite=Lax; path=/"
+  var expiration = "";   // defaults to session cookie
+  if (days > 0) {
+    // cookie with expiration time
+    let date = new Date();
+    date.setTime(date.getTime() + days * 24*60*60*1000);
+    expiration = "; expires=" + date.toGMTString();
+  } else if (days < 0) {
+    // already expired cookie, i.e., cookie to be deleted
+    let date = new Date(0);
+    expiration = "; expires=" + date.toGMTString();
+  }
+  var cookie = name + "=" + value + expiration + scope;
+  if (cookie.length >= 4096 ) {
+    // oversized cookie deleted to avoid truncation issues
+    let date = new Date(0);
+    expiration = "; expires=" + date.toGMTString();
+    cookie = name + "=" + expiration + scope;
+  }
+  document.cookie = cookie;
+}
+
+function readCookie(name)
+{
+  var nameEQ = name + "=";
+  for (let c of document.cookie.split(';')) {
+    c = c.trim();
+    if (c.startsWith(nameEQ)) return c.substring(nameEQ.length);
+  }
+  return null;
+}
+
+function eraseCookie(name)
+{
+  createCookie(name, "", -1);
+}

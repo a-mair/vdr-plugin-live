@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 20:48+0200\n"
+"POT-Creation-Date: 2026-07-20 11:50+0200\n"
 "PO-Revision-Date: 2025-10-05 18:19+0200\n"
 "Last-Translator: Tomasz Maciej Nowak <tomek_n@o2.pl>\n"
 "Language-Team: see developers in README\n"
@@ -761,12 +761,6 @@ msgstr ""
 msgid "Deselect all recordings in this folder"
 msgstr ""
 
-msgid "Collapse the log"
-msgstr ""
-
-msgid "Expand the log"
-msgstr ""
-
 msgid "Wrong username or password"
 msgstr "Błędna nazwa lub hasło użytkownika"
 
@@ -838,6 +832,12 @@ msgstr "Poprzedni"
 
 msgid "Next entry"
 msgstr "Następny"
+
+msgid "Collapse the log"
+msgstr ""
+
+msgid "Expand the log"
+msgstr ""
 
 msgid "Play this channel in the browser"
 msgstr "Oglądaj kanał w przeglądarce"

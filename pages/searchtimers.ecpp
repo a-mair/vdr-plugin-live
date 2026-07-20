@@ -10,8 +10,6 @@ using namespace vdrlive;
 
 </%pre>
 <%args>
-  // input parameters
-  std::string searchtimerid;
   std::string action;
 </%args>
 <%session scope="global">
@@ -26,15 +24,6 @@ reply.setHeader (tnt::httpheader::cacheControl, "no-store, no-cache, max-age=0, 
   pageTitle = tr("Search timers");
   SearchTimers timers;
   if (!action.empty() ) {
-    if (!searchtimerid.empty() ) {
-      if (action == "toggle")
-        timers.ToggleActive(searchtimerid);
-      if (action == "delete") {
-        if (!cUser::CurrentUserHasRightTo(UR_DELSTIMERS))
-          throw HtmlError( tr("Sorry, no permission. Please contact your administrator!") );
-        timers.Delete(searchtimerid);
-      }
-    }
     if (action == "update") {
       timers.TriggerUpdate();
       timerNotifier.SetTimerModification();
@@ -58,7 +47,6 @@ reply.setHeader (tnt::httpheader::cacheControl, "no-store, no-cache, max-age=0, 
     <& pageelems.stylesheets &>
     <& pageelems.scripts &>
     <& pageelems.ajax_js &>
-    <& pageelems.create_html_js &>
   </head>
   <body onpagehide="saveScrollPosition('content')" onpageshow="restoreScrollPosition()">
     <& pageelems.logo &>
@@ -124,9 +112,6 @@ reply.setHeader (tnt::httpheader::cacheControl, "no-store, no-cache, max-age=0, 
             <div class="event_actions">
 %             constexpr auto regexBreaksAtLeft = "{[(|";
 %             constexpr auto regexBreaksAtRight = "|)]}";
-<#
-              <a href="searchtimers.html?searchtimerid=<$ timerID $>&action=toggle"><img class="icon" src="<$ GetThemedLink("img", timer->UseAsSearchTimer() ? "active.svg" : "inactive.svg") $>" alt="<$ tr("Toggle search timer actions (in)active") $>" <& tooltip.hint label=(timer->Search()) className=("click-action") breaksAtLeft=(regexBreaksAtLeft) breaksAtRight=(regexBreaksAtRight) text=(tr("Toggle search timer actions (in)active")) &> /></a>
-#>
               <a onclick="return action('<$timer->UseAsSearchTimer()?"das":"acs"$>_<$ timerID $>')">
                 <img class="icon" src="<$ GetThemedLink("img", timer->UseAsSearchTimer() ? "active.svg" : "inactive.svg") $>" alt="" <& tooltip.hint label=(timer->Search()) className=("click-action") breaksAtLeft=(regexBreaksAtLeft) breaksAtRight=(regexBreaksAtRight) text=(timer->UseAsSearchTimer()?tr("Search timer is active. Click to deactivate search timer"):tr("Search timer is inactive. Click to activate search timer")) &> />
               </a>

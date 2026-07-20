@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 3.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 20:48+0200\n"
+"POT-Creation-Date: 2026-07-20 11:50+0200\n"
 "PO-Revision-Date: 2026-01-27 20:15+0200\n"
 "Last-Translator: Stefan Hofmann <info@stefans-galerie.de>\n"
 "Language-Team: see developers in README\n"
@@ -762,12 +762,6 @@ msgstr "Alle Aufzeichnungen in diesem Ordner auswählen"
 msgid "Deselect all recordings in this folder"
 msgstr "Auswahl für alle Aufzeichnungen in diesem Ordner aufheben"
 
-msgid "Collapse the log"
-msgstr "Protokoll einklappen"
-
-msgid "Expand the log"
-msgstr "Protokoll aufklappen"
-
 msgid "Wrong username or password"
 msgstr "Benutzerkennung oder Passwort ungültig"
 
@@ -839,6 +833,12 @@ msgstr "Zurück"
 
 msgid "Next entry"
 msgstr "Vor"
+
+msgid "Collapse the log"
+msgstr "Protokoll einklappen"
+
+msgid "Expand the log"
+msgstr "Protokoll aufklappen"
 
 msgid "Play this channel in the browser"
 msgstr "Sender im Browser abspielen"

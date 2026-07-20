@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 20:48+0200\n"
+"POT-Creation-Date: 2026-07-20 11:50+0200\n"
 "PO-Revision-Date: 2012-12-03 21:41+0100\n"
 "Last-Translator: Milan Hrala <hrala.milan@gmail.com>\n"
 "Language-Team: Slovak <hrala.milan@gmail.com>\n"
@@ -760,12 +760,6 @@ msgstr ""
 msgid "Deselect all recordings in this folder"
 msgstr ""
 
-msgid "Collapse the log"
-msgstr ""
-
-msgid "Expand the log"
-msgstr ""
-
 msgid "Wrong username or password"
 msgstr "Chybné užívateľské meno alebo heslo"
 
@@ -836,6 +830,12 @@ msgid "Prev. entry"
 msgstr ""
 
 msgid "Next entry"
+msgstr ""
+
+msgid "Collapse the log"
+msgstr ""
+
+msgid "Expand the log"
 msgstr ""
 
 msgid "Play this channel in the browser"

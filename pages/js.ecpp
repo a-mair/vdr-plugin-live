@@ -1,11 +1,17 @@
 <%include>page.eh</%include>
 <%pre>
-/* javascript functions depending on settings and language,
+/*
+ * Functions for pages creating html code with javascript
+ * this is schedule, searchresults, recordings,
+ * epginfo (for toolbox), stream (for recording playback)
+ * and al pages using the epginfo popup:
+ * whats_on, multischedule, timers, timerconflicts
+
+ * javascript functions depending on settings and language,
  *  but not depending on other parameters
  *  -> static page, no input parameters
 */
 #include <setup.h>
-#include <confirm.h>
 #include <livefeatures.h>
 using namespace vdrlive;
 #if TNTVERSION >= 30000
@@ -14,46 +20,8 @@ const char *TNT_ARRAY = "[]";
 const char *TNT_ARRAY = "";
 #endif
 </%pre>
+% reply.setHeader (tnt::httpheader::contentType, "text/javascript; charset=utf-8", true);
 
-<%cpp>
-reply.setHeader (tnt::httpheader::contentType, "text/javascript; charset=utf-8", true);
-</%cpp>
-const action_texts = [
-<%cpp>
-for (const cConfirm &confirm: g_confirm_popups) {
-</%cpp>
-{ id: "<$ cSv(confirm.m_id).substr(0,3) $>", confirmationSupported: <$confirm.confirmationSupported()?"true":"false" $>, headline_0: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_0)) $>, headline_n: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_n)) $>, headline_error: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_error)) $> },
-% }
-];
-
-function get_texts(action) {
-  for (const texts of action_texts) {
-    if(action == texts.id) return texts;
-  }
-  console.log("action '"+action+"' not found");
-}
-function is_action(epgid) {
-  if (epgid.length < 4) return false;
-  const action = epgid.substring(0, 3);
-  for (const texts of action_texts) {
-    if(action == texts.id) return true;
-  }
-  return false;
-}
-function set_icons_closed(img_plus_minus, img_folder_symbol) {
-// input: images nodes
-// -> set the images to the closed state, indicating the folder is currently closed
-
-  if( img_plus_minus) img_plus_minus.src="<$ GetThemedLinkPrefixImg()$>icon_overlay_plus.svg";
-  if (img_folder_symbol) img_folder_symbol.src="<$ GetThemedLinkPrefixImg()$>folder_closed.svg";
-}
-function set_icons_open(img_plus_minus, img_folder_symbol) {
-// input: images nodes
-// -> set the images to the open state, indicating the folder is currently open
-
-  if( img_plus_minus) img_plus_minus.src="<$ GetThemedLinkPrefixImg()$>icon_overlay_minus.svg";
-  if (img_folder_symbol) img_folder_symbol.src="<$ GetThemedLinkPrefixImg()$>folder_open.svg";
-}
 
 function addErrorIcon(s, numErrors, durationDeviation, duration, numTsFiles, isPesRecording) {
   if (numErrors <= -100) return
@@ -83,26 +51,6 @@ function addErrorIcon(s, numErrors, durationDeviation, duration, numTsFiles, isP
   s.a += '</p>\" /> </div>'
 }
 
-function addHdSdIcon(s, hdsd, toolTip, frameParams) {
-  s.a += '<div class=\"recording_sd_hd\"><img class=\"sdhd\" src=\"<$GetThemedLinkPrefixImg()$>'
-  s.a += hdsd
-  s.a += '.svg\"'
-  if (toolTip || frameParams) {
-    s.a += ' title=\"'
-    if (toolTip) {
-      s.a += '<p>'
-      s.a += toolTip
-      s.a += '</p>'
-    }
-    if (frameParams) {
-      s.a += '<p>'
-      s.a += frameParams
-      s.a += '</p>'
-    }
-    s.a += '\"'
-  }
-  s.a += ' /></div>'
-}
 
 %// do not HTML-encode name; will be URI-encoded here!
 function IMDbS(s, im_db, name, label) {
@@ -218,13 +166,6 @@ function addEvent(s, bottomrow_i, obj) {
   s.a += '</div></div></td></tr>'
 }
 
-function eventString(bottomrow, data) {
-  const s = Object.create(null)
-  s.a = ""
-  addEvent(s, bottomrow, data)
-  return s.a
-}
-
 // existing recording
 // do not HTML-encode name; will be HTML-encoded here!
 function existingRecordingSR(s, col_span1, bottomrow, imdb_id, id, stillRecording, image, pt, s_title, s_season_episode, s_runtime, s_date, day_time_duration, errors, hd_sd, channel_name, newR, name, short_text, description, durationDeviation, folder, duration, numTsFiles, isPesRecording) {
@@ -262,13 +203,6 @@ function existingRecordingSR(s, col_span1, bottomrow, imdb_id, id, stillRecordin
   s.a += '\">'
   addColEventRec(s, still_recording, day_time_duration, 'recording_', id, name, folder, short_text, description)
   s.a += '</td></tr>'
-}
-
-function existingRecordingString(col_span, bottomrow, id, stillRecording, imdb_id, image, pt, s_title, s_season_episode, s_runtime, s_date, day_time_duration, errors, hd_sd, channel_name, newR, name, short_text, description, durationDeviation, folder, duration, size, numTsFiles, isPesRecording) {
-  const s = Object.create(null)
-  s.a = ""
-  existingRecordingSR(s, col_span, bottomrow, imdb_id, id, stillRecording, image, pt, s_title, s_season_episode, s_runtime, s_date, day_time_duration, errors, hd_sd, channel_name, newR, name, short_text, description, durationDeviation, folder, duration, numTsFiles, isPesRecording)
-  return s.a
 }
 
 function RecordingActionStream(s, id, label) {
@@ -491,15 +425,4 @@ function get_text_Select_all_recordings_in_this_folder() {
 }
 function get_text_Deselect_all_recordings_in_this_folder() {
   return '<$ tr("Deselect all recordings in this folder") $>';
-}
-
-function get_text_Nothing_selected() {
-  return '<$ tr("Nothing selected!") $>';
-}
-
-function get_text_Collapse_the_log() {
-  return '<$ tr("Collapse the log") $>';
-}
-function get_text_Expand_the_log() {
-  return '<$ tr("Expand the log") $>';
 }

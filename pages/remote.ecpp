@@ -139,7 +139,6 @@ last_page="remote";
   <& pageelems.favicon &>
   <& pageelems.stylesheets &>
   <& pageelems.scripts &>
-  <& pageelems.create_html_js &>
   <& pageelems.ajax_js &>
   <script type="text/javascript"><!--
   var newImg = null;

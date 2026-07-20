@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR-LIVE 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 20:48+0200\n"
+"POT-Creation-Date: 2026-07-20 11:50+0200\n"
 "PO-Revision-Date: 2023-02-14 20:02+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -762,12 +762,6 @@ msgstr ""
 msgid "Deselect all recordings in this folder"
 msgstr ""
 
-msgid "Collapse the log"
-msgstr ""
-
-msgid "Expand the log"
-msgstr ""
-
 msgid "Wrong username or password"
 msgstr "მომხმარებლის სახელი ან პაროლი არასწორია"
 
@@ -838,6 +832,12 @@ msgid "Prev. entry"
 msgstr ""
 
 msgid "Next entry"
+msgstr ""
+
+msgid "Collapse the log"
+msgstr ""
+
+msgid "Expand the log"
 msgstr ""
 
 msgid "Play this channel in the browser"

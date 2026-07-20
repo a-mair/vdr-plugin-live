@@ -34,6 +34,22 @@ function restoreScrollPosition() {
   }
 }
 
+// used in every treeview (recordings, recording commands)
+function set_icons_closed(img_plus_minus, img_folder_symbol) {
+// input: images nodes
+// -> set the images to the closed state, indicating the folder is currently closed
+
+  if (img_plus_minus) img_plus_minus.src=getThemedLinkPrefixImg()+"icon_overlay_plus.svg";
+  if (img_folder_symbol) img_folder_symbol.src=getThemedLinkPrefixImg()+"folder_closed.svg";
+}
+function set_icons_open(img_plus_minus, img_folder_symbol) {
+// input: images nodes
+// -> set the images to the open state, indicating the folder is currently open
+
+  if (img_plus_minus) img_plus_minus.src=getThemedLinkPrefixImg()+"icon_overlay_minus.svg";
+  if (img_folder_symbol) img_folder_symbol.src=getThemedLinkPrefixImg()+"folder_open.svg";
+}
+
 // in pages/edit_timer.ecpp, pages/recordings.ecpp, pages/edit_recording.ecpp
 // used in the folder selection dropdown / inputfield
 function new_dir() {
@@ -44,3 +60,23 @@ function new_dir() {
     newdir.value = dir.value;
     newdir.disabled = false;
 }
+
+// navigate depending on referrer
+function back_depending_referrer(back_epginfo, back_others) {
+  if (document.referrer.indexOf("epginfo.html?") != -1) {
+    history.go(-back_epginfo);
+  } else {
+    history.go(-back_others);
+  }
+}
+// defer image load
+function imgLoad() {
+var imgDefer = document.getElementsByTagName('img');
+  for (var i = 0; i < imgDefer.length; i++) {
+    if (imgDefer[i].getAttribute('data-src')) {
+      imgDefer[i].setAttribute('src',imgDefer[i].getAttribute('data-src'));
+    }
+  }
+}
+
+

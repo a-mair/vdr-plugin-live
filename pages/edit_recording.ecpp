@@ -12,7 +12,6 @@ using namespace vdrlive;
 <%args>
   // input parameters
   std::string recid;
-  std::string async;
   int history_num_back;  //number of pages to go back to the recordings page
       // call with 1 -> chancel will go back one page in history
   // form parameters
@@ -40,8 +39,6 @@ std::string active_r;
   last_page="edit_recording";   // to cater for direct access
   if (!cUser::CurrentUserHasRightTo(UR_EDITRECS))
     throw HtmlError( tr("Sorry, no permission. Please contact your administrator!") );
-
-  bool ajaxReq = !async.empty() && (parse_int<int>(async) != 0);
 
   std::string message;
 
@@ -74,7 +71,7 @@ std::string active_r;
 </%cpp>
 <!DOCTYPE html>
 <html>
-  <script type="text/javascript" src="js/live/createHtml.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
+  <& pageelems.scripts &>
   <script>
     back_depending_referrer(2, <$ history_num_back $>);
   </script>
@@ -119,28 +116,14 @@ std::string active_r;
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>VDR Live - <$ tr("Edit recording") $></title>
-<%cpp>
-  if (!ajaxReq) {
-</%cpp>
     <& pageelems.favicon &>
     <& pageelems.stylesheets &>
     <& pageelems.scripts &>
-    <& pageelems.create_html_js &>
     <& pageelems.ajax_js &>
-<%cpp>
-  }
-</%cpp>
-  <script type="text/javascript" src="js/live/treeview.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
   </head>
   <body onpagehide="saveScrollPosition('content')" onpageshow="restoreScrollPosition()">
-<%cpp>
-  if (!ajaxReq) {
-</%cpp>
     <& pageelems.logo &>
     <& menu active=(active_r) &>
-<%cpp>
-  }
-</%cpp>
     <div id="content">
       <div class="spacebar"><# spacer with fade-out effect #></div>
       <form method="post" name="edit_recording" id="<$ recid $>" action="edit_recording.ecpp">
@@ -253,5 +236,4 @@ std::string active_r;
   </body>
 </html>
 % }
-</%def>
 <%include>page_exit.eh</%include>

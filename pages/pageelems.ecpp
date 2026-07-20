@@ -4,6 +4,7 @@
 
 #include <livefeatures.h>
 #include <setup.h>
+#include <confirm.h>
 #include <timers.h>
 #include <tools.h>
 #include <epg_events.h>
@@ -78,8 +79,26 @@ function getEffectiveTheme()       { return "<$ effectiveTheme $>"; }
 function getThemedLinkPrefix()     { return "<$ cToSvConcat("/themes/", effectiveTheme, "/") $>"; }
 function getThemedLinkPrefixImg()  { return "<$ cToSvConcat("/themes/", effectiveTheme, "/img/") $>"; }
 function getThemedLink(type, name) { return "<$ cToSvConcat("/themes/", effectiveTheme, "/") $>" + type + "/" + name; }
+
+// for actions defined in confir.h
+const action_texts = [
+% for (const cConfirm &confirm: g_confirm_popups) {
+{ id: "<$ cSv(confirm.m_id).substr(0,3) $>", confirmationSupported: <$confirm.confirmationSupported()?"true":"false" $>, headline_0: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_0)) $>, headline_n: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_n)) $>, headline_error: <$$ cToSvStringEscapedAndCorrectNonUTF8(tr(confirm.m_headline_error)) $> },
+% }
+];
+function get_text_Nothing_selected() {
+  return '<$ tr("Nothing selected!") $>';
+}
+function get_text_Collapse_the_log() {
+  return '<$ tr("Collapse the log") $>';
+}
+function get_text_Expand_the_log() {
+  return '<$ tr("Expand the log") $>';
+}
+
 --></script>
 <script type="text/javascript" src="js/live/scripts.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
+<script type="text/javascript" src="js/live/actions.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
 <script type="text/javascript" src="js/live/epg_tt_box.js?st=<$cToSvInt(LiveSetup().GetVdrStart() )$>"></script>
 </%def>
 
