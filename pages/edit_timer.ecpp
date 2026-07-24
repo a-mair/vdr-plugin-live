@@ -19,7 +19,6 @@ using namespace vdrlive;
   // input parameters
   std::string timerid;
   std::string epgid;
-  std::string async;
   // form parameters
   std::string channel_string = "";
   int active = 1;
@@ -53,8 +52,6 @@ TimerConflictNotifier timerNotifier;
   last_page="edit_timer";   // to cater for direct access
   if (!cUser::CurrentUserHasRightTo(UR_EDITTIMERS))
     throw HtmlError( tr("Sorry, no permission. Please contact your administrator!") );
-
-  bool ajaxReq = !async.empty() && (parse_int<int>(async) != 0);
 
   std::string message;
   tChannelID channel = tChannelID::FromString(channel_string.c_str());
@@ -267,16 +264,10 @@ TimerConflictNotifier timerNotifier;
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>VDR Live - <$ timerid.empty() ? tr("New timer") : tr("Edit timer")  $></title>
-<%cpp>
-  if (!ajaxReq) {
-</%cpp>
     <& pageelems.favicon &>
     <& pageelems.stylesheets &>
     <& pageelems.scripts &>
     <& pageelems.ajax_js &>
-<%cpp>
-  }
-</%cpp>
     <script type="text/javascript"><!--
     function initform()
     {
@@ -316,14 +307,8 @@ TimerConflictNotifier timerNotifier;
 
   </head>
   <body onload="initform()" onpagehide="saveScrollPosition('content')" onpageshow="restoreScrollPosition()">
-<%cpp>
-  if (!ajaxReq) {
-</%cpp>
     <& pageelems.logo &>
     <& menu active=("timers") &>
-<%cpp>
-  }
-</%cpp>
     <div id="content">
       <div class="spacebar"><# spacer with fade-out effect #></div>
       <form method="post" name="edit_timer" id="<$ timerid $>" action="edit_timer.ecpp">
@@ -339,11 +324,11 @@ TimerConflictNotifier timerNotifier;
             <td class="label leftcol"><div class="withmargin"><$ trVDR("Active") $>:</div></td>
             <td class="rightcol"><div class="options">
               <div class="dotted">
-                <input id="active_1" name="active" value="1" <{ reply.out() << ( active ? "checked=\"checked\"" : "" ); }> type="radio"></input>
+                <input id="active_1" name="active" value="1" <{ reply.out() << ( active ? "checked=\"checked\"" : "" ); }> type="radio"/>
                 <label for="active_1"><$ trVDR("yes") $></label>
               </div>
               <div class="dotted">
-                <input id="active_0" name="active" value="0" <{ reply.out() << ( !active ? "checked=\"checked\"" : "" ); }> type="radio"></input>
+                <input id="active_0" name="active" value="0" <{ reply.out() << ( !active ? "checked=\"checked\"" : "" ); }> type="radio"/>
                 <label for="active_0"><$ trVDR("no") $></label>
               </div>
             </div></td>
@@ -457,23 +442,28 @@ TimerConflictNotifier timerNotifier;
             <td class="label leftcol"><div class="withmargin"><$ tr("Monitoring") $>:</div></td>
             <td class="rightcol"><div class="options">
               <div class="dotted">
-                <input id="monitoring_none" name="monitoring" value="none" <? monitoring=="none" ? "checked=\"checked\"" ?> type="radio"></input>
+                <input id="monitoring_none" name="monitoring" value="none" <?? monitoring=="none" ? "checked=\"checked\"" ?> type="radio"/>
                 <label for="monitoring_none"><$ tr("none") $></label>
               </div>
               <div class="dotted">
-                <input id="monitoring_vps" name="monitoring" value="vps" <? monitoring=="vps" ? "checked=\"checked\"" ?> type="radio"></input>
+                <input id="monitoring_vps" name="monitoring" value="vps" <?? monitoring=="vps" ? "checked=\"checked\"" ?> type="radio"/>
                 <label for="monitoring_vps"><$ trVDR("VPS") $></label>
               </div>
 %             if ( (!others_monitor && event_monitoring_id != 0 && LiveFeatures<features::epgsearch>().Recent()) || monitoring=="event_id" || monitoring=="event_time") {
-              <# why are these options not included all the time? #>
-              <div id="monitoring_option_id" class="dotted" style="display: none">
-                <input id="monitoring_event_id" name="monitoring" value="event_id" <? monitoring=="event_id" ? "checked=\"checked\"" ?> type="radio"></input>
-                <label for="monitoring_event_id"><$ tr("event ID") $></label>
-              </div>
-              <div id="monitoring_option_time" class="dotted" style="display: none">
-                <input id="monitoring_event_time" name="monitoring" value="event_time" <? monitoring=="event_time" ? "checked=\"checked\"" ?> type="radio"></input>
-                <label for="monitoring_event_time"><$ tr("event time") $></label>
-              </div>
+                <# if others_monitor == true, the timer was created by
+                   tvscraper or epgsearch. They already take care of monitoring the timer #>
+                <# if event_monitoring_id == 0, there is no event assigned to this timer.
+                   we cannot monitor / adapt the timer to event changes if there is no event ...#>
+                <# if LiveFeatures<features::epgsearch>().Recent()) == false, epgsearch is not running
+                   this monitoring is done by epgsearch (we only tell epgesearch to monitor)  #>
+                <div id="monitoring_option_id" class="dotted" style="display: none">
+                  <input id="monitoring_event_id" name="monitoring" value="event_id" <?? monitoring=="event_id" ? "checked=\"checked\"" ?> type="radio"/>
+                  <label for="monitoring_event_id"><$ tr("event ID") $></label>
+                </div>
+                <div id="monitoring_option_time" class="dotted" style="display: none">
+                  <input id="monitoring_event_time" name="monitoring" value="event_time" <?? monitoring=="event_time" ? "checked=\"checked\"" ?> type="radio"/>
+                  <label for="monitoring_event_time"><$ tr("event time") $></label>
+                </div>
 %             }
             </div></td>
           </tr>

@@ -1,21 +1,15 @@
 <%pre>
-
 #include <livefeatures.h>
 #include <setup.h>
 #include <tools.h>
 #include <epg_events.h>
 #include <timers.h>
 #include <recman.h>
-
-
 #include <vdr/config.h>
 
-
 using namespace vdrlive;
-
-
-
 </%pre>
+
 <%args>
   int channel = -1;
   std::string channelid;
@@ -106,13 +100,10 @@ bool events_available = false;
     <& menu active=("schedule") component=("schedule.channel_selection") &>
     <div id="content">
       <div class="spacebar"><# spacer with fade-out effect #></div>
-<%cpp>
-  if (!events_available) {
-</%cpp>
+% if (!events_available) {
       <$ tr("No schedules available for this channel") $>.
 <%cpp>
-  }
-  else {
+  } else {
     int col_span = 3;
     if (display_pictures) col_span++;
     std::string current_day = "";
@@ -142,7 +133,8 @@ bool events_available = false;
       <$ tr("No events available for this channel") $>.
 %   } else {
 <script>
-document.write(addEventListString(<$col_span$>, <$$ epg_item.c_str() $>))
+const elem_content=document.getElementById("content");
+elem_content.insertAdjacentHTML("beforeend", addEventListString(<$col_span$>, <$$ epg_item.c_str() $>));
 </script>
 <%cpp>
     }

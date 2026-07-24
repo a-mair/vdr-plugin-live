@@ -93,7 +93,8 @@ using namespace vdrlive;
           <$ tr("No search results") $>
 %       } else {
 <script>
-document.write(addEventListString(<$col_span$>, <$$ epg_item.c_str() $>))
+const elem_content=document.getElementById("content");
+elem_content.insertAdjacentHTML("beforeend", addEventListString(<$col_span$>, <$$ epg_item.c_str() $>));
 </script>
 %       } }
       <& pageelems.action_results &>

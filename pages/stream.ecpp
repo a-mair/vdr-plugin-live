@@ -166,10 +166,11 @@ cToSvConcat<0> recording_item;
 rPtr->AppendAsJSArray(recording_item);
 </%cpp>
       <table class="listing streaming recording" cellspacing="0" cellpadding="0">
-        <tbody>
+        <tbody id="id_tbody_recording_details">
           <script>
+            const elem_tbody=document.getElementById("id_tbody_recording_details");
             // column span 0 indicates discarding the label
-            document.write(existingRecordingString(0, "", <$$ recording_item.c_str() $>))
+            elem_tbody.insertAdjacentHTML("beforeend", existingRecordingString(0, "", <$$ recording_item.c_str() $>));
           </script>
         </tbody>
       </table>
